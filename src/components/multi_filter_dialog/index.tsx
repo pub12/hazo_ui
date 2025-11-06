@@ -37,7 +37,7 @@ import {
 } from "../ui/select";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "../ui/tooltip";
 import { Calendar as CalendarComponent } from "../ui/calendar";
-import { Filter, Trash2, Plus, Check as CheckIcon, ChevronsUpDown, Calendar as CalendarIcon } from "lucide-react";
+import { Filter, Trash2, Plus, Check as CheckIcon, ChevronsUpDown, Calendar as CalendarIcon, X } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { format } from "date-fns";
 
@@ -386,6 +386,10 @@ export function MultiFilterDialog({
     setIsOpen(false);
   };
 
+  const handleClearAll = () => {
+    setFilterFields([]);
+  };
+
   // Get available fields that haven't been added yet
   const availableFieldsToAdd = availableFields.filter(
     af => !filterFields.some(ff => ff.field === af.value)
@@ -546,6 +550,16 @@ export function MultiFilterDialog({
           )}
         </div>
         <DialogFooter>
+          {filterFields.length > 0 && (
+            <Button
+              variant="outline"
+              onClick={handleClearAll}
+              className="cls_clear_all_btn"
+            >
+              <X className="cls_clear_all_icon h-4 w-4 mr-2" />
+              Clear All
+            </Button>
+          )}
           <Button
             onClick={handleApply}
             className="cls_apply_btn"
