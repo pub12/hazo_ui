@@ -10,7 +10,15 @@ npm install hazo_ui
 
 ## Components
 
-### MultiFilterDialog
+### Component Overview
+
+- **[MultiFilterDialog](#multifilterdialog)** - A powerful dialog component for multi-field filtering with support for text, number, combobox, boolean, and date fields. Includes operator support, validation, and visual feedback.
+
+- **[MultiSortDialog](#multisortdialog)** - A flexible dialog component for multi-field sorting with drag-and-drop reordering. Allows users to set sort priority and direction (ascending/descending) for multiple fields.
+
+---
+
+## MultiFilterDialog
 
 A powerful, flexible dialog component for multi-field filtering with support for various input types. Perfect for table headers, grid views, or any interface where users need to apply multiple filters simultaneously.
 
@@ -229,7 +237,7 @@ When users apply filters, the `onFilterChange` callback receives an array of `Fi
 
 ---
 
-### MultiSortDialog
+## MultiSortDialog
 
 A powerful dialog component for multi-field sorting with drag-and-drop reordering. Allows users to select multiple fields for sorting, reorder them by priority, and set ascending/descending direction for each field.
 
