@@ -29,6 +29,7 @@ A powerful, flexible dialog component for multi-field filtering with support for
 - **Dynamic Field Addition**: Users can add and remove filter fields dynamically
 - **Field Validation**: Built-in validation for text length, number ranges, and decimal precision
 - **Visual Feedback**: Tooltip shows active filters when hovering over the filter button
+- **Clear All Button**: Quickly clear all filters at once
 - **Responsive Design**: Works seamlessly on mobile and desktop devices
 - **TypeScript Support**: Fully typed with TypeScript interfaces
 - **Accessible**: Built with accessibility in mind using Radix UI primitives
@@ -226,40 +227,218 @@ When users apply filters, the `onFilterChange` callback receives an array of `Fi
 ]
 ```
 
-#### TypeScript Interfaces
+---
 
-```typescript
-interface FilterField {
-  value: string;                    // Unique identifier for the field
-  label: string;                    // Display label
-  type: 'text' | 'number' | 'combobox' | 'boolean' | 'date';
-  textConfig?: {
-    minLength?: number;
-    maxLength?: number;
-  };
-  numberConfig?: {
-    min?: number;
-    max?: number;
-    allowDecimal?: boolean;
-    decimalLength?: number;
-  };
-  comboboxOptions?: Array<{ label: string; value: string }>;
-  booleanLabels?: {
-    trueLabel?: string;
-    falseLabel?: string;
-  };
-}
+### MultiSortDialog
 
-interface FilterConfig {
-  field: string;                   // Field identifier
-  operator?: string;               // For number/date: 'equals', 'not_equals', 'greater_than', 'less_than', 'greater_equal', 'less_equal'
-  value: any;                      // Filter value (string, number, boolean, or Date)
+A powerful dialog component for multi-field sorting with drag-and-drop reordering. Allows users to select multiple fields for sorting, reorder them by priority, and set ascending/descending direction for each field.
+
+![MultiSortDialog - Sort Button with Active Sorts Tooltip](https://github.com/pub12/hazo_ui/raw/main/docs/multisortdialog/sort-button-tooltip.png)
+
+![MultiSortDialog - Dialog with Multiple Sort Fields](https://github.com/pub12/hazo_ui/raw/main/docs/multisortdialog/sort-dialog.png)
+
+![MultiSortDialog - Drag and Drop Reordering](https://github.com/pub12/hazo_ui/raw/main/docs/multisortdialog/sort-drag-drop.png)
+
+![MultiSortDialog - Sort Output Example](https://github.com/pub12/hazo_ui/raw/main/docs/multisortdialog/sort-output.png)
+
+#### Features
+
+- **Drag-and-Drop Reordering**: Intuitively reorder sort fields by dragging them
+- **Multiple Sort Fields**: Add multiple fields to sort by with priority ordering
+- **Direction Toggle**: Switch between ascending and descending for each field
+- **Visual Feedback**: Drag handle with grip icon, opacity changes during drag
+- **Clear All Button**: Quickly clear all sort fields at once
+- **Tooltip Display**: Shows active sort configuration when hovering over the sort button
+- **Keyboard Accessible**: Full keyboard navigation support for drag and drop
+- **Responsive Design**: Works seamlessly on mobile and desktop devices
+- **TypeScript Support**: Fully typed with TypeScript interfaces
+- **Accessible**: Built with accessibility in mind using Radix UI primitives
+
+#### How It Works
+
+1. **Adding Sort Fields**: Click the "Add field" button to select from available fields
+2. **Reordering**: Drag fields using the grip icon (⋮⋮) to change their priority
+3. **Changing Direction**: Toggle the switch next to each field to change between ascending (A→Z, 0→9) and descending (Z→A, 9→0)
+4. **Removing Fields**: Click the trash icon to remove a field from sorting
+5. **Applying Sorts**: Click "Apply" to save the sort configuration
+6. **Clearing All**: Click "Clear All" to remove all sort fields at once
+
+The component returns an array of sort configurations in priority order, where the first item is the primary sort field, second is secondary, and so on.
+
+#### Usage
+
+```tsx
+import { MultiSortDialog, type SortField, type SortConfig } from 'hazo_ui';
+import { useState } from 'react';
+
+function DataTable() {
+  const [sorts, setSorts] = useState<SortConfig[]>([]);
+
+  // Define available sort fields
+  const availableFields: SortField[] = [
+    {
+      value: "name",
+      label: "Name",
+    },
+    {
+      value: "age",
+      label: "Age",
+    },
+    {
+      value: "price",
+      label: "Price",
+    },
+    {
+      value: "status",
+      label: "Status",
+    },
+    {
+      value: "created_date",
+      label: "Created Date",
+    },
+  ];
+
+  // Handle sort changes
+  const handleSortChange = (sortConfig: SortConfig[]) => {
+    setSorts(sortConfig);
+    // Apply sorts to your data
+    console.log('Applied sorts:', sortConfig);
+    // Sort your data based on the configuration
+    // First item is primary sort, second is secondary, etc.
+  };
+
+  return (
+    <div>
+      <MultiSortDialog
+        availableFields={availableFields}
+        onSortChange={handleSortChange}
+        initialSortFields={sorts}
+      />
+      {/* Your table/grid component */}
+    </div>
+  );
 }
 ```
 
-#### Styling
+#### Example Input
 
-The component uses Tailwind CSS and follows shadcn/ui design patterns. Make sure your project has Tailwind CSS configured with the following CSS variables:
+```tsx
+// Available sort fields configuration
+const availableFields: SortField[] = [
+  {
+    value: "name",
+    label: "Name",
+  },
+  {
+    value: "price",
+    label: "Price",
+  },
+  {
+    value: "created_date",
+    label: "Created Date",
+  },
+];
+
+// Initial sort fields (optional)
+const initialSortFields: SortConfig[] = [
+  {
+    field: "name",
+    direction: "asc",
+  },
+  {
+    field: "price",
+    direction: "desc",
+  },
+];
+```
+
+#### Expected Output
+
+When users apply sorts, the `onSortChange` callback receives an array of `SortConfig` objects in priority order:
+
+```typescript
+// Example output when user applies sorts:
+[
+  {
+    field: "name",
+    direction: "asc"      // Primary sort: Name ascending
+  },
+  {
+    field: "price",
+    direction: "desc"     // Secondary sort: Price descending
+  },
+  {
+    field: "created_date",
+    direction: "desc"     // Tertiary sort: Created Date descending
+  }
+]
+```
+
+**Important**: The order of the array matters! The first item is the primary sort field, the second is secondary, and so on. This allows for multi-level sorting (e.g., sort by name first, then by price for items with the same name).
+
+#### TypeScript Interfaces
+
+```typescript
+interface SortField {
+  value: string;          // Unique identifier for the field
+  label: string;          // Display label
+}
+
+interface SortConfig {
+  field: string;          // Field identifier
+  direction: 'asc' | 'desc';  // Sort direction: 'asc' for ascending, 'desc' for descending
+}
+```
+
+#### Implementing the Sort Logic
+
+Here's an example of how to apply the sort configuration to your data:
+
+```typescript
+function applySorts(data: any[], sortConfigs: SortConfig[]): any[] {
+  if (sortConfigs.length === 0) return data;
+
+  return [...data].sort((a, b) => {
+    for (const sortConfig of sortConfigs) {
+      const aValue = a[sortConfig.field];
+      const bValue = b[sortConfig.field];
+      
+      let comparison = 0;
+      
+      // Handle different value types
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        comparison = aValue.localeCompare(bValue);
+      } else if (aValue instanceof Date && bValue instanceof Date) {
+        comparison = aValue.getTime() - bValue.getTime();
+      } else {
+        comparison = (aValue ?? 0) - (bValue ?? 0);
+      }
+      
+      // Apply direction
+      if (sortConfig.direction === 'desc') {
+        comparison = -comparison;
+      }
+      
+      // If values are different, return the comparison
+      // Otherwise, continue to next sort field
+      if (comparison !== 0) {
+        return comparison;
+      }
+    }
+    
+    return 0; // All sort fields are equal
+  });
+}
+
+// Usage
+const sortedData = applySorts(originalData, sorts);
+```
+
+---
+
+## Styling
+
+Both components use Tailwind CSS and follow shadcn/ui design patterns. Make sure your project has Tailwind CSS configured with the following CSS variables:
 
 ```css
 :root {
@@ -267,7 +446,18 @@ The component uses Tailwind CSS and follows shadcn/ui design patterns. Make sure
   --foreground: 222.2 84% 4.9%;
   --primary: 222.2 47.4% 11.2%;
   --primary-foreground: 210 40% 98%;
-  /* ... other CSS variables */
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 222.2 84% 4.9%;
+  --radius: 0.5rem;
 }
 ```
 
