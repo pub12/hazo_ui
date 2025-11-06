@@ -9,3 +9,7 @@ export { ExampleComponent } from "./components/example_component";
 export { MultiFilterDialog } from "./components/multi_filter_dialog";
 export type { FilterField, FilterConfig } from "./components/multi_filter_dialog";
 
+// MultiSortDialog component
+export { MultiSortDialog } from "./components/multi_sort_dialog";
+export type { SortField, SortConfig } from "./components/multi_sort_dialog";
+
