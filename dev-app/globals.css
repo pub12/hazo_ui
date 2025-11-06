@@ -1,0 +1,5 @@
+/* Global styles for hazo_ui dev app */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+

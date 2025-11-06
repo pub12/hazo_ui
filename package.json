@@ -1,0 +1,86 @@
+{
+  "name": "hazo_ui",
+  "version": "1.0.2",
+  "description": "Set of UI components for common interaction elements in a SaaS app",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "dev:app": "cd dev-app && npm run dev",
+    "test:build": "npm run build && cd dev-app && npm run build",
+    "test:dev": "npm run build && npm run dev:app",
+    "lint": "eslint src --ext ts,tsx",
+    "type-check": "tsc --noEmit",
+    "prepublishOnly": "npm run build && npm run type-check"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.1",
+    "@radix-ui/react-popover": "^1.1.1",
+    "@radix-ui/react-select": "^2.1.1",
+    "@radix-ui/react-tooltip": "^1.1.1",
+    "@radix-ui/react-slot": "^1.1.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "date-fns": "^3.3.1",
+    "lucide-react": "^0.344.0",
+    "react-day-picker": "^8.10.0",
+    "tailwind-merge": "^2.2.1",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "devDependencies": {
+    "@storybook/addon-links": "^10.0.5",
+    "@storybook/react-vite": "^10.0.5",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "storybook": "^10.0.5",
+    "tailwindcss": "^3.4.13",
+    "tsup": "^8.0.0",
+    "typescript": "^5.5.0",
+    "vite": "^5.4.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "@storybook/addon-docs": "^10.0.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pub12/hazo_ui.git"
+  },
+  "keywords": [
+    "UI",
+    "React",
+    "UI",
+    "library",
+    "SaaS",
+    "components"
+  ],
+  "author": "Pubs Abayasiri",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pub12/hazo_ui/issues"
+  },
+  "homepage": "https://github.com/pub12/hazo_ui#readme"
+}

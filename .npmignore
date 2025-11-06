@@ -1,0 +1,32 @@
+# Source files (consumers only need dist)
+src
+dev-app
+.storybook
+storybook-static
+
+# Development files
+*.config.ts
+*.config.js
+tsconfig.json
+tsup.config.ts
+
+# Git files
+.git
+.gitignore
+
+# IDE files
+.vscode
+.idea
+*.swp
+
+# Test files
+coverage
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+
+# Documentation
+README.md
+*.md
+
