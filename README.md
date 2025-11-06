@@ -14,13 +14,13 @@ npm install hazo_ui
 
 A powerful, flexible dialog component for multi-field filtering with support for various input types. Perfect for table headers, grid views, or any interface where users need to apply multiple filters simultaneously.
 
-![MultiFilterDialog - Dialog with Multiple Filters](https://github.com/pub12/hazo_ui/raw/main/docs/Screenshot%202025-11-06%20at%202.51.24%E2%80%AFPM.png)
+![MultiFilterDialog - Filter Button with Active Filters Tooltip](https://github.com/pub12/hazo_ui/raw/main/docs/multifilterdialog/filter-button-tooltip.png)
 
-![MultiFilterDialog - Filter Button with Active Filters Tooltip](https://github.com/pub12/hazo_ui/raw/main/docs/Screenshot%202025-11-06%20at%202.51.34%E2%80%AFPM.png)
+![MultiFilterDialog - Dialog with Multiple Filters](https://github.com/pub12/hazo_ui/raw/main/docs/multifilterdialog/filter-dialog.png)
 
-![MultiFilterDialog - Calendar Date Picker](https://github.com/pub12/hazo_ui/raw/main/docs/Screenshot%202025-11-06%20at%202.51.37%E2%80%AFPM.png)
+![MultiFilterDialog - Calendar Date Picker](https://github.com/pub12/hazo_ui/raw/main/docs/multifilterdialog/filter-dialog-calendar.png)
 
-![MultiFilterDialog - Filter Output Example](https://github.com/pub12/hazo_ui/raw/main/docs/Screenshot%202025-11-06%20at%202.51.53%E2%80%AFPM.png)
+![MultiFilterDialog - Filter Output Example](https://github.com/pub12/hazo_ui/raw/main/docs/multifilterdialog/filter-output.png)
 
 #### Features
 
