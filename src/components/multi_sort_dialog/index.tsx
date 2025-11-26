@@ -294,25 +294,28 @@ export function MultiSortDialog({
                 <Command>
                   <CommandInput placeholder="Search fields..." className="cls_command_input" />
                   <CommandList>
-                    <CommandEmpty>No fields found.</CommandEmpty>
-                    <CommandGroup>
-                      {availableFieldsToAdd.map((field) => (
-                        <CommandItem
-                          key={field.value}
-                          value={field.value}
-                          onSelect={() => handleAddField(field.value)}
-                          className="cls_command_item"
-                        >
-                          <CheckIcon
-                            className={cn(
-                              "cls_check_icon mr-2 h-4 w-4",
-                              false ? "opacity-100" : "opacity-0"
-                            )}
-                          />
-                          {field.label}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
+                    {availableFieldsToAdd.length === 0 ? (
+                      <CommandEmpty>No fields found.</CommandEmpty>
+                    ) : (
+                      <CommandGroup>
+                        {availableFieldsToAdd.map((field) => (
+                          <CommandItem
+                            key={field.value}
+                            value={field.label}
+                            onSelect={() => handleAddField(field.value)}
+                            className="cls_command_item"
+                          >
+                            <CheckIcon
+                              className={cn(
+                                "cls_check_icon mr-2 h-4 w-4",
+                                false ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            {field.label}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    )}
                   </CommandList>
                 </Command>
               </PopoverContent>
