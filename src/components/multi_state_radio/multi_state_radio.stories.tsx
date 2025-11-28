@@ -760,3 +760,200 @@ export const CompressedMode: Story = {
   }
 };
 
+// Sample data with Circum Icons (ci)
+const ciIconData: MultiStateRadioItem[] = [
+  {
+    label: "Home",
+    value: "home",
+    icon_selected: "CiHome",
+    icon_unselected: "CiHome1",
+  },
+  {
+    label: "User",
+    value: "user",
+    icon_selected: "CiUser",
+    icon_unselected: "CiUser1",
+  },
+  {
+    label: "Settings",
+    value: "settings",
+    icon_selected: "CiSettings",
+    icon_unselected: "CiSettings1",
+  },
+  {
+    label: "Search",
+    value: "search",
+    icon_selected: "CiSearch",
+    icon_unselected: "CiSearch1",
+  },
+];
+
+// Sample data with custom colors
+const coloredIconData: MultiStateRadioItem[] = [
+  {
+    label: "Red",
+    value: "red",
+    icon_selected: "FaCircle",
+    icon_unselected: "FaRegCircle",
+    fgcolor: "#ffffff",
+    bgcolor: "#ef4444",
+  },
+  {
+    label: "Blue",
+    value: "blue",
+    icon_selected: "FaCircle",
+    icon_unselected: "FaRegCircle",
+    fgcolor: "#ffffff",
+    bgcolor: "#3b82f6",
+  },
+  {
+    label: "Green",
+    value: "green",
+    icon_selected: "FaCircle",
+    icon_unselected: "FaRegCircle",
+    fgcolor: "#ffffff",
+    bgcolor: "#22c55e",
+  },
+  {
+    label: "Yellow",
+    value: "yellow",
+    icon_selected: "FaCircle",
+    icon_unselected: "FaRegCircle",
+    fgcolor: "#000000",
+    bgcolor: "#eab308",
+  },
+];
+
+/**
+ * Circum Icons (ci) - Example with CI icon set
+ */
+export const CircumIcons: Story = {
+  render: () => {
+    const [value, setValue] = useState<string>("home");
+    return (
+      <div className="cls_storybook_container p-4 space-y-4">
+        <MultiStateRadio
+          data={ciIconData}
+          value={value}
+          onChange={(val) => setValue(val as string)}
+          selection="single"
+          layout="horizontal"
+          style="icons"
+          display_label={true}
+          icon_set="ci"
+        />
+        <div className="cls_output mt-4 p-4 border rounded-md bg-gray-50 dark:bg-gray-900">
+          <p className="cls_output_label text-sm font-semibold mb-2">Selected Value:</p>
+          <p className="cls_output_value text-sm">{value}</p>
+        </div>
+      </div>
+    );
+  },
+};
+
+/**
+ * Custom Colors - Example with fgcolor and bgcolor
+ */
+export const CustomColors: Story = {
+  render: () => {
+    const [value1, setValue1] = useState<string>("red");
+    const [value2, setValue2] = useState<string>("blue");
+    const [value3, setValue3] = useState<string[]>([]);
+    
+    return (
+      <div className="cls_storybook_container p-4 space-y-6">
+        <div className="cls_example_section">
+          <h3 className="cls_section_title text-sm font-semibold mb-2">
+            Custom Colors (Single Selection):
+          </h3>
+          <p className="cls_description text-xs text-muted-foreground mb-2">
+            Each option has custom foreground and background colors defined.
+          </p>
+          <MultiStateRadio
+            data={coloredIconData}
+            value={value1}
+            onChange={(val) => setValue1(val as string)}
+            selection="single"
+            layout="horizontal"
+            style="icons"
+            display_label={true}
+            icon_set="fa"
+          />
+          <div className="cls_output mt-2 p-2 border rounded-md bg-gray-50 dark:bg-gray-900">
+            <p className="cls_output_value text-xs">Selected: {value1}</p>
+          </div>
+        </div>
+        
+        <div className="cls_example_section">
+          <h3 className="cls_section_title text-sm font-semibold mb-2">
+            Custom Colors (No Labels):
+          </h3>
+          <p className="cls_description text-xs text-muted-foreground mb-2">
+            Custom colors with labels hidden.
+          </p>
+          <MultiStateRadio
+            data={coloredIconData}
+            value={value2}
+            onChange={(val) => setValue2(val as string)}
+            selection="single"
+            layout="horizontal"
+            style="icons"
+            display_label={false}
+            icon_set="fa"
+          />
+          <div className="cls_output mt-2 p-2 border rounded-md bg-gray-50 dark:bg-gray-900">
+            <p className="cls_output_value text-xs">Selected: {value2}</p>
+          </div>
+        </div>
+        
+        <div className="cls_example_section">
+          <h3 className="cls_section_title text-sm font-semibold mb-2">
+            Custom Colors (Multi-Selection):
+          </h3>
+          <p className="cls_description text-xs text-muted-foreground mb-2">
+            Multi-selection with custom colors.
+          </p>
+          <MultiStateRadio
+            data={coloredIconData}
+            value={value3}
+            onChange={(val) => setValue3(val as string[])}
+            selection="multi"
+            layout="horizontal"
+            style="icons"
+            display_label={true}
+            icon_set="fa"
+          />
+          <div className="cls_output mt-2 p-2 border rounded-md bg-gray-50 dark:bg-gray-900">
+            <p className="cls_output_value text-xs">
+              Selected: {value3.length > 0 ? JSON.stringify(value3) : "[]"}
+            </p>
+          </div>
+        </div>
+        
+        <div className="cls_example_section">
+          <h3 className="cls_section_title text-sm font-semibold mb-2">
+            Custom Colors (Compressed):
+          </h3>
+          <p className="cls_description text-xs text-muted-foreground mb-2">
+            Compressed layout with custom colors.
+          </p>
+          <MultiStateRadio
+            data={coloredIconData}
+            value={value1}
+            onChange={(val) => setValue1(val as string)}
+            selection="single"
+            layout="horizontal"
+            style="icons"
+            display_label={false}
+            icon_set="fa"
+            compressed={true}
+          />
+          <div className="cls_output mt-2 p-2 border rounded-md bg-gray-50 dark:bg-gray-900">
+            <p className="cls_output_value text-xs">Selected: {value1}</p>
+          </div>
+        </div>
+      </div>
+    );
+  },
+};
+

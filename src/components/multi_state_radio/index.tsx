@@ -22,6 +22,7 @@ import * as FiIcons from "react-icons/fi";
 import * as IoIcons from "react-icons/io5";
 import * as RiIcons from "react-icons/ri";
 import * as TbIcons from "react-icons/tb";
+import * as CiIcons from "react-icons/ci";
 
 // Icon set mapping
 const iconSetMap: Record<string, any> = {
@@ -36,6 +37,7 @@ const iconSetMap: Record<string, any> = {
   io5: IoIcons,
   ri: RiIcons,
   tb: TbIcons,
+  ci: CiIcons,
 };
 
 /**
@@ -52,6 +54,8 @@ export interface MultiStateRadioItem {
   value: string;
   icon_selected?: string;
   icon_unselected?: string;
+  fgcolor?: string; // Foreground color for the icon (text/icon color)
+  bgcolor?: string; // Background color for the icon button
 }
 
 export interface MultiStateRadioProps {
@@ -256,6 +260,12 @@ export function MultiStateRadio({
     
     const IconComponent = selected && SelectedIcon ? SelectedIcon : (UnselectedIcon || SelectedIcon);
     
+    // Apply custom colors if provided
+    const buttonStyles: React.CSSProperties = {};
+    if (item.bgcolor) {
+      buttonStyles.backgroundColor = item.bgcolor;
+    }
+    
     const buttonContent = (
       <Button
         variant={selected ? "default" : "ghost"}
@@ -265,9 +275,11 @@ export function MultiStateRadio({
           layout === "horizontal" ? "flex-row" : "flex-col",
           "gap-2 h-auto",
           compressed ? "py-0 px-0" : "py-2 px-3 sm:py-3 sm:px-4",
-          selected && "bg-primary text-primary-foreground",
-          !selected && "hover:bg-accent"
+          // Only apply default colors if custom colors are not provided
+          !item.bgcolor && selected && "bg-primary text-primary-foreground",
+          !item.bgcolor && !selected && "hover:bg-accent"
         )}
+        style={Object.keys(buttonStyles).length > 0 ? buttonStyles : undefined}
         onClick={() => {
           if (selection === "single") {
             handleSingleSelection(item.value);
@@ -279,10 +291,16 @@ export function MultiStateRadio({
         aria-pressed={selected}
       >
         {IconComponent && (
-          <IconComponent className="cls_icon h-4 w-4 sm:h-5 sm:w-5" />
+          <IconComponent 
+            className="cls_icon h-4 w-4 sm:h-5 sm:w-5" 
+            style={item.fgcolor ? { color: item.fgcolor } : undefined}
+          />
         )}
         {display_label && (
-          <span className="cls_icon_label text-sm font-medium">
+          <span 
+            className="cls_icon_label text-sm font-medium"
+            style={item.fgcolor ? { color: item.fgcolor } : undefined}
+          >
             {item.label}
           </span>
         )}
