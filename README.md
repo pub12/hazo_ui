@@ -16,6 +16,8 @@ npm install hazo_ui
 
 - **[MultiSortDialog](#multisortdialog)** - A flexible dialog component for multi-field sorting with drag-and-drop reordering. Allows users to set sort priority and direction (ascending/descending) for multiple fields.
 
+- **[MultiStateRadio](#multistateradio)** - A flexible radio button/icon selection component with support for single and multi-selection modes, customizable layouts, and react-icons integration. Perfect for settings panels, preference selection, and option groups.
+
 ---
 
 ## MultiFilterDialog
@@ -440,6 +442,227 @@ function applySorts(data: any[], sortConfigs: SortConfig[]): any[] {
 
 // Usage
 const sortedData = applySorts(originalData, sorts);
+```
+
+---
+
+## MultiStateRadio
+
+A flexible radio button/icon selection component with support for single and multi-selection modes, customizable layouts, and react-icons integration. Perfect for settings panels, preference selection, and option groups.
+
+#### Features
+
+- **Single & Multi-Selection**: Support for both single selection (radio) and multi-selection (checkbox) modes
+- **Layout Options**: Horizontal (default) or vertical arrangement of options
+- **Style Variants**: Radio button style or icon-only button style
+- **Icon Support**: Integration with react-icons library (supports fa, md, hi, bi, ai, bs, fi, io, ri, tb icon sets)
+- **Label Control**: Option to show or hide labels
+- **Tooltips**: Hover tooltips with 1-second delay showing option labels
+- **Responsive Design**: Adaptive spacing and sizing for different screen sizes
+- **Controlled Component**: Fully controlled component with value/onChange pattern
+- **TypeScript Support**: Fully typed with TypeScript interfaces
+- **Accessible**: Built with accessibility in mind using Radix UI primitives
+
+#### Props
+
+```typescript
+interface MultiStateRadioItem {
+  label: string;                    // Display label for the option
+  value: string;                    // Unique value identifier
+  icon_selected?: string;           // Icon name when selected (e.g., "FaHome")
+  icon_unselected?: string;         // Icon name when unselected (e.g., "FaRegHome")
+}
+
+interface MultiStateRadioProps {
+  layout?: 'horizontal' | 'vertical';  // Layout direction (default: 'horizontal')
+  style?: 'radio' | 'icons';           // Display style (default: 'radio')
+  display_label?: boolean;              // Show/hide labels (default: true)
+  icon_set?: string;                    // Icon set package name (e.g., 'fa', 'md')
+  data: MultiStateRadioItem[];          // Array of options
+  selection: 'single' | 'multi';       // Selection mode
+  value: string | string[];             // Controlled value (string for single, array for multi)
+  onChange: (value: string | string[]) => void;  // Change handler
+  className?: string;                   // Additional CSS classes
+}
+```
+
+#### Usage
+
+**Basic Single Selection (Radio Style)**
+
+```tsx
+import { MultiStateRadio, type MultiStateRadioItem } from 'hazo_ui';
+import { useState } from 'react';
+
+function SettingsPanel() {
+  const [selectedOption, setSelectedOption] = useState<string>('option1');
+
+  const options: MultiStateRadioItem[] = [
+    { label: 'Option 1', value: 'option1' },
+    { label: 'Option 2', value: 'option2' },
+    { label: 'Option 3', value: 'option3' },
+    { label: 'Option 4', value: 'option4' },
+  ];
+
+  return (
+    <MultiStateRadio
+      data={options}
+      value={selectedOption}
+      onChange={setSelectedOption}
+      selection="single"
+      layout="horizontal"
+      style="radio"
+      display_label={true}
+    />
+  );
+}
+```
+
+**Icon Style with React Icons**
+
+```tsx
+import { MultiStateRadio, type MultiStateRadioItem } from 'hazo_ui';
+import { useState } from 'react';
+
+function IconSelector() {
+  const [selectedIcon, setSelectedIcon] = useState<string>('home');
+
+  const iconOptions: MultiStateRadioItem[] = [
+    {
+      label: 'Home',
+      value: 'home',
+      icon_selected: 'FaHome',
+      icon_unselected: 'FaRegHome',
+    },
+    {
+      label: 'User',
+      value: 'user',
+      icon_selected: 'FaUser',
+      icon_unselected: 'FaRegUser',
+    },
+    {
+      label: 'Settings',
+      value: 'settings',
+      icon_selected: 'FaCog',
+      icon_unselected: 'FaRegCog',
+    },
+  ];
+
+  return (
+    <MultiStateRadio
+      data={iconOptions}
+      value={selectedIcon}
+      onChange={setSelectedIcon}
+      selection="single"
+      layout="horizontal"
+      style="icons"
+      display_label={true}
+      icon_set="fa"  // FontAwesome icons
+    />
+  );
+}
+```
+
+**Multi-Selection Mode**
+
+```tsx
+import { MultiStateRadio, type MultiStateRadioItem } from 'hazo_ui';
+import { useState } from 'react';
+
+function MultiSelectExample() {
+  const [selectedOptions, setSelectedOptions] = useState<string[]>(['option1', 'option3']);
+
+  const options: MultiStateRadioItem[] = [
+    { label: 'Option 1', value: 'option1' },
+    { label: 'Option 2', value: 'option2' },
+    { label: 'Option 3', value: 'option3' },
+    { label: 'Option 4', value: 'option4' },
+  ];
+
+  return (
+    <MultiStateRadio
+      data={options}
+      value={selectedOptions}
+      onChange={setSelectedOptions}
+      selection="multi"
+      layout="horizontal"
+      style="radio"
+      display_label={true}
+    />
+  );
+}
+```
+
+**Vertical Layout with Icons Only (No Labels)**
+
+```tsx
+import { MultiStateRadio, type MultiStateRadioItem } from 'hazo_ui';
+import { useState } from 'react';
+
+function VerticalIconSelector() {
+  const [selected, setSelected] = useState<string>('favorite');
+
+  const options: MultiStateRadioItem[] = [
+    {
+      label: 'Favorite',
+      value: 'favorite',
+      icon_selected: 'MdFavorite',
+      icon_unselected: 'MdFavoriteBorder',
+    },
+    {
+      label: 'Star',
+      value: 'star',
+      icon_selected: 'MdStar',
+      icon_unselected: 'MdStarBorder',
+    },
+  ];
+
+  return (
+    <MultiStateRadio
+      data={options}
+      value={selected}
+      onChange={setSelected}
+      selection="single"
+      layout="vertical"
+      style="icons"
+      display_label={false}  // Hide labels, show only icons
+      icon_set="md"  // Material Design icons
+    />
+  );
+}
+```
+
+#### Supported Icon Sets
+
+The component supports the following react-icons packages:
+
+- `fa` - FontAwesome (react-icons/fa)
+- `md` - Material Design (react-icons/md)
+- `hi` - Heroicons (react-icons/hi)
+- `bi` - Bootstrap Icons (react-icons/bi)
+- `ai` - Ant Design Icons (react-icons/ai)
+- `bs` - Bootstrap Icons (react-icons/bs)
+- `fi` - Feather Icons (react-icons/fi)
+- `io` / `io5` - Ionicons (react-icons/io5)
+- `ri` - Remix Icon (react-icons/ri)
+- `tb` - Tabler Icons (react-icons/tb)
+
+#### Expected Output
+
+**Single Selection Mode:**
+```typescript
+// onChange receives a string value
+'onChange' => (value: string) => {
+  // value will be the selected option's value, e.g., "option1"
+}
+```
+
+**Multi-Selection Mode:**
+```typescript
+// onChange receives an array of string values
+'onChange' => (value: string[]) => {
+  // value will be an array of selected values, e.g., ["option1", "option3"]
+}
 ```
 
 ---
