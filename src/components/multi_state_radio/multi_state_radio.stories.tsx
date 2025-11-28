@@ -27,6 +27,10 @@ const meta: Meta<typeof MultiStateRadio> = {
       control: "select",
       options: ["single", "multi"],
     },
+    compressed: {
+      control: "boolean",
+      description: "When true, removes padding and spacing between elements",
+    },
   },
 };
 
@@ -498,5 +502,261 @@ export const ControlledExample: Story = {
       </div>
     );
   },
+};
+
+/**
+ * Compressed mode - Elements next to each other with no padding and spacing
+ */
+export const CompressedMode: Story = {
+  args: {
+    layout: "horizontal",
+    style: "icons",
+    display_label: false,
+    selection: "multi"
+  },
+
+  render: () => {
+    const [value1, setValue1] = useState<string>("option1");
+    const [value2, setValue2] = useState<string>("home");
+    const [value3, setValue3] = useState<string[]>([]);
+    const [value4, setValue4] = useState<string[]>([]);
+    
+    return (
+      <div className="cls_storybook_container p-4 space-y-6">
+        <div className="cls_example_section">
+          <h3 className="cls_section_title text-sm font-semibold mb-2">
+            Compressed Radio Style (Single Selection):
+          </h3>
+          <p className="cls_description text-xs text-muted-foreground mb-2">
+            Elements are placed next to each other with no padding or spacing between them.
+          </p>
+          <MultiStateRadio
+            data={basicData}
+            value={value1}
+            onChange={(val) => setValue1(val as string)}
+            selection="single"
+            layout="horizontal"
+            style="radio"
+            display_label={true}
+            compressed={true}
+          />
+          <div className="cls_output mt-2 p-2 border rounded-md bg-gray-50 dark:bg-gray-900">
+            <p className="cls_output_value text-xs">Selected: {value1}</p>
+          </div>
+        </div>
+        
+        <div className="cls_example_section">
+          <h3 className="cls_section_title text-sm font-semibold mb-2">
+            Compressed Icon Style (Single Selection):
+          </h3>
+          <p className="cls_description text-xs text-muted-foreground mb-2">
+            Icons are placed directly next to each other with no gaps.
+          </p>
+          <MultiStateRadio
+            data={iconData}
+            value={value2}
+            onChange={(val) => setValue2(val as string)}
+            selection="single"
+            layout="horizontal"
+            style="icons"
+            display_label={true}
+            icon_set="fa"
+            compressed={true}
+          />
+          <div className="cls_output mt-2 p-2 border rounded-md bg-gray-50 dark:bg-gray-900">
+            <p className="cls_output_value text-xs">Selected: {value2}</p>
+          </div>
+        </div>
+        
+        <div className="cls_example_section">
+          <h3 className="cls_section_title text-sm font-semibold mb-2">
+            Compressed Multi-Selection:
+          </h3>
+          <p className="cls_description text-xs text-muted-foreground mb-2">
+            Multiple selection with compressed spacing.
+          </p>
+          <MultiStateRadio
+            data={basicData}
+            value={value3}
+            onChange={(val) => setValue3(val as string[])}
+            selection="multi"
+            layout="horizontal"
+            style="radio"
+            display_label={true}
+            compressed={true}
+          />
+          <div className="cls_output mt-2 p-2 border rounded-md bg-gray-50 dark:bg-gray-900">
+            <p className="cls_output_value text-xs">
+              Selected: {value3.length > 0 ? JSON.stringify(value3) : "[]"}
+            </p>
+          </div>
+        </div>
+        
+        <div className="cls_example_section">
+          <h3 className="cls_section_title text-sm font-semibold mb-2">
+            Compressed Radio Style (No Labels):
+          </h3>
+          <p className="cls_description text-xs text-muted-foreground mb-2">
+            Radio buttons only, no labels, compressed spacing.
+          </p>
+          <MultiStateRadio
+            data={basicData}
+            value={value1}
+            onChange={(val) => setValue1(val as string)}
+            selection="single"
+            layout="horizontal"
+            style="radio"
+            display_label={false}
+            compressed={true}
+          />
+          <div className="cls_output mt-2 p-2 border rounded-md bg-gray-50 dark:bg-gray-900">
+            <p className="cls_output_value text-xs">Selected: {value1}</p>
+          </div>
+        </div>
+        
+        <div className="cls_example_section">
+          <h3 className="cls_section_title text-sm font-semibold mb-2">
+            Compressed Icon Style (No Labels):
+          </h3>
+          <p className="cls_description text-xs text-muted-foreground mb-2">
+            Icons only, no labels, placed directly next to each other.
+          </p>
+          <MultiStateRadio
+            data={iconData}
+            value={value2}
+            onChange={(val) => setValue2(val as string)}
+            selection="single"
+            layout="horizontal"
+            style="icons"
+            display_label={false}
+            icon_set="fa"
+            compressed={true}
+          />
+          <div className="cls_output mt-2 p-2 border rounded-md bg-gray-50 dark:bg-gray-900">
+            <p className="cls_output_value text-xs">Selected: {value2}</p>
+          </div>
+        </div>
+        
+        <div className="cls_example_section">
+          <h3 className="cls_section_title text-sm font-semibold mb-2">
+            Compressed Multi-Selection (No Labels):
+          </h3>
+          <p className="cls_description text-xs text-muted-foreground mb-2">
+            Multi-selection with checkboxes only, no labels, compressed spacing.
+          </p>
+          <MultiStateRadio
+            data={basicData}
+            value={value3}
+            onChange={(val) => setValue3(val as string[])}
+            selection="multi"
+            layout="horizontal"
+            style="radio"
+            display_label={false}
+            compressed={true}
+          />
+          <div className="cls_output mt-2 p-2 border rounded-md bg-gray-50 dark:bg-gray-900">
+            <p className="cls_output_value text-xs">
+              Selected: {value3.length > 0 ? JSON.stringify(value3) : "[]"}
+            </p>
+          </div>
+        </div>
+        
+        <div className="cls_example_section">
+          <h3 className="cls_section_title text-sm font-semibold mb-2">
+            Compressed Icon Multi-Selection (No Labels):
+          </h3>
+          <p className="cls_description text-xs text-muted-foreground mb-2">
+            Multi-selection with icons only, no labels, compressed spacing.
+          </p>
+          <MultiStateRadio
+            data={iconData}
+            value={value4}
+            onChange={(val) => setValue4(val as string[])}
+            selection="multi"
+            layout="horizontal"
+            style="icons"
+            display_label={false}
+            icon_set="fa"
+            compressed={true}
+          />
+          <div className="cls_output mt-2 p-2 border rounded-md bg-gray-50 dark:bg-gray-900">
+            <p className="cls_output_value text-xs">
+              Selected: {value4.length > 0 ? JSON.stringify(value4) : "[]"}
+            </p>
+          </div>
+        </div>
+        
+        <div className="cls_example_section">
+          <h3 className="cls_section_title text-sm font-semibold mb-2">
+            Comparison: Normal vs Compressed:
+          </h3>
+          <div className="cls_comparison space-y-4">
+            <div>
+              <p className="cls_comparison_label text-xs font-medium mb-2">Normal (default):</p>
+              <MultiStateRadio
+                data={basicData.slice(0, 3)}
+                value={value1}
+                onChange={(val) => setValue1(val as string)}
+                selection="single"
+                layout="horizontal"
+                style="radio"
+                display_label={true}
+                compressed={false}
+              />
+            </div>
+            <div>
+              <p className="cls_comparison_label text-xs font-medium mb-2">Compressed:</p>
+              <MultiStateRadio
+                data={basicData.slice(0, 3)}
+                value={value1}
+                onChange={(val) => setValue1(val as string)}
+                selection="single"
+                layout="horizontal"
+                style="radio"
+                display_label={true}
+                compressed={true}
+              />
+            </div>
+          </div>
+        </div>
+        
+        <div className="cls_example_section">
+          <h3 className="cls_section_title text-sm font-semibold mb-2">
+            Comparison: With Labels vs No Labels (Compressed):
+          </h3>
+          <div className="cls_comparison space-y-4">
+            <div>
+              <p className="cls_comparison_label text-xs font-medium mb-2">Compressed with Labels:</p>
+              <MultiStateRadio
+                data={iconData.slice(0, 3)}
+                value={value2}
+                onChange={(val) => setValue2(val as string)}
+                selection="single"
+                layout="horizontal"
+                style="icons"
+                display_label={true}
+                icon_set="fa"
+                compressed={true}
+              />
+            </div>
+            <div>
+              <p className="cls_comparison_label text-xs font-medium mb-2">Compressed without Labels:</p>
+              <MultiStateRadio
+                data={iconData.slice(0, 3)}
+                value={value2}
+                onChange={(val) => setValue2(val as string)}
+                selection="single"
+                layout="horizontal"
+                style="icons"
+                display_label={false}
+                icon_set="fa"
+                compressed={true}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 };
 

@@ -64,6 +64,7 @@ export interface MultiStateRadioProps {
   value: string | string[];
   onChange: (value: string | string[]) => void;
   className?: string;
+  compressed?: boolean; // When true, removes padding and spacing between elements
 }
 
 /**
@@ -93,6 +94,7 @@ export function MultiStateRadio({
   value,
   onChange,
   className,
+  compressed = false,
 }: MultiStateRadioProps) {
   // Icon library is loaded lazily when needed
 
@@ -143,7 +145,8 @@ export function MultiStateRadio({
           className={cn(
             "cls_radio_option flex items-center gap-2",
             layout === "horizontal" ? "flex-row" : "flex-col",
-            "p-2 rounded-md hover:bg-accent transition-colors",
+            compressed ? "" : "p-2 rounded-md",
+            "hover:bg-accent transition-colors",
             selected && "bg-accent"
           )}
         >
@@ -180,7 +183,8 @@ export function MultiStateRadio({
           className={cn(
             "cls_radio_option flex items-center gap-2 cursor-pointer",
             layout === "horizontal" ? "flex-row" : "flex-col",
-            "p-2 rounded-md hover:bg-accent transition-colors",
+            compressed ? "" : "p-2 rounded-md",
+            "hover:bg-accent transition-colors",
             selected && "bg-accent"
           )}
           onClick={() => handleMultiSelection(item.value)}
@@ -259,7 +263,8 @@ export function MultiStateRadio({
         className={cn(
           "cls_icon_option border-0",
           layout === "horizontal" ? "flex-row" : "flex-col",
-          "gap-2 h-auto py-2 px-3 sm:py-3 sm:px-4",
+          "gap-2 h-auto",
+          compressed ? "py-0 px-0" : "py-2 px-3 sm:py-3 sm:px-4",
           selected && "bg-primary text-primary-foreground",
           !selected && "hover:bg-accent"
         )}
@@ -298,10 +303,17 @@ export function MultiStateRadio({
 
   // Container classes with single outline
   const containerClasses = cn(
-    "cls_multi_state_radio border border-input rounded-md p-2 sm:p-3",
+    "cls_multi_state_radio border border-input rounded-md",
+    compressed ? "" : "p-2 sm:p-3",
     layout === "horizontal"
-      ? "flex flex-row flex-wrap gap-2 sm:gap-3"
-      : "flex flex-col gap-2 sm:gap-3",
+      ? cn(
+          "flex flex-row flex-wrap",
+          compressed ? "gap-0" : "gap-2 sm:gap-3"
+        )
+      : cn(
+          "flex flex-col",
+          compressed ? "gap-0" : "gap-2 sm:gap-3"
+        ),
     className
   );
   
