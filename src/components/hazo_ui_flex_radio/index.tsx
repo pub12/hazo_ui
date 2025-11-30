@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Multi State Radio Component
+ * Hazo UI Flex Radio Component
  * 
  * Flexible radio button/icon selection component with support for single and multi-selection modes,
  * customizable layouts, and react-icons integration.
@@ -49,7 +49,7 @@ function getIconLibrary(iconSet: string): any {
   return iconSetMap[normalizedSet] || null;
 }
 
-export interface MultiStateRadioItem {
+export interface HazoUiFlexRadioItem {
   label: string;
   value: string;
   icon_selected?: string;
@@ -58,12 +58,12 @@ export interface MultiStateRadioItem {
   bgcolor?: string; // Background color for the icon button
 }
 
-export interface MultiStateRadioProps {
+export interface HazoUiFlexRadioProps {
   layout?: "horizontal" | "vertical";
   style?: "radio" | "icons";
   display_label?: boolean;
   icon_set?: string; // Package name like 'fa', 'md', etc.
-  data: MultiStateRadioItem[];
+  data: HazoUiFlexRadioItem[];
   selection: "single" | "multi";
   value: string | string[];
   onChange: (value: string | string[]) => void;
@@ -85,10 +85,10 @@ function getIconComponent(iconSet: string | undefined, iconName: string | undefi
 }
 
 /**
- * Multi State Radio Component
+ * Hazo UI Flex Radio Component
  * Supports single and multi-selection with radio buttons or icons
  */
-export function MultiStateRadio({
+export function HazoUiFlexRadio({
   layout = "horizontal",
   style = "radio",
   display_label = true,
@@ -99,7 +99,7 @@ export function MultiStateRadio({
   onChange,
   className,
   compressed = false,
-}: MultiStateRadioProps) {
+}: HazoUiFlexRadioProps) {
   // Icon library is loaded lazily when needed
 
   /**
@@ -140,7 +140,7 @@ export function MultiStateRadio({
   /**
    * Render radio style option
    */
-  const renderRadioOption = (item: MultiStateRadioItem) => {
+  const renderRadioOption = (item: HazoUiFlexRadioItem) => {
     const selected = isSelected(item.value);
     
     if (selection === "single") {
@@ -247,7 +247,7 @@ export function MultiStateRadio({
   /**
    * Render icon style option
    */
-  const renderIconOption = (item: MultiStateRadioItem) => {
+  const renderIconOption = (item: HazoUiFlexRadioItem) => {
     const selected = isSelected(item.value);
     
     // Get icon components
@@ -321,7 +321,7 @@ export function MultiStateRadio({
 
   // Container classes with single outline
   const containerClasses = cn(
-    "cls_multi_state_radio border border-input rounded-md",
+    "cls_hazo_ui_flex_radio border border-input rounded-md",
     compressed ? "" : "p-2 sm:p-3",
     layout === "horizontal"
       ? cn(

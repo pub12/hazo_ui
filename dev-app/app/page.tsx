@@ -3,11 +3,11 @@
 "use client";
 
 import { useState } from "react";
-import { MultiFilterDialog, type FilterField, type FilterConfig } from "hazo_ui";
+import { HazoUiMultiFilterDialog, type FilterField, type FilterConfig } from "hazo_ui";
 
 /**
  * Main page for testing hazo_ui components
- * Test MultiFilterDialog component with various field types
+ * Test HazoUiMultiFilterDialog component with various field types
  */
 export default function Home() {
   const [filters, setFilters] = useState<FilterConfig[]>([]);
@@ -81,7 +81,7 @@ export default function Home() {
   ];
 
   /**
-   * Handle filter changes from MultiFilterDialog
+   * Handle filter changes from HazoUiMultiFilterDialog
    * @param filterConfig - Array of active filter configurations
    */
   const handleFilterChange = (filterConfig: FilterConfig[]) => {
@@ -96,16 +96,16 @@ export default function Home() {
           hazo_ui Component Library - Dev App
         </h1>
         <p className="cls_dev_app_subtitle text-muted-foreground">
-          Testing MultiFilterDialog component
+          Testing HazoUiMultiFilterDialog component
         </p>
       </div>
 
       <div className="cls_dev_app_content space-y-6">
-        {/* MultiFilterDialog Component */}
+        {/* HazoUiMultiFilterDialog Component */}
         <div className="cls_filter_section space-y-4">
           <div className="cls_filter_header">
             <h2 className="cls_filter_title text-xl font-semibold mb-2">
-              MultiFilterDialog Component
+              HazoUiMultiFilterDialog Component
             </h2>
             <p className="cls_filter_description text-sm text-muted-foreground mb-4">
               Click the filter button to add multiple filter criteria. Test different field types:
@@ -114,7 +114,7 @@ export default function Home() {
           </div>
 
           <div className="cls_filter_component_container">
-            <MultiFilterDialog
+            <HazoUiMultiFilterDialog
               availableFields={availableFields}
               onFilterChange={handleFilterChange}
               initialFilters={filters}

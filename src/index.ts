@@ -5,15 +5,19 @@
 // Example component export (replace with your actual components)
 export { ExampleComponent } from "./components/example_component";
 
-// MultiFilterDialog component
-export { MultiFilterDialog } from "./components/multi_filter_dialog";
-export type { FilterField, FilterConfig } from "./components/multi_filter_dialog";
+// HazoUiMultiFilterDialog component
+export { HazoUiMultiFilterDialog } from "./components/hazo_ui_multi_filter_dialog";
+export type { FilterField, FilterConfig } from "./components/hazo_ui_multi_filter_dialog";
 
-// MultiSortDialog component
-export { MultiSortDialog } from "./components/multi_sort_dialog";
-export type { SortField, SortConfig } from "./components/multi_sort_dialog";
+// HazoUiMultiSortDialog component
+export { HazoUiMultiSortDialog } from "./components/hazo_ui_multi_sort_dialog";
+export type { SortField, SortConfig } from "./components/hazo_ui_multi_sort_dialog";
 
-// MultiStateRadio component
-export { MultiStateRadio } from "./components/multi_state_radio";
-export type { MultiStateRadioItem, MultiStateRadioProps } from "./components/multi_state_radio";
+// HazoUiFlexRadio component
+export { HazoUiFlexRadio } from "./components/hazo_ui_flex_radio";
+export type { HazoUiFlexRadioItem, HazoUiFlexRadioProps } from "./components/hazo_ui_flex_radio";
+
+// HazoUiFlexInput component
+export { HazoUiFlexInput } from "./components/hazo_ui_flex_input";
+export type { HazoUiFlexInputProps } from "./components/hazo_ui_flex_input";
 

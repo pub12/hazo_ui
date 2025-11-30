@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Multi Filter Dialog Component
+ * Hazo UI Multi Filter Dialog Component
  * 
  * Reusable component for multi-field filtering with different input types.
  * Allows users to select multiple fields for filtering with appropriate input controls.
@@ -68,7 +68,7 @@ export interface FilterConfig {
   value: any;
 }
 
-interface MultiFilterDialogProps {
+interface HazoUiMultiFilterDialogProps {
   availableFields: FilterField[];
   onFilterChange: (filterConfig: FilterConfig[]) => void;
   initialFilters?: FilterConfig[];
@@ -310,11 +310,11 @@ function FilterFieldItem({
   );
 }
 
-export function MultiFilterDialog({
+export function HazoUiMultiFilterDialog({
   availableFields,
   onFilterChange,
   initialFilters = [],
-}: MultiFilterDialogProps) {
+}: HazoUiMultiFilterDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [filterFields, setFilterFields] = useState<FilterConfig[]>(initialFilters);
   const [isComboboxOpen, setIsComboboxOpen] = useState(false);

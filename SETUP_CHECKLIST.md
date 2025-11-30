@@ -53,9 +53,9 @@ npm install @radix-ui/react-dialog @radix-ui/react-popover @radix-ui/react-selec
 **Note**: If you're using specific components, you may not need all dependencies. Here's a breakdown:
 
 - **All components require**: `clsx`, `tailwind-merge`, `tailwindcss-animate`
-- **MultiFilterDialog requires**: `@radix-ui/react-dialog`, `@radix-ui/react-popover`, `@radix-ui/react-select`, `@radix-ui/react-tooltip`, `date-fns`, `lucide-react`, `react-day-picker`
-- **MultiSortDialog requires**: `@radix-ui/react-dialog`, `@radix-ui/react-popover`, `@radix-ui/react-select`, `@radix-ui/react-tooltip`, `@dnd-kit/core`, `@dnd-kit/sortable`, `@dnd-kit/utilities`, `lucide-react`
-- **MultiStateRadio requires**: `@radix-ui/react-radio-group`, `@radix-ui/react-tooltip`, `react-icons`, `lucide-react`
+- **HazoUiMultiFilterDialog requires**: `@radix-ui/react-dialog`, `@radix-ui/react-popover`, `@radix-ui/react-select`, `@radix-ui/react-tooltip`, `date-fns`, `lucide-react`, `react-day-picker`
+- **HazoUiMultiSortDialog requires**: `@radix-ui/react-dialog`, `@radix-ui/react-popover`, `@radix-ui/react-select`, `@radix-ui/react-tooltip`, `@dnd-kit/core`, `@dnd-kit/sortable`, `@dnd-kit/utilities`, `lucide-react`
+- **HazoUiFlexRadio requires**: `@radix-ui/react-radio-group`, `@radix-ui/react-tooltip`, `react-icons`, `lucide-react`
 
 ### 4. Configure Tailwind CSS
 
@@ -144,13 +144,13 @@ module.exports = {
 
 ```tsx
 // Import a component
-import { MultiFilterDialog } from 'hazo_ui';
+import { HazoUiMultiFilterDialog } from 'hazo_ui';
 
 // Import with types
-import { MultiFilterDialog, type FilterField, type FilterConfig } from 'hazo_ui';
+import { HazoUiMultiFilterDialog, type FilterField, type FilterConfig } from 'hazo_ui';
 
 // Import multiple components
-import { MultiFilterDialog, MultiSortDialog, MultiStateRadio } from 'hazo_ui';
+import { HazoUiMultiFilterDialog, HazoUiMultiSortDialog, HazoUiFlexRadio } from 'hazo_ui';
 ```
 
 [ ] Use the component in your code (see README.md for detailed usage examples)
@@ -175,13 +175,13 @@ import { MultiFilterDialog, MultiSortDialog, MultiStateRadio } from 'hazo_ui';
 **Issue**: TypeScript errors
 - **Solution**: Make sure you have `@types/react` and `@types/react-dom` installed
 
-**Issue**: Icons not showing (for MultiStateRadio)
+**Issue**: Icons not showing (for HazoUiFlexRadio)
 - **Solution**: Ensure `react-icons` is installed and you're using the correct icon set name
 
-**Issue**: Drag and drop not working (for MultiSortDialog)
+**Issue**: Drag and drop not working (for HazoUiMultiSortDialog)
 - **Solution**: Ensure `@dnd-kit/core`, `@dnd-kit/sortable`, and `@dnd-kit/utilities` are installed
 
-**Issue**: Date picker not working (for MultiFilterDialog)
+**Issue**: Date picker not working (for HazoUiMultiFilterDialog)
 - **Solution**: Ensure `react-day-picker` and `date-fns` are installed
 
 ## Next Steps
@@ -247,7 +247,7 @@ The library is optimized for tree-shaking. Always import components individually
 
 ```tsx
 // ✅ Recommended
-import { MultiStateRadio } from "hazo_ui";
+import { HazoUiFlexRadio } from "hazo_ui";
 
 // ❌ Avoid
 import * as HazoUI from "hazo_ui";

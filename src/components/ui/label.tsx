@@ -1,5 +1,5 @@
 // Label component for hazo_ui library
-// Based on shadcn/ui label component (placeholder - not used in MultiFilterDialog but included for completeness)
+// Based on shadcn/ui label component (placeholder - not used in HazoUiMultiFilterDialog but included for completeness)
 import * as React from "react";
 import { cn } from "../../lib/utils";
 

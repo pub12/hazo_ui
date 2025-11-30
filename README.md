@@ -12,25 +12,25 @@ npm install hazo_ui
 
 ### Component Overview
 
-- **[MultiFilterDialog](#multifilterdialog)** - A powerful dialog component for multi-field filtering with support for text, number, combobox, boolean, and date fields. Includes operator support, validation, and visual feedback.
+- **[HazoUiMultiFilterDialog](#hazouimultifilterdialog)** - A powerful dialog component for multi-field filtering with support for text, number, combobox, boolean, and date fields. Includes operator support, validation, and visual feedback.
 
-- **[MultiSortDialog](#multisortdialog)** - A flexible dialog component for multi-field sorting with drag-and-drop reordering. Allows users to set sort priority and direction (ascending/descending) for multiple fields.
+- **[HazoUiMultiSortDialog](#hazouimultisortdialog)** - A flexible dialog component for multi-field sorting with drag-and-drop reordering. Allows users to set sort priority and direction (ascending/descending) for multiple fields.
 
-- **[MultiStateRadio](#multistateradio)** - A flexible radio button/icon selection component with support for single and multi-selection modes, customizable layouts, and react-icons integration. Perfect for settings panels, preference selection, and option groups.
+- **[HazoUiFlexRadio](#hazouiflexradio)** - A flexible radio button/icon selection component with support for single and multi-selection modes, customizable layouts, and react-icons integration. Perfect for settings panels, preference selection, and option groups.
 
 ---
 
-## MultiFilterDialog
+## HazoUiMultiFilterDialog
 
 A powerful, flexible dialog component for multi-field filtering with support for various input types. Perfect for table headers, grid views, or any interface where users need to apply multiple filters simultaneously.
 
-![MultiFilterDialog - Filter Button with Active Filters Tooltip](https://github.com/pub12/hazo_ui/raw/main/docs/multifilterdialog/filter-button-tooltip.png)
+![HazoUiMultiFilterDialog - Filter Button with Active Filters Tooltip](https://github.com/pub12/hazo_ui/raw/main/docs/multifilterdialog/filter-button-tooltip.png)
 
-![MultiFilterDialog - Dialog with Multiple Filters](https://github.com/pub12/hazo_ui/raw/main/docs/multifilterdialog/filter-dialog.png)
+![HazoUiMultiFilterDialog - Dialog with Multiple Filters](https://github.com/pub12/hazo_ui/raw/main/docs/multifilterdialog/filter-dialog.png)
 
-![MultiFilterDialog - Calendar Date Picker](https://github.com/pub12/hazo_ui/raw/main/docs/multifilterdialog/filter-dialog-calendar.png)
+![HazoUiMultiFilterDialog - Calendar Date Picker](https://github.com/pub12/hazo_ui/raw/main/docs/multifilterdialog/filter-dialog-calendar.png)
 
-![MultiFilterDialog - Filter Output Example](https://github.com/pub12/hazo_ui/raw/main/docs/multifilterdialog/filter-output.png)
+![HazoUiMultiFilterDialog - Filter Output Example](https://github.com/pub12/hazo_ui/raw/main/docs/multifilterdialog/filter-output.png)
 
 #### Features
 
@@ -71,7 +71,7 @@ A powerful, flexible dialog component for multi-field filtering with support for
 #### Usage
 
 ```tsx
-import { MultiFilterDialog, type FilterField, type FilterConfig } from 'hazo_ui';
+import { HazoUiMultiFilterDialog, type FilterField, type FilterConfig } from 'hazo_ui';
 import { useState } from 'react';
 
 function DataTable() {
@@ -145,7 +145,7 @@ function DataTable() {
 
   return (
     <div>
-      <MultiFilterDialog
+      <HazoUiMultiFilterDialog
         availableFields={availableFields}
         onFilterChange={handleFilterChange}
         initialFilters={filters}
@@ -239,17 +239,17 @@ When users apply filters, the `onFilterChange` callback receives an array of `Fi
 
 ---
 
-## MultiSortDialog
+## HazoUiMultiSortDialog
 
 A powerful dialog component for multi-field sorting with drag-and-drop reordering. Allows users to select multiple fields for sorting, reorder them by priority, and set ascending/descending direction for each field.
 
-![MultiSortDialog - Sort Button with Active Sorts Tooltip](https://github.com/pub12/hazo_ui/raw/main/docs/multisortdialog/sort-button-tooltip.png)
+![HazoUiMultiSortDialog - Sort Button with Active Sorts Tooltip](https://github.com/pub12/hazo_ui/raw/main/docs/multisortdialog/sort-button-tooltip.png)
 
-![MultiSortDialog - Dialog with Multiple Sort Fields](https://github.com/pub12/hazo_ui/raw/main/docs/multisortdialog/sort-dialog.png)
+![HazoUiMultiSortDialog - Dialog with Multiple Sort Fields](https://github.com/pub12/hazo_ui/raw/main/docs/multisortdialog/sort-dialog.png)
 
-![MultiSortDialog - Drag and Drop Reordering](https://github.com/pub12/hazo_ui/raw/main/docs/multisortdialog/sort-drag-drop.png)
+![HazoUiMultiSortDialog - Drag and Drop Reordering](https://github.com/pub12/hazo_ui/raw/main/docs/multisortdialog/sort-drag-drop.png)
 
-![MultiSortDialog - Sort Output Example](https://github.com/pub12/hazo_ui/raw/main/docs/multisortdialog/sort-output.png)
+![HazoUiMultiSortDialog - Sort Output Example](https://github.com/pub12/hazo_ui/raw/main/docs/multisortdialog/sort-output.png)
 
 #### Features
 
@@ -278,7 +278,7 @@ The component returns an array of sort configurations in priority order, where t
 #### Usage
 
 ```tsx
-import { MultiSortDialog, type SortField, type SortConfig } from 'hazo_ui';
+import { HazoUiMultiSortDialog, type SortField, type SortConfig } from 'hazo_ui';
 import { useState } from 'react';
 
 function DataTable() {
@@ -319,7 +319,7 @@ function DataTable() {
 
   return (
     <div>
-      <MultiSortDialog
+      <HazoUiMultiSortDialog
         availableFields={availableFields}
         onSortChange={handleSortChange}
         initialSortFields={sorts}
@@ -446,7 +446,7 @@ const sortedData = applySorts(originalData, sorts);
 
 ---
 
-## MultiStateRadio
+## HazoUiFlexRadio
 
 A flexible radio button/icon selection component with support for single and multi-selection modes, customizable layouts, and react-icons integration. Perfect for settings panels, preference selection, and option groups.
 
@@ -466,19 +466,19 @@ A flexible radio button/icon selection component with support for single and mul
 #### Props
 
 ```typescript
-interface MultiStateRadioItem {
+interface HazoUiFlexRadioItem {
   label: string;                    // Display label for the option
   value: string;                    // Unique value identifier
   icon_selected?: string;           // Icon name when selected (e.g., "FaHome")
   icon_unselected?: string;         // Icon name when unselected (e.g., "FaRegHome")
 }
 
-interface MultiStateRadioProps {
+interface HazoUiFlexRadioProps {
   layout?: 'horizontal' | 'vertical';  // Layout direction (default: 'horizontal')
   style?: 'radio' | 'icons';           // Display style (default: 'radio')
   display_label?: boolean;              // Show/hide labels (default: true)
   icon_set?: string;                    // Icon set package name (e.g., 'fa', 'md')
-  data: MultiStateRadioItem[];          // Array of options
+  data: HazoUiFlexRadioItem[];          // Array of options
   selection: 'single' | 'multi';       // Selection mode
   value: string | string[];             // Controlled value (string for single, array for multi)
   onChange: (value: string | string[]) => void;  // Change handler
@@ -491,13 +491,13 @@ interface MultiStateRadioProps {
 **Basic Single Selection (Radio Style)**
 
 ```tsx
-import { MultiStateRadio, type MultiStateRadioItem } from 'hazo_ui';
+import { HazoUiFlexRadio, type HazoUiFlexRadioItem } from 'hazo_ui';
 import { useState } from 'react';
 
 function SettingsPanel() {
   const [selectedOption, setSelectedOption] = useState<string>('option1');
 
-  const options: MultiStateRadioItem[] = [
+  const options: HazoUiFlexRadioItem[] = [
     { label: 'Option 1', value: 'option1' },
     { label: 'Option 2', value: 'option2' },
     { label: 'Option 3', value: 'option3' },
@@ -505,7 +505,7 @@ function SettingsPanel() {
   ];
 
   return (
-    <MultiStateRadio
+    <HazoUiFlexRadio
       data={options}
       value={selectedOption}
       onChange={setSelectedOption}
@@ -521,13 +521,13 @@ function SettingsPanel() {
 **Icon Style with React Icons**
 
 ```tsx
-import { MultiStateRadio, type MultiStateRadioItem } from 'hazo_ui';
+import { HazoUiFlexRadio, type HazoUiFlexRadioItem } from 'hazo_ui';
 import { useState } from 'react';
 
 function IconSelector() {
   const [selectedIcon, setSelectedIcon] = useState<string>('home');
 
-  const iconOptions: MultiStateRadioItem[] = [
+  const iconOptions: HazoUiFlexRadioItem[] = [
     {
       label: 'Home',
       value: 'home',
@@ -549,7 +549,7 @@ function IconSelector() {
   ];
 
   return (
-    <MultiStateRadio
+    <HazoUiFlexRadio
       data={iconOptions}
       value={selectedIcon}
       onChange={setSelectedIcon}
@@ -566,13 +566,13 @@ function IconSelector() {
 **Multi-Selection Mode**
 
 ```tsx
-import { MultiStateRadio, type MultiStateRadioItem } from 'hazo_ui';
+import { HazoUiFlexRadio, type HazoUiFlexRadioItem } from 'hazo_ui';
 import { useState } from 'react';
 
 function MultiSelectExample() {
   const [selectedOptions, setSelectedOptions] = useState<string[]>(['option1', 'option3']);
 
-  const options: MultiStateRadioItem[] = [
+  const options: HazoUiFlexRadioItem[] = [
     { label: 'Option 1', value: 'option1' },
     { label: 'Option 2', value: 'option2' },
     { label: 'Option 3', value: 'option3' },
@@ -580,7 +580,7 @@ function MultiSelectExample() {
   ];
 
   return (
-    <MultiStateRadio
+    <HazoUiFlexRadio
       data={options}
       value={selectedOptions}
       onChange={setSelectedOptions}
@@ -596,13 +596,13 @@ function MultiSelectExample() {
 **Vertical Layout with Icons Only (No Labels)**
 
 ```tsx
-import { MultiStateRadio, type MultiStateRadioItem } from 'hazo_ui';
+import { HazoUiFlexRadio, type HazoUiFlexRadioItem } from 'hazo_ui';
 import { useState } from 'react';
 
 function VerticalIconSelector() {
   const [selected, setSelected] = useState<string>('favorite');
 
-  const options: MultiStateRadioItem[] = [
+  const options: HazoUiFlexRadioItem[] = [
     {
       label: 'Favorite',
       value: 'favorite',
@@ -618,7 +618,7 @@ function VerticalIconSelector() {
   ];
 
   return (
-    <MultiStateRadio
+    <HazoUiFlexRadio
       data={options}
       value={selected}
       onChange={setSelected}

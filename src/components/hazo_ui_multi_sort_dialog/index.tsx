@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Multi Sort Dialog Component
+ * Hazo UI Multi Sort Dialog Component
  * 
  * Reusable component for multi-field sorting with drag-and-drop reordering.
  * Allows users to select multiple fields for sorting, reorder them, and set ascending/descending direction.
@@ -60,7 +60,7 @@ export interface SortConfig {
   direction: 'asc' | 'desc';
 }
 
-interface MultiSortDialogProps {
+interface HazoUiMultiSortDialogProps {
   availableFields: SortField[];
   onSortChange: (sortConfig: SortConfig[]) => void;
   initialSortFields?: SortConfig[];
@@ -132,11 +132,11 @@ function SortableSortFieldItem({
   );
 }
 
-export function MultiSortDialog({
+export function HazoUiMultiSortDialog({
   availableFields,
   onSortChange,
   initialSortFields = [],
-}: MultiSortDialogProps) {
+}: HazoUiMultiSortDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [sortFields, setSortFields] = useState<SortConfig[]>(initialSortFields);
   const [isComboboxOpen, setIsComboboxOpen] = useState(false);

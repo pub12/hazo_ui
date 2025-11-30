@@ -1,12 +1,12 @@
-// Storybook stories for MultiSortDialog component
+// Storybook stories for HazoUiMultiSortDialog component
 // Used for testing and development of the component
 import type { Meta, StoryObj } from "@storybook/react";
-import { MultiSortDialog, type SortField, type SortConfig } from "./index";
+import { HazoUiMultiSortDialog, type SortField, type SortConfig } from "./index";
 import { useState } from "react";
 
-const meta: Meta<typeof MultiSortDialog> = {
-  title: "Components/MultiSortDialog",
-  component: MultiSortDialog,
+const meta: Meta<typeof HazoUiMultiSortDialog> = {
+  title: "Components/HazoUiMultiSortDialog",
+  component: HazoUiMultiSortDialog,
   parameters: {
     layout: "centered",
   },
@@ -14,7 +14,7 @@ const meta: Meta<typeof MultiSortDialog> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof MultiSortDialog>;
+type Story = StoryObj<typeof HazoUiMultiSortDialog>;
 
 // Sample sort fields for stories
 const sampleFields: SortField[] = [
@@ -52,7 +52,7 @@ export const Default: Story = {
     const [sorts, setSorts] = useState<SortConfig[]>([]);
     return (
       <div className="cls_storybook_container p-4 space-y-4">
-        <MultiSortDialog
+        <HazoUiMultiSortDialog
           availableFields={sampleFields}
           onSortChange={(newSorts) => {
             setSorts(newSorts);
@@ -103,7 +103,7 @@ export const WithInitialSorts: Story = {
     ]);
     return (
       <div className="cls_storybook_container p-4 space-y-4">
-        <MultiSortDialog
+        <HazoUiMultiSortDialog
           availableFields={sampleFields}
           onSortChange={(newSorts) => {
             setSorts(newSorts);
@@ -151,7 +151,7 @@ export const LimitedFields: Story = {
     ];
     return (
       <div className="cls_storybook_container p-4 space-y-4">
-        <MultiSortDialog
+        <HazoUiMultiSortDialog
           availableFields={limitedFields}
           onSortChange={(newSorts) => {
             setSorts(newSorts);

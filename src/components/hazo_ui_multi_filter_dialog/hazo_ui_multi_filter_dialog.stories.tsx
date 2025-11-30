@@ -1,12 +1,12 @@
-// Storybook stories for MultiFilterDialog component
+// Storybook stories for HazoUiMultiFilterDialog component
 // Used for testing and development of the component
 import type { Meta, StoryObj } from "@storybook/react";
-import { MultiFilterDialog, type FilterField, type FilterConfig } from "./index";
+import { HazoUiMultiFilterDialog, type FilterField, type FilterConfig } from "./index";
 import { useState } from "react";
 
-const meta: Meta<typeof MultiFilterDialog> = {
-  title: "Components/MultiFilterDialog",
-  component: MultiFilterDialog,
+const meta: Meta<typeof HazoUiMultiFilterDialog> = {
+  title: "Components/HazoUiMultiFilterDialog",
+  component: HazoUiMultiFilterDialog,
   parameters: {
     layout: "centered",
   },
@@ -14,7 +14,7 @@ const meta: Meta<typeof MultiFilterDialog> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof MultiFilterDialog>;
+type Story = StoryObj<typeof HazoUiMultiFilterDialog>;
 
 // Sample filter fields for stories
 const sampleFields: FilterField[] = [
@@ -82,7 +82,7 @@ export const Default: Story = {
     const [filters, setFilters] = useState<FilterConfig[]>([]);
     return (
       <div className="cls_storybook_container p-4 space-y-4">
-        <MultiFilterDialog
+        <HazoUiMultiFilterDialog
           availableFields={sampleFields}
           onFilterChange={(newFilters) => {
             setFilters(newFilters);
@@ -133,7 +133,7 @@ export const WithInitialFilters: Story = {
     ]);
     return (
       <div className="cls_storybook_container p-4 space-y-4">
-        <MultiFilterDialog
+        <HazoUiMultiFilterDialog
           availableFields={sampleFields}
           onFilterChange={(newFilters) => {
             setFilters(newFilters);
@@ -191,7 +191,7 @@ export const TextFieldsOnly: Story = {
     ];
     return (
       <div className="cls_storybook_container p-4 space-y-4">
-        <MultiFilterDialog
+        <HazoUiMultiFilterDialog
           availableFields={textFields}
           onFilterChange={(newFilters) => {
             setFilters(newFilters);
@@ -250,7 +250,7 @@ export const NumberFields: Story = {
     ];
     return (
       <div className="cls_storybook_container p-4 space-y-4">
-        <MultiFilterDialog
+        <HazoUiMultiFilterDialog
           availableFields={numberFields}
           onFilterChange={(newFilters) => {
             setFilters(newFilters);

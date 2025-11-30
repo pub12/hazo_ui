@@ -1,12 +1,12 @@
-// Storybook stories for MultiStateRadio component
+// Storybook stories for HazoUiFlexRadio component
 // Used for testing and development of the component
 import type { Meta, StoryObj } from "@storybook/react";
-import { MultiStateRadio, type MultiStateRadioItem } from "./index";
+import { HazoUiFlexRadio, type HazoUiFlexRadioItem } from "./index";
 import { useState } from "react";
 
-const meta: Meta<typeof MultiStateRadio> = {
-  title: "Components/MultiStateRadio",
-  component: MultiStateRadio,
+const meta: Meta<typeof HazoUiFlexRadio> = {
+  title: "Components/HazoUiFlexRadio",
+  component: HazoUiFlexRadio,
   parameters: {
     layout: "centered",
   },
@@ -35,10 +35,10 @@ const meta: Meta<typeof MultiStateRadio> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof MultiStateRadio>;
+type Story = StoryObj<typeof HazoUiFlexRadio>;
 
 // Sample data for basic stories
-const basicData: MultiStateRadioItem[] = [
+const basicData: HazoUiFlexRadioItem[] = [
   { label: "Option 1", value: "option1" },
   { label: "Option 2", value: "option2" },
   { label: "Option 3", value: "option3" },
@@ -46,7 +46,7 @@ const basicData: MultiStateRadioItem[] = [
 ];
 
 // Sample data with icons (FontAwesome)
-const iconData: MultiStateRadioItem[] = [
+const iconData: HazoUiFlexRadioItem[] = [
   {
     label: "Home",
     value: "home",
@@ -74,7 +74,7 @@ const iconData: MultiStateRadioItem[] = [
 ];
 
 // Sample data with Material Design icons
-const mdIconData: MultiStateRadioItem[] = [
+const mdIconData: HazoUiFlexRadioItem[] = [
   {
     label: "Favorite",
     value: "favorite",
@@ -109,7 +109,7 @@ export const Default: Story = {
     const [value, setValue] = useState<string>("option1");
     return (
       <div className="cls_storybook_container p-4 space-y-4">
-        <MultiStateRadio
+        <HazoUiFlexRadio
           data={basicData}
           value={value}
           onChange={(val) => setValue(val as string)}
@@ -135,7 +135,7 @@ export const VerticalLayout: Story = {
     const [value, setValue] = useState<string>("option2");
     return (
       <div className="cls_storybook_container p-4 space-y-4">
-        <MultiStateRadio
+        <HazoUiFlexRadio
           data={basicData}
           value={value}
           onChange={(val) => setValue(val as string)}
@@ -161,7 +161,7 @@ export const IconStyle: Story = {
     const [value, setValue] = useState<string>("home");
     return (
       <div className="cls_storybook_container p-4 space-y-4">
-        <MultiStateRadio
+        <HazoUiFlexRadio
           data={iconData}
           value={value}
           onChange={(val) => setValue(val as string)}
@@ -190,7 +190,7 @@ export const NoLabels: Story = {
       <div className="cls_storybook_container p-4 space-y-4">
         <div className="cls_example_section mb-4">
           <h3 className="cls_section_title text-sm font-semibold mb-2">Icon Style (No Labels):</h3>
-          <MultiStateRadio
+          <HazoUiFlexRadio
             data={iconData}
             value={value}
             onChange={(val) => setValue(val as string)}
@@ -203,7 +203,7 @@ export const NoLabels: Story = {
         </div>
         <div className="cls_example_section">
           <h3 className="cls_section_title text-sm font-semibold mb-2">Radio Style (No Labels):</h3>
-          <MultiStateRadio
+          <HazoUiFlexRadio
             data={basicData}
             value={value}
             onChange={(val) => setValue(val as string)}
@@ -232,7 +232,7 @@ export const MultiSelection: Story = {
       <div className="cls_storybook_container p-4 space-y-4">
         <div className="cls_example_section mb-4">
           <h3 className="cls_section_title text-sm font-semibold mb-2">Radio Style (Multi):</h3>
-          <MultiStateRadio
+          <HazoUiFlexRadio
             data={basicData}
             value={value}
             onChange={(val) => setValue(val as string[])}
@@ -244,7 +244,7 @@ export const MultiSelection: Story = {
         </div>
         <div className="cls_example_section">
           <h3 className="cls_section_title text-sm font-semibold mb-2">Icon Style (Multi):</h3>
-          <MultiStateRadio
+          <HazoUiFlexRadio
             data={iconData}
             value={value}
             onChange={(val) => setValue(val as string[])}
@@ -278,7 +278,7 @@ export const DifferentIconSets: Story = {
       <div className="cls_storybook_container p-4 space-y-6">
         <div className="cls_example_section">
           <h3 className="cls_section_title text-sm font-semibold mb-2">FontAwesome Icons (fa):</h3>
-          <MultiStateRadio
+          <HazoUiFlexRadio
             data={iconData}
             value={faValue}
             onChange={(val) => setFaValue(val as string)}
@@ -295,7 +295,7 @@ export const DifferentIconSets: Story = {
         
         <div className="cls_example_section">
           <h3 className="cls_section_title text-sm font-semibold mb-2">Material Design Icons (md):</h3>
-          <MultiStateRadio
+          <HazoUiFlexRadio
             data={mdIconData}
             value={mdValue}
             onChange={(val) => setMdValue(val as string)}
@@ -329,7 +329,7 @@ export const CombinedVariations: Story = {
           <h3 className="cls_section_title text-sm font-semibold mb-2">
             Vertical Icons with Labels (Single):
           </h3>
-          <MultiStateRadio
+          <HazoUiFlexRadio
             data={iconData}
             value={value1}
             onChange={(val) => setValue1(val as string)}
@@ -345,7 +345,7 @@ export const CombinedVariations: Story = {
           <h3 className="cls_section_title text-sm font-semibold mb-2">
             Horizontal Radio Multi-Selection:
           </h3>
-          <MultiStateRadio
+          <HazoUiFlexRadio
             data={basicData}
             value={value2}
             onChange={(val) => setValue2(val as string[])}
@@ -365,7 +365,7 @@ export const CombinedVariations: Story = {
           <h3 className="cls_section_title text-sm font-semibold mb-2">
             Vertical Radio Single (No Labels):
           </h3>
-          <MultiStateRadio
+          <HazoUiFlexRadio
             data={basicData}
             value={value3}
             onChange={(val) => setValue3(val as string)}
@@ -392,7 +392,7 @@ export const ResponsiveDemo: Story = {
           Resize the viewport to see responsive spacing adjustments. The layout remains horizontal
           but spacing adapts to screen size.
         </p>
-        <MultiStateRadio
+        <HazoUiFlexRadio
           data={iconData}
           value={value}
           onChange={(val) => setValue(val as string)}
@@ -428,7 +428,7 @@ export const ControlledExample: Story = {
       <div className="cls_storybook_container p-4 space-y-6">
         <div className="cls_example_section">
           <h3 className="cls_section_title text-sm font-semibold mb-2">Single Selection (Controlled):</h3>
-          <MultiStateRadio
+          <HazoUiFlexRadio
             data={basicData}
             value={singleValue}
             onChange={(val) => setSingleValue(val as string)}
@@ -464,7 +464,7 @@ export const ControlledExample: Story = {
         
         <div className="cls_example_section">
           <h3 className="cls_section_title text-sm font-semibold mb-2">Multi Selection (Controlled):</h3>
-          <MultiStateRadio
+          <HazoUiFlexRadio
             data={basicData}
             value={multiValue}
             onChange={(val) => setMultiValue(val as string[])}
@@ -530,7 +530,7 @@ export const CompressedMode: Story = {
           <p className="cls_description text-xs text-muted-foreground mb-2">
             Elements are placed next to each other with no padding or spacing between them.
           </p>
-          <MultiStateRadio
+          <HazoUiFlexRadio
             data={basicData}
             value={value1}
             onChange={(val) => setValue1(val as string)}
@@ -552,7 +552,7 @@ export const CompressedMode: Story = {
           <p className="cls_description text-xs text-muted-foreground mb-2">
             Icons are placed directly next to each other with no gaps.
           </p>
-          <MultiStateRadio
+          <HazoUiFlexRadio
             data={iconData}
             value={value2}
             onChange={(val) => setValue2(val as string)}
@@ -575,7 +575,7 @@ export const CompressedMode: Story = {
           <p className="cls_description text-xs text-muted-foreground mb-2">
             Multiple selection with compressed spacing.
           </p>
-          <MultiStateRadio
+          <HazoUiFlexRadio
             data={basicData}
             value={value3}
             onChange={(val) => setValue3(val as string[])}
@@ -599,7 +599,7 @@ export const CompressedMode: Story = {
           <p className="cls_description text-xs text-muted-foreground mb-2">
             Radio buttons only, no labels, compressed spacing.
           </p>
-          <MultiStateRadio
+          <HazoUiFlexRadio
             data={basicData}
             value={value1}
             onChange={(val) => setValue1(val as string)}
@@ -621,7 +621,7 @@ export const CompressedMode: Story = {
           <p className="cls_description text-xs text-muted-foreground mb-2">
             Icons only, no labels, placed directly next to each other.
           </p>
-          <MultiStateRadio
+          <HazoUiFlexRadio
             data={iconData}
             value={value2}
             onChange={(val) => setValue2(val as string)}
@@ -644,7 +644,7 @@ export const CompressedMode: Story = {
           <p className="cls_description text-xs text-muted-foreground mb-2">
             Multi-selection with checkboxes only, no labels, compressed spacing.
           </p>
-          <MultiStateRadio
+          <HazoUiFlexRadio
             data={basicData}
             value={value3}
             onChange={(val) => setValue3(val as string[])}
@@ -668,7 +668,7 @@ export const CompressedMode: Story = {
           <p className="cls_description text-xs text-muted-foreground mb-2">
             Multi-selection with icons only, no labels, compressed spacing.
           </p>
-          <MultiStateRadio
+          <HazoUiFlexRadio
             data={iconData}
             value={value4}
             onChange={(val) => setValue4(val as string[])}
@@ -693,7 +693,7 @@ export const CompressedMode: Story = {
           <div className="cls_comparison space-y-4">
             <div>
               <p className="cls_comparison_label text-xs font-medium mb-2">Normal (default):</p>
-              <MultiStateRadio
+              <HazoUiFlexRadio
                 data={basicData.slice(0, 3)}
                 value={value1}
                 onChange={(val) => setValue1(val as string)}
@@ -706,7 +706,7 @@ export const CompressedMode: Story = {
             </div>
             <div>
               <p className="cls_comparison_label text-xs font-medium mb-2">Compressed:</p>
-              <MultiStateRadio
+              <HazoUiFlexRadio
                 data={basicData.slice(0, 3)}
                 value={value1}
                 onChange={(val) => setValue1(val as string)}
@@ -727,7 +727,7 @@ export const CompressedMode: Story = {
           <div className="cls_comparison space-y-4">
             <div>
               <p className="cls_comparison_label text-xs font-medium mb-2">Compressed with Labels:</p>
-              <MultiStateRadio
+              <HazoUiFlexRadio
                 data={iconData.slice(0, 3)}
                 value={value2}
                 onChange={(val) => setValue2(val as string)}
@@ -741,7 +741,7 @@ export const CompressedMode: Story = {
             </div>
             <div>
               <p className="cls_comparison_label text-xs font-medium mb-2">Compressed without Labels:</p>
-              <MultiStateRadio
+              <HazoUiFlexRadio
                 data={iconData.slice(0, 3)}
                 value={value2}
                 onChange={(val) => setValue2(val as string)}
@@ -761,7 +761,7 @@ export const CompressedMode: Story = {
 };
 
 // Sample data with Circum Icons (ci)
-const ciIconData: MultiStateRadioItem[] = [
+const ciIconData: HazoUiFlexRadioItem[] = [
   {
     label: "Home",
     value: "home",
@@ -789,7 +789,7 @@ const ciIconData: MultiStateRadioItem[] = [
 ];
 
 // Sample data with custom colors
-const coloredIconData: MultiStateRadioItem[] = [
+const coloredIconData: HazoUiFlexRadioItem[] = [
   {
     label: "Red",
     value: "red",
@@ -832,7 +832,7 @@ export const CircumIcons: Story = {
     const [value, setValue] = useState<string>("home");
     return (
       <div className="cls_storybook_container p-4 space-y-4">
-        <MultiStateRadio
+        <HazoUiFlexRadio
           data={ciIconData}
           value={value}
           onChange={(val) => setValue(val as string)}
@@ -869,7 +869,7 @@ export const CustomColors: Story = {
           <p className="cls_description text-xs text-muted-foreground mb-2">
             Each option has custom foreground and background colors defined.
           </p>
-          <MultiStateRadio
+          <HazoUiFlexRadio
             data={coloredIconData}
             value={value1}
             onChange={(val) => setValue1(val as string)}
@@ -891,7 +891,7 @@ export const CustomColors: Story = {
           <p className="cls_description text-xs text-muted-foreground mb-2">
             Custom colors with labels hidden.
           </p>
-          <MultiStateRadio
+          <HazoUiFlexRadio
             data={coloredIconData}
             value={value2}
             onChange={(val) => setValue2(val as string)}
@@ -913,7 +913,7 @@ export const CustomColors: Story = {
           <p className="cls_description text-xs text-muted-foreground mb-2">
             Multi-selection with custom colors.
           </p>
-          <MultiStateRadio
+          <HazoUiFlexRadio
             data={coloredIconData}
             value={value3}
             onChange={(val) => setValue3(val as string[])}
@@ -937,7 +937,7 @@ export const CustomColors: Story = {
           <p className="cls_description text-xs text-muted-foreground mb-2">
             Compressed layout with custom colors.
           </p>
-          <MultiStateRadio
+          <HazoUiFlexRadio
             data={coloredIconData}
             value={value1}
             onChange={(val) => setValue1(val as string)}
