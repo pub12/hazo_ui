@@ -18,6 +18,8 @@ npm install hazo_ui
 
 - **[HazoUiFlexRadio](#hazouiflexradio)** - A flexible radio button/icon selection component with support for single and multi-selection modes, customizable layouts, and react-icons integration. Perfect for settings panels, preference selection, and option groups.
 
+- **[HazoUiFlexInput](#hazouiflexinput)** - An enhanced input component with type validation, character restrictions, and error messaging. Supports numeric, alpha, email, and mixed input types with built-in validation and formatting guides.
+
 ---
 
 ## HazoUiMultiFilterDialog
@@ -664,6 +666,257 @@ The component supports the following react-icons packages:
   // value will be an array of selected values, e.g., ["option1", "option3"]
 }
 ```
+
+---
+
+## HazoUiFlexInput
+
+An enhanced input component with type validation, character restrictions, and error messaging. Extends shadcn Input component with additional validation props for numeric, alpha, email, and mixed input types.
+
+#### Features
+
+- **Multiple Input Types**: Supports mixed (text), numeric, alpha (letters only), and email input types
+- **Real-time Character Filtering**: Automatically prevents invalid characters from being entered (e.g., numbers in alpha fields)
+- **Validation on Blur**: Validates input when the field loses focus and displays error messages
+- **Numeric Constraints**: Min/max value validation and decimal precision control
+- **Length Constraints**: Configurable minimum and maximum character lengths
+- **Regex Validation**: Custom regex pattern support for complex validation rules
+- **Format Guide**: Optional helper text displayed below the input
+- **Error Messaging**: Clear error messages displayed when validation fails
+- **Controlled & Uncontrolled**: Supports both controlled and uncontrolled usage patterns
+- **TypeScript Support**: Fully typed with TypeScript interfaces
+- **Accessible**: Built with accessibility in mind using shadcn/ui components
+
+#### Input Types
+
+1. **Mixed (text)**
+   - Allows any characters
+   - Supports length constraints (min/max)
+   - Supports regex validation
+
+2. **Numeric**
+   - Only allows numbers, decimal point, and minus sign
+   - Supports min/max value constraints
+   - Configurable decimal precision (including integers with 0 decimals)
+   - Automatically filters out non-numeric characters
+
+3. **Alpha**
+   - Only allows letters and spaces
+   - Automatically filters out numbers and special characters
+   - Supports length constraints
+
+4. **Email**
+   - Validates email format on blur
+   - Uses standard email regex pattern
+
+#### Props
+
+```typescript
+interface HazoUiFlexInputProps extends Omit<InputProps, "type"> {
+  input_type?: "mixed" | "numeric" | "email" | "alpha";  // Input type (default: "mixed")
+  text_len_min?: number;                                  // Minimum character length
+  text_len_max?: number;                                  // Maximum character length
+  num_min?: number;                                       // Minimum numeric value
+  num_max?: number;                                       // Maximum numeric value
+  regex?: string | RegExp;                                // Custom regex pattern
+  num_decimals?: number;                                  // Number of decimal places allowed
+  format_guide?: string;                                  // Helper text displayed below input
+  format_guide_info?: boolean;                            // Show format guide (default: false)
+}
+```
+
+#### Usage
+
+**Basic Mixed Input**
+
+```tsx
+import { HazoUiFlexInput } from 'hazo_ui';
+import { useState } from 'react';
+
+function BasicForm() {
+  const [value, setValue] = useState<string>("");
+
+  return (
+    <HazoUiFlexInput
+      input_type="mixed"
+      placeholder="Enter text..."
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+    />
+  );
+}
+```
+
+**Numeric Input with Constraints**
+
+```tsx
+import { HazoUiFlexInput } from 'hazo_ui';
+import { useState } from 'react';
+
+function PriceInput() {
+  const [price, setPrice] = useState<string>("");
+
+  return (
+    <HazoUiFlexInput
+      input_type="numeric"
+      placeholder="Enter price (0-100)..."
+      num_min={0}
+      num_max={100}
+      num_decimals={2}
+      format_guide="Enter a number between 0 and 100 with up to 2 decimal places"
+      format_guide_info={true}
+      value={price}
+      onChange={(e) => setPrice(e.target.value)}
+    />
+  );
+}
+```
+
+**Integer Input (No Decimals)**
+
+```tsx
+import { HazoUiFlexInput } from 'hazo_ui';
+import { useState } from 'react';
+
+function AgeInput() {
+  const [age, setAge] = useState<string>("");
+
+  return (
+    <HazoUiFlexInput
+      input_type="numeric"
+      placeholder="Enter age (1-120)..."
+      num_min={1}
+      num_max={120}
+      num_decimals={0}
+      format_guide="Enter a whole number between 1 and 120"
+      format_guide_info={true}
+      value={age}
+      onChange={(e) => setAge(e.target.value)}
+    />
+  );
+}
+```
+
+**Alpha Input (Letters Only)**
+
+```tsx
+import { HazoUiFlexInput } from 'hazo_ui';
+import { useState } from 'react';
+
+function NameInput() {
+  const [name, setName] = useState<string>("");
+
+  return (
+    <HazoUiFlexInput
+      input_type="alpha"
+      placeholder="Enter name (letters only)..."
+      format_guide="Only letters and spaces are allowed"
+      format_guide_info={true}
+      value={name}
+      onChange={(e) => setName(e.target.value)}
+    />
+  );
+}
+```
+
+**Email Input with Validation**
+
+```tsx
+import { HazoUiFlexInput } from 'hazo_ui';
+import { useState } from 'react';
+
+function EmailForm() {
+  const [email, setEmail] = useState<string>("");
+
+  return (
+    <HazoUiFlexInput
+      input_type="email"
+      placeholder="Enter email address..."
+      format_guide="Enter a valid email address (e.g., user@example.com)"
+      format_guide_info={true}
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+    />
+  );
+}
+```
+
+**Mixed Input with Length Constraints**
+
+```tsx
+import { HazoUiFlexInput } from 'hazo_ui';
+import { useState } from 'react';
+
+function UsernameInput() {
+  const [username, setUsername] = useState<string>("");
+
+  return (
+    <HazoUiFlexInput
+      input_type="mixed"
+      placeholder="Enter username (5-20 characters)..."
+      text_len_min={5}
+      text_len_max={20}
+      format_guide="Must be between 5 and 20 characters"
+      format_guide_info={true}
+      value={username}
+      onChange={(e) => setUsername(e.target.value)}
+    />
+  );
+}
+```
+
+**Input with Regex Validation**
+
+```tsx
+import { HazoUiFlexInput } from 'hazo_ui';
+import { useState } from 'react';
+
+function PhoneInput() {
+  const [phone, setPhone] = useState<string>("");
+
+  return (
+    <HazoUiFlexInput
+      input_type="mixed"
+      placeholder="Enter phone number (XXX-XXX-XXXX)..."
+      regex={/^\d{3}-\d{3}-\d{4}$/}
+      format_guide="Format: XXX-XXX-XXXX (e.g., 123-456-7890)"
+      format_guide_info={true}
+      value={phone}
+      onChange={(e) => setPhone(e.target.value)}
+    />
+  );
+}
+```
+
+#### Validation Behavior
+
+- **Character Filtering**: For `numeric` and `alpha` types, invalid characters are automatically filtered out as the user types
+- **Validation Timing**: Validation occurs when the input loses focus (onBlur event)
+- **Error Display**: Error messages appear below the input in red text when validation fails
+- **Format Guide**: Optional helper text can be displayed below the input (set `format_guide_info={true}`)
+- **Error Priority**: If both an error message and format guide are present, only the error message is shown
+
+#### Expected Output
+
+The component behaves like a standard input element:
+
+```typescript
+// onChange receives a standard React.ChangeEvent<HTMLInputElement>
+onChange={(e) => {
+  const value = e.target.value;  // Current input value as string
+  // Handle value change
+}}
+```
+
+#### Error Messages
+
+The component provides default error messages for common validation failures:
+
+- **Numeric**: "Must be a valid number", "Must be at least X", "Must be at most X", "Maximum X decimal places allowed"
+- **Alpha**: "Only letters are allowed"
+- **Email**: "Must be a valid email address"
+- **Mixed**: "Must be at least X characters", "Must be at most X characters"
+- **Regex**: "Invalid format" (or custom message via `format_guide`)
 
 ---
 

@@ -56,6 +56,7 @@ npm install @radix-ui/react-dialog @radix-ui/react-popover @radix-ui/react-selec
 - **HazoUiMultiFilterDialog requires**: `@radix-ui/react-dialog`, `@radix-ui/react-popover`, `@radix-ui/react-select`, `@radix-ui/react-tooltip`, `date-fns`, `lucide-react`, `react-day-picker`
 - **HazoUiMultiSortDialog requires**: `@radix-ui/react-dialog`, `@radix-ui/react-popover`, `@radix-ui/react-select`, `@radix-ui/react-tooltip`, `@dnd-kit/core`, `@dnd-kit/sortable`, `@dnd-kit/utilities`, `lucide-react`
 - **HazoUiFlexRadio requires**: `@radix-ui/react-radio-group`, `@radix-ui/react-tooltip`, `react-icons`, `lucide-react`
+- **HazoUiFlexInput requires**: No additional dependencies (uses base shadcn/ui Input component)
 
 ### 4. Configure Tailwind CSS
 
@@ -150,7 +151,7 @@ import { HazoUiMultiFilterDialog } from 'hazo_ui';
 import { HazoUiMultiFilterDialog, type FilterField, type FilterConfig } from 'hazo_ui';
 
 // Import multiple components
-import { HazoUiMultiFilterDialog, HazoUiMultiSortDialog, HazoUiFlexRadio } from 'hazo_ui';
+import { HazoUiMultiFilterDialog, HazoUiMultiSortDialog, HazoUiFlexRadio, HazoUiFlexInput } from 'hazo_ui';
 ```
 
 [ ] Use the component in your code (see README.md for detailed usage examples)
@@ -183,6 +184,9 @@ import { HazoUiMultiFilterDialog, HazoUiMultiSortDialog, HazoUiFlexRadio } from 
 
 **Issue**: Date picker not working (for HazoUiMultiFilterDialog)
 - **Solution**: Ensure `react-day-picker` and `date-fns` are installed
+
+**Issue**: Input validation not working (for HazoUiFlexInput)
+- **Solution**: Ensure the component is properly controlled with `value` and `onChange` props, and validation occurs on blur
 
 ## Next Steps
 
