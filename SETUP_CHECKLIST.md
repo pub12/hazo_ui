@@ -9,7 +9,45 @@ This checklist will guide you through installing and setting up hazo_ui in your 
 - [ ] A React project (Next.js, Create React App, Vite, etc.)
 - [ ] Tailwind CSS configured in your project
 
-## Installation Steps
+## Quick Setup (Recommended)
+
+### 1. Install the Package
+
+```bash
+npm install hazo_ui
+```
+
+### 2. Import CSS Variables
+
+Add to your app's entry point (e.g., `layout.tsx`, `_app.tsx`, or `main.tsx`):
+
+```tsx
+import 'hazo_ui/styles.css';
+```
+
+### 3. Configure Tailwind
+
+Update your `tailwind.config.ts`:
+
+```ts
+import hazoUiPreset from 'hazo_ui/tailwind-preset';
+
+export default {
+  presets: [hazoUiPreset],
+  content: [
+    './src/**/*.{js,ts,jsx,tsx}',
+    './node_modules/hazo_ui/dist/**/*.js',
+  ],
+};
+```
+
+**Done!** You can now use the components.
+
+---
+
+## Manual Setup (Alternative)
+
+If you prefer not to use the preset, or need custom configuration:
 
 ### 1. Install the Package
 

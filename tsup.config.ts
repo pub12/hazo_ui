@@ -1,6 +1,7 @@
 // Build configuration for hazo_ui component library
 // Uses tsup for fast, tree-shakeable builds with ESM and CJS support
 import { defineConfig } from "tsup";
+import { copyFileSync } from "fs";
 
 export default defineConfig({
   entry: ["src/index.ts"],
@@ -16,6 +17,11 @@ export default defineConfig({
     options.banner = {
       js: '"use client";',
     };
+  },
+  onSuccess: async () => {
+    // Copy CSS file to dist folder
+    copyFileSync("src/styles/hazo-ui.css", "dist/styles.css");
+    console.log("✓ Copied styles.css to dist/");
   },
 });
 

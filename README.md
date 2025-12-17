@@ -8,6 +8,41 @@ A set of UI components for common interaction elements in a SaaS app.
 npm install hazo_ui
 ```
 
+## Quick Setup (Required)
+
+hazo_ui uses Tailwind CSS and CSS variables for styling. Follow these two steps:
+
+### Step 1: Import the CSS variables
+
+Add to your app's entry point (e.g., `layout.tsx`, `_app.tsx`, or `main.tsx`):
+
+```tsx
+import 'hazo_ui/styles.css';
+```
+
+### Step 2: Configure Tailwind
+
+Update your `tailwind.config.ts`:
+
+```ts
+import hazoUiPreset from 'hazo_ui/tailwind-preset';
+
+export default {
+  presets: [hazoUiPreset],
+  content: [
+    './src/**/*.{js,ts,jsx,tsx}',
+    './node_modules/hazo_ui/dist/**/*.js',  // Required: scan hazo_ui components
+  ],
+  // ... your other config
+};
+```
+
+That's it! The components will now render correctly with proper styling.
+
+> **Note**: If you already have shadcn/ui configured with CSS variables, you may skip Step 1 as the variables are compatible.
+
+---
+
 ## Components
 
 ### Component Overview

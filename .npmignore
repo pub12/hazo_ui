@@ -5,10 +5,13 @@ dev-app
 storybook-static
 
 # Development files
-*.config.ts
-*.config.js
 tsconfig.json
 tsup.config.ts
+tailwind.config.ts
+postcss.config.cjs
+
+# Keep tailwind.preset.js (for consumers)
+!tailwind.preset.js
 
 # Git files
 .git
@@ -26,7 +29,11 @@ coverage
 *.spec.ts
 *.spec.tsx
 
-# Documentation
-README.md
-*.md
+# Documentation (exclude most, but keep README)
+!README.md
+CLAUDE.md
+CHANGE_LOG.md
+TECHDOC.md
+SETUP_CHECKLIST.md
+docs
 
