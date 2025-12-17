@@ -64,6 +64,8 @@ interface HazoUiMultiSortDialogProps {
   availableFields: SortField[];
   onSortChange: (sortConfig: SortConfig[]) => void;
   initialSortFields?: SortConfig[];
+  title?: string;
+  description?: string;
 }
 
 interface SortableSortFieldItemProps {
@@ -136,6 +138,8 @@ export function HazoUiMultiSortDialog({
   availableFields,
   onSortChange,
   initialSortFields = [],
+  title = "Sort",
+  description = "Add multiple fields to sort by and reorder them. Use the switch to toggle between ascending and descending.",
 }: HazoUiMultiSortDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [sortFields, setSortFields] = useState<SortConfig[]>(initialSortFields);
@@ -267,9 +271,9 @@ export function HazoUiMultiSortDialog({
       </TooltipProvider>
       <DialogContent className="cls_sort_dialog_content max-w-lg">
         <DialogHeader>
-          <DialogTitle>Sort Images</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
           <DialogDescription>
-            Add multiple fields to sort by and reorder them. Use the switch to toggle between ascending and descending.
+            {description}
           </DialogDescription>
         </DialogHeader>
         <div className="cls_sort_dialog_body space-y-4 py-4">

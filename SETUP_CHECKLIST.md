@@ -170,6 +170,15 @@ import { HazoUiMultiFilterDialog, HazoUiMultiSortDialog, HazoUiFlexRadio, HazoUi
 
 ### Common Issues
 
+**Issue**: Dialog appears without backdrop/overlay or looks unstyled
+- **Solution**: Ensure the CSS variables are defined in your globals.css (see Step 4 above). The backdrop uses `bg-black/80` which requires proper Tailwind configuration.
+
+**Issue**: Dropdowns/Selects appear as unstyled inputs
+- **Solution**:
+  1. Ensure you've added `./node_modules/hazo_ui/dist/**/*.{js,ts,jsx,tsx}` to your Tailwind config content array
+  2. Verify CSS variables like `--popover`, `--border`, `--input` are defined
+  3. Make sure `tailwindcss-animate` is installed and configured
+
 **Issue**: Components not styling correctly
 - **Solution**: Ensure Tailwind CSS is properly configured and CSS variables are set up
 

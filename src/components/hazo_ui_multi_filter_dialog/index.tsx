@@ -72,6 +72,8 @@ interface HazoUiMultiFilterDialogProps {
   availableFields: FilterField[];
   onFilterChange: (filterConfig: FilterConfig[]) => void;
   initialFilters?: FilterConfig[];
+  title?: string;
+  description?: string;
 }
 
 interface FilterFieldItemProps {
@@ -314,6 +316,8 @@ export function HazoUiMultiFilterDialog({
   availableFields,
   onFilterChange,
   initialFilters = [],
+  title = "Filter",
+  description = "Add multiple fields to filter by. Select a field and set its filter value.",
 }: HazoUiMultiFilterDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [filterFields, setFilterFields] = useState<FilterConfig[]>(initialFilters);
@@ -472,9 +476,9 @@ export function HazoUiMultiFilterDialog({
       </TooltipProvider>
       <DialogContent className="cls_filter_dialog_content max-w-lg w-full max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Filter Images</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
           <DialogDescription>
-            Add multiple fields to filter by. Select a field and set its filter value.
+            {description}
           </DialogDescription>
         </DialogHeader>
         <div className="cls_filter_dialog_body space-y-4 py-4">

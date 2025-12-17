@@ -151,12 +151,24 @@ function DataTable() {
         availableFields={availableFields}
         onFilterChange={handleFilterChange}
         initialFilters={filters}
+        title="Filter Products"           // Optional: customize dialog title (default: "Filter")
+        description="Filter by product attributes"  // Optional: customize description
       />
       {/* Your table/grid component */}
     </div>
   );
 }
 ```
+
+#### Props
+
+| Prop | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `availableFields` | `FilterField[]` | Yes | - | Array of field definitions for filtering |
+| `onFilterChange` | `(filters: FilterConfig[]) => void` | Yes | - | Callback when filters are applied |
+| `initialFilters` | `FilterConfig[]` | No | `[]` | Initial filter configuration |
+| `title` | `string` | No | `"Filter"` | Dialog title text |
+| `description` | `string` | No | `"Add multiple fields to filter by..."` | Dialog description text |
 
 #### Example Input
 
@@ -325,12 +337,24 @@ function DataTable() {
         availableFields={availableFields}
         onSortChange={handleSortChange}
         initialSortFields={sorts}
+        title="Sort Products"           // Optional: customize dialog title (default: "Sort")
+        description="Drag to reorder sort priority"  // Optional: customize description
       />
       {/* Your table/grid component */}
     </div>
   );
 }
 ```
+
+#### Props
+
+| Prop | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `availableFields` | `SortField[]` | Yes | - | Array of field definitions for sorting |
+| `onSortChange` | `(sorts: SortConfig[]) => void` | Yes | - | Callback when sorts are applied |
+| `initialSortFields` | `SortConfig[]` | No | `[]` | Initial sort configuration |
+| `title` | `string` | No | `"Sort"` | Dialog title text |
+| `description` | `string` | No | `"Add multiple fields to sort by..."` | Dialog description text |
 
 #### Example Input
 
