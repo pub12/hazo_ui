@@ -172,6 +172,7 @@ export const HazoUiRte: React.FC<HazoUiRteProps> = ({
     ],
     content: html,
     editable: !disabled,
+    immediatelyRender: false, // Prevent SSR hydration mismatch in Next.js
     editorProps: {
       attributes: {
         class: cn(

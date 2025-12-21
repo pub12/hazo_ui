@@ -13,12 +13,17 @@
       "require": "./dist/index.cjs"
     },
     "./styles.css": "./dist/styles.css",
-    "./tailwind-preset": "./tailwind.preset.js",
+    "./tailwind-preset": {
+      "types": "./tailwind.preset.d.ts",
+      "import": "./tailwind.preset.js",
+      "require": "./tailwind.preset.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
     "dist",
     "tailwind.preset.js",
+    "tailwind.preset.d.ts",
     "README.md"
   ],
   "scripts": {
