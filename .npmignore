@@ -21,6 +21,7 @@ postcss.config.cjs
 .vscode
 .idea
 *.swp
+.playwright-mcp
 
 # Test files
 coverage

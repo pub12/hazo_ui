@@ -40,3 +40,4 @@ storybook-static
 *.tmp
 *.temp
 
+.playwright-mcp/

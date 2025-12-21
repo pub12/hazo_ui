@@ -2,9 +2,6 @@
 // Export all components here to enable tree-shaking
 // Components should be imported individually: import { Button } from 'hazo_ui'
 
-// Example component export (replace with your actual components)
-export { ExampleComponent } from "./components/example_component";
-
 // HazoUiMultiFilterDialog component
 export { HazoUiMultiFilterDialog } from "./components/hazo_ui_multi_filter_dialog";
 export type { FilterField, FilterConfig } from "./components/hazo_ui_multi_filter_dialog";
@@ -20,4 +17,13 @@ export type { HazoUiFlexRadioItem, HazoUiFlexRadioProps } from "./components/haz
 // HazoUiFlexInput component
 export { HazoUiFlexInput } from "./components/hazo_ui_flex_input";
 export type { HazoUiFlexInputProps } from "./components/hazo_ui_flex_input";
+
+// HazoUiRte component - Rich Text Editor
+export { HazoUiRte } from "./components/hazo_ui_rte";
+export type {
+  HazoUiRteProps,
+  RteOutput,
+  RteAttachment,
+  RteVariable,
+} from "./components/hazo_ui_rte";
 

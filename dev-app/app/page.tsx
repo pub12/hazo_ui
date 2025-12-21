@@ -3,7 +3,7 @@
 "use client";
 
 import { useState } from "react";
-import { HazoUiMultiFilterDialog, type FilterField, type FilterConfig } from "hazo_ui";
+import { HazoUiMultiFilterDialog, type FilterField, type FilterConfig, HazoUiRte, type RteOutput, type RteVariable } from "hazo_ui";
 
 /**
  * Main page for testing hazo_ui components
@@ -11,6 +11,18 @@ import { HazoUiMultiFilterDialog, type FilterField, type FilterConfig } from "ha
  */
 export default function Home() {
   const [filters, setFilters] = useState<FilterConfig[]>([]);
+  const [rte_output, set_rte_output] = useState<RteOutput>({
+    html: "",
+    plain_text: "",
+    attachments: [],
+  });
+
+  // RTE test variables
+  const rte_variables: RteVariable[] = [
+    { name: "first_name", description: "First name" },
+    { name: "last_name", description: "Last name" },
+    { name: "company", description: "Company name" },
+  ];
 
   // Define available filter fields for testing
   const availableFields: FilterField[] = [
@@ -119,6 +131,32 @@ export default function Home() {
               onFilterChange={handleFilterChange}
               initialFilters={filters}
             />
+          </div>
+        </div>
+
+        {/* RTE Component Test */}
+        <div className="cls_rte_section space-y-4 mt-8">
+          <div className="cls_rte_header">
+            <h2 className="cls_rte_title text-xl font-semibold mb-2">
+              HazoUiRte Component (Rich Text Editor)
+            </h2>
+            <p className="cls_rte_description text-sm text-muted-foreground mb-4">
+              Test the rich text editor with variables support.
+            </p>
+          </div>
+
+          <HazoUiRte
+            variables={rte_variables}
+            on_change={set_rte_output}
+            placeholder="Start typing..."
+            min_height="200px"
+          />
+
+          <div className="cls_rte_output p-3 border rounded-md bg-card">
+            <h3 className="font-medium mb-2">Output:</h3>
+            <pre className="text-xs overflow-auto max-h-32">
+              {JSON.stringify(rte_output, null, 2)}
+            </pre>
           </div>
         </div>
 

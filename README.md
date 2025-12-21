@@ -55,6 +55,8 @@ That's it! The components will now render correctly with proper styling.
 
 - **[HazoUiFlexInput](#hazouiflexinput)** - An enhanced input component with type validation, character restrictions, and error messaging. Supports numeric, alpha, email, and mixed input types with built-in validation and formatting guides.
 
+- **[HazoUiRte](#hazouirte)** - A comprehensive rich text editor for email template generation with variable insertion support, file attachments, and full formatting controls. Built on Tiptap with support for tables, lists, images, and multiple view modes (HTML, Plain Text, Raw HTML).
+
 ---
 
 ## HazoUiMultiFilterDialog
@@ -976,6 +978,259 @@ The component provides default error messages for common validation failures:
 - **Email**: "Must be a valid email address"
 - **Mixed**: "Must be at least X characters", "Must be at most X characters"
 - **Regex**: "Invalid format" (or custom message via `format_guide`)
+
+---
+
+## HazoUiRte
+
+A comprehensive rich text editor component designed for email template generation. Features variable insertion for dynamic content, file attachments, and a full-featured formatting toolbar. Built on [Tiptap](https://tiptap.dev/), a headless editor framework.
+
+#### Features
+
+- **Rich Text Formatting**: Bold, italic, underline, strikethrough, subscript, superscript
+- **Block Types**: Paragraphs, headings (H1-H3), bullet lists, numbered lists, checklists, blockquotes, code blocks
+- **Font Controls**: Font family selection, font size adjustment (8-72px)
+- **Text Alignment**: Left, center, right, justify
+- **Colors**: Text color and highlight/background color with color picker
+- **Links**: Insert and edit hyperlinks
+- **Images**: Insert images (supports base64 and URLs)
+- **Tables**: Insert tables with custom size, add/remove rows and columns
+- **Horizontal Rules**: Insert dividers
+- **Variable Insertion**: Insert template variables (e.g., `{{first_name}}`) for email personalization
+- **File Attachments**: Attach files stored as base64-encoded data
+- **View Modes**: Switch between HTML editor, Plain Text view, and Raw HTML view
+- **Undo/Redo**: Full history support
+- **Indent/Outdent**: Control list indentation
+
+> **Note**: HazoUiRte includes Tiptap and ~17 extension packages. This may impact your bundle size if you're not already using Tiptap in your project.
+
+#### Type Definitions
+
+```typescript
+interface HazoUiRteProps {
+  // Initial HTML content
+  html?: string;
+
+  // Initial plain text (typically not used directly)
+  plain_text?: string;
+
+  // Initial file attachments
+  attachments?: RteAttachment[];
+
+  // Template variables available for insertion
+  variables?: RteVariable[];
+
+  // Callback fired when content changes (debounced 300ms)
+  on_change?: (output: RteOutput) => void;
+
+  // Placeholder text when editor is empty
+  placeholder?: string;  // default: "Start typing..."
+
+  // Editor height constraints
+  min_height?: string;   // default: "200px"
+  max_height?: string;   // default: "400px"
+
+  // Disable editing
+  disabled?: boolean;    // default: false
+
+  // Additional CSS classes
+  className?: string;
+
+  // Show view mode tabs (HTML, Plain Text, Raw HTML)
+  show_output_viewer?: boolean;  // default: false
+}
+
+interface RteAttachment {
+  filename: string;      // e.g., "document.pdf"
+  mime_type: string;     // e.g., "application/pdf"
+  data: string;          // base64 encoded content
+}
+
+interface RteVariable {
+  name: string;          // Variable name (e.g., "first_name")
+  description: string;   // Description shown in dropdown
+}
+
+interface RteOutput {
+  html: string;          // HTML content
+  plain_text: string;    // Plain text content (tags stripped)
+  attachments: RteAttachment[];  // Current attachments
+}
+```
+
+#### Basic Usage
+
+```tsx
+import { HazoUiRte, type RteOutput } from 'hazo_ui';
+import { useState } from 'react';
+
+function BasicEditor() {
+  const [content, setContent] = useState<RteOutput | null>(null);
+
+  return (
+    <HazoUiRte
+      placeholder="Start typing your content..."
+      min_height="200px"
+      max_height="400px"
+      on_change={(output) => setContent(output)}
+    />
+  );
+}
+```
+
+#### Email Template with Variables
+
+```tsx
+import { HazoUiRte, type RteOutput, type RteVariable } from 'hazo_ui';
+import { useState } from 'react';
+
+function EmailTemplateEditor() {
+  const [content, setContent] = useState<RteOutput | null>(null);
+
+  // Define available template variables
+  const variables: RteVariable[] = [
+    { name: "first_name", description: "Recipient's first name" },
+    { name: "last_name", description: "Recipient's last name" },
+    { name: "email", description: "Recipient's email address" },
+    { name: "company_name", description: "Company name" },
+    { name: "order_id", description: "Order ID number" },
+    { name: "order_date", description: "Date of order" },
+    { name: "total_amount", description: "Total order amount" },
+  ];
+
+  // Initial template HTML
+  const initialHtml = `
+    <h2>Order Confirmation</h2>
+    <p>Dear <span data-variable="first_name">{{first_name}}</span>,</p>
+    <p>Thank you for your order!</p>
+    <p>Order ID: <span data-variable="order_id">{{order_id}}</span></p>
+    <p>Total: <span data-variable="total_amount">{{total_amount}}</span></p>
+  `;
+
+  return (
+    <HazoUiRte
+      html={initialHtml}
+      variables={variables}
+      placeholder="Compose your email template..."
+      show_output_viewer={true}
+      on_change={(output) => {
+        setContent(output);
+        console.log('HTML:', output.html);
+        console.log('Plain text:', output.plain_text);
+      }}
+    />
+  );
+}
+```
+
+#### With File Attachments
+
+```tsx
+import { HazoUiRte, type RteOutput, type RteAttachment } from 'hazo_ui';
+import { useState } from 'react';
+
+function EditorWithAttachments() {
+  const [content, setContent] = useState<RteOutput | null>(null);
+
+  // Pre-loaded attachments (if any)
+  const initialAttachments: RteAttachment[] = [
+    {
+      filename: "terms.pdf",
+      mime_type: "application/pdf",
+      data: "JVBERi0xLjQK...", // base64 encoded PDF
+    },
+  ];
+
+  return (
+    <HazoUiRte
+      html="<p>Please see the attached document.</p>"
+      attachments={initialAttachments}
+      on_change={(output) => {
+        setContent(output);
+        // Access attachments from output
+        console.log('Attachments:', output.attachments);
+      }}
+    />
+  );
+}
+```
+
+#### With Output Viewer Tabs
+
+The `show_output_viewer` prop enables tabs to switch between different views:
+
+- **HTML**: The rich text editor (default, editable)
+- **Plain Text**: Plain text version with HTML tags stripped (view-only)
+- **Raw HTML**: Formatted HTML source code (view-only)
+
+```tsx
+import { HazoUiRte } from 'hazo_ui';
+
+function EditorWithViewer() {
+  return (
+    <HazoUiRte
+      html="<p>Hello <strong>World</strong>!</p>"
+      show_output_viewer={true}
+      min_height="300px"
+    />
+  );
+}
+```
+
+When viewing Plain Text or Raw HTML tabs, the toolbar is disabled (grayed out) since those are view-only modes.
+
+#### Disabled State
+
+```tsx
+import { HazoUiRte } from 'hazo_ui';
+
+function ReadOnlyEditor() {
+  return (
+    <HazoUiRte
+      html="<p>This content cannot be edited.</p>"
+      disabled={true}
+    />
+  );
+}
+```
+
+#### Props Reference
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `html` | `string` | `""` | Initial HTML content |
+| `plain_text` | `string` | - | Initial plain text (rarely used) |
+| `attachments` | `RteAttachment[]` | `[]` | Initial file attachments |
+| `variables` | `RteVariable[]` | `[]` | Template variables for insertion |
+| `on_change` | `(output: RteOutput) => void` | - | Callback when content changes (debounced 300ms) |
+| `placeholder` | `string` | `"Start typing..."` | Placeholder text |
+| `min_height` | `string` | `"200px"` | Minimum editor height |
+| `max_height` | `string` | `"400px"` | Maximum editor height |
+| `disabled` | `boolean` | `false` | Disable editing |
+| `className` | `string` | - | Additional CSS classes |
+| `show_output_viewer` | `boolean` | `false` | Show HTML/Plain Text/Raw HTML tabs |
+
+#### Toolbar Controls
+
+The toolbar includes the following controls (left to right):
+
+1. **Undo/Redo** - History navigation
+2. **Block Type** - Paragraph, Headings, Lists, Code, Quote
+3. **Font Family** - Arial, Verdana, Times New Roman, Georgia, Courier New, Trebuchet MS
+4. **Font Size** - Decrease/Increase (8-72px)
+5. **Text Formatting** - Bold, Italic, Underline, Strikethrough, Subscript, Superscript
+6. **Link** - Insert/edit hyperlinks
+7. **Clear Formatting** - Remove all formatting
+8. **Text Color** - Color picker for text
+9. **Highlight Color** - Color picker for background
+10. **Text Alignment** - Left, Center, Right, Justify
+11. **Lists** - Bullet list, Numbered list, Checklist
+12. **Indent/Outdent** - Adjust list indentation
+13. **Horizontal Rule** - Insert divider
+14. **Image** - Insert image
+15. **Table** - Insert table with size picker, add/remove rows/columns
+16. **Variables** - Insert template variables (if `variables` prop provided)
+17. **Attachment** - Attach files
 
 ---
 

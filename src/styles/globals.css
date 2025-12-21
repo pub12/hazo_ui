@@ -61,3 +61,73 @@
   }
 }
 
+/* RTE Editor Styles */
+/* Headings */
+.cls_rte_editor h1 {
+  @apply text-3xl font-bold mb-4 mt-2;
+}
+.cls_rte_editor h2 {
+  @apply text-2xl font-semibold mb-3 mt-2;
+}
+.cls_rte_editor h3 {
+  @apply text-xl font-semibold mb-2 mt-2;
+}
+
+/* Lists */
+.cls_rte_editor ul {
+  @apply list-disc pl-6 mb-4;
+}
+.cls_rte_editor ol {
+  @apply list-decimal pl-6 mb-4;
+}
+.cls_rte_editor li {
+  @apply mb-1;
+}
+.cls_rte_editor li > ul,
+.cls_rte_editor li > ol {
+  @apply mt-1 mb-0;
+}
+
+/* Task List */
+.cls_rte_editor ul[data-type="taskList"] {
+  @apply list-none pl-0;
+}
+.cls_rte_editor ul[data-type="taskList"] li {
+  @apply flex items-start gap-2;
+}
+.cls_rte_editor ul[data-type="taskList"] li > label {
+  @apply flex items-center;
+}
+.cls_rte_editor ul[data-type="taskList"] li > label > input[type="checkbox"] {
+  @apply mt-1;
+}
+.cls_rte_editor ul[data-type="taskList"] li > div {
+  @apply flex-1;
+}
+
+/* Blockquote */
+.cls_rte_editor blockquote {
+  @apply border-l-4 border-primary/30 pl-4 italic my-4;
+}
+
+/* Code */
+.cls_rte_editor pre {
+  @apply bg-muted p-4 rounded-md overflow-x-auto my-4 font-mono text-sm;
+}
+.cls_rte_editor code {
+  @apply bg-muted px-1.5 py-0.5 rounded text-sm font-mono;
+}
+.cls_rte_editor pre code {
+  @apply bg-transparent p-0;
+}
+
+/* Paragraph */
+.cls_rte_editor p {
+  @apply mb-2;
+}
+
+/* Horizontal rule */
+.cls_rte_editor hr {
+  @apply my-4 border-border;
+}
+
