@@ -27,3 +27,32 @@ export type {
   RteVariable,
 } from "./components/hazo_ui_rte";
 
+// HazoUiCommand - Headless command/mention system
+export {
+  CommandNodeExtension,
+  CommandPill,
+  CommandPopover,
+  create_command_suggestion_extension,
+  parse_commands_from_text,
+  text_to_tiptap_content,
+} from "./components/hazo_ui_command";
+export type {
+  CommandItem,
+  PrefixConfig,
+  InsertedCommand,
+  CommandTextOutput,
+  CommandPopoverProps,
+  CommandPillProps,
+  SuggestionState,
+  BaseCommandInputProps,
+  CommandEditContext,
+} from "./components/hazo_ui_command";
+
+// HazoUiTextbox - Single-line input with command support
+export { HazoUiTextbox } from "./components/hazo_ui_textbox";
+export type { HazoUiTextboxProps } from "./components/hazo_ui_textbox";
+
+// HazoUiTextarea - Multi-line input with command support
+export { HazoUiTextarea } from "./components/hazo_ui_textarea";
+export type { HazoUiTextareaProps } from "./components/hazo_ui_textarea";
+
