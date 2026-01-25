@@ -95,14 +95,16 @@ export const CommandPopover: React.FC<CommandPopoverProps> = ({
       ref={container_ref}
       className={cn(
         "cls_command_popover",
-        "fixed z-[9999]",
+        "fixed",
         "w-64 min-w-[200px] max-w-[300px]",
         "rounded-md border bg-popover text-popover-foreground shadow-lg",
         "animate-in fade-in-0 zoom-in-95"
       )}
       style={{
+        position: "fixed",
         top: position.top,
         left: position.left,
+        zIndex: 9999,
       }}
     >
       <Command className="rounded-md">

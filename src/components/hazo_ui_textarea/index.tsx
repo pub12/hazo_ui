@@ -577,14 +577,16 @@ export const HazoUiTextarea: React.FC<HazoUiTextareaProps> = ({
           ref={edit_popover_ref}
           className={cn(
             "cls_edit_popover",
-            "fixed z-[9999]",
+            "fixed",
             "w-64 min-w-[200px] max-w-[300px]",
             "rounded-md border bg-popover text-popover-foreground shadow-lg",
             "animate-in fade-in-0 zoom-in-95"
           )}
           style={{
+            position: "fixed",
             top: edit_context.rect.y,
             left: edit_context.rect.x,
+            zIndex: 9999,
           }}
         >
           <div className="py-1">
