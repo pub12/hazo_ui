@@ -92,8 +92,9 @@ const CommandItem = React.forwardRef<
   React.HTMLAttributes<HTMLDivElement> & {
     onSelect?: (value: string) => void;
     value?: string;
+    selected?: boolean;
   }
->(({ className, onSelect, value, style, ...props }, ref) => {
+>(({ className, onSelect, value, selected, style, ...props }, ref) => {
   const handleClick = () => {
     if (onSelect && value) {
       onSelect(value);
@@ -106,13 +107,16 @@ const CommandItem = React.forwardRef<
       className={cn(
         "cls_command_item",
         "relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        // When selected, apply accent background and ensure all text is visible
+        selected && "bg-accent text-accent-foreground [&_.text-muted-foreground]:text-accent-foreground/70",
         className
       )}
-      style={{
-        // Ensure items have opaque background (inherit from popover container)
-        backgroundColor: "inherit",
+      style={selected ? {
+        // Explicit inline styles as fallback for consumers with non-HSL CSS variables
+        backgroundColor: "var(--accent, #f1f5f9)",
+        color: "var(--accent-foreground, #0f172a)",
         ...style,
-      }}
+      } : style}
       onClick={handleClick}
       {...props}
     />

@@ -84,14 +84,33 @@
 .cls_command_dropdown .cls_command_item:hover,
 .cls_command_popover .cls_command_item.bg-accent,
 .cls_command_dropdown .cls_command_item.bg-accent {
-  background-color: var(--accent, #f1f5f9);
+  background-color: var(--accent, #f1f5f9) !important;
+  color: var(--accent-foreground, #0f172a) !important;
+}
+
+/* Ensure nested text elements are visible when parent is selected */
+.cls_command_popover .cls_command_item.bg-accent *,
+.cls_command_dropdown .cls_command_item.bg-accent * {
+  color: inherit;
+}
+
+/* Description text in selected items - slightly muted but still visible */
+.cls_command_popover .cls_command_item.bg-accent .text-muted-foreground,
+.cls_command_dropdown .cls_command_item.bg-accent .text-muted-foreground {
   color: var(--accent-foreground, #0f172a);
+  opacity: 0.7;
 }
 
 .dark .cls_command_popover .cls_command_item:hover,
 .dark .cls_command_dropdown .cls_command_item:hover,
 .dark .cls_command_popover .cls_command_item.bg-accent,
 .dark .cls_command_dropdown .cls_command_item.bg-accent {
-  background-color: var(--accent, #334155);
+  background-color: var(--accent, #334155) !important;
+  color: var(--accent-foreground, #f8fafc) !important;
+}
+
+.dark .cls_command_popover .cls_command_item.bg-accent .text-muted-foreground,
+.dark .cls_command_dropdown .cls_command_item.bg-accent .text-muted-foreground {
   color: var(--accent-foreground, #f8fafc);
+  opacity: 0.7;
 }

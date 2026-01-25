@@ -143,9 +143,7 @@ export const CommandPopover: React.FC<CommandPopoverProps> = ({
                     key={cmd.action}
                     value={cmd.action}
                     onSelect={() => on_select(cmd)}
-                    className={cn(
-                      flat_idx === selected_index && "bg-accent"
-                    )}
+                    selected={flat_idx === selected_index}
                   >
                     <div className="flex items-center gap-2 w-full">
                       {cmd.icon && (
