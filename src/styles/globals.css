@@ -131,3 +131,31 @@
   @apply my-4 border-border;
 }
 
+/* Command Dropdown/Popover Styles */
+/* Default styles for command dropdowns to ensure proper visual separation */
+.cls_command_popover,
+.cls_command_dropdown,
+.cls_textarea_command_dropdown,
+.cls_edit_popover {
+  background-color: hsl(var(--popover)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Dark mode shadow enhancement */
+.dark .cls_command_popover,
+.dark .cls_command_dropdown,
+.dark .cls_textarea_command_dropdown,
+.dark .cls_edit_popover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Command item hover states */
+.cls_command_popover [role="option"]:hover,
+.cls_command_popover [role="option"][aria-selected="true"],
+.cls_command_dropdown [role="option"]:hover,
+.cls_command_dropdown [role="option"][aria-selected="true"] {
+  background-color: hsl(var(--accent)) !important;
+}
+

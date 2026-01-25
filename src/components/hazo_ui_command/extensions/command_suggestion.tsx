@@ -54,30 +54,38 @@ const create_suggestion_config = (
     render: () => {
       return {
         onStart: (props) => {
-          on_suggestion_change({
-            is_active: true,
-            query: props.query,
-            prefix: prefix_config.char,
-            client_rect: props.clientRect as () => DOMRect | null,
-            commands: prefix_config.commands,
-            range: props.range,
+          // Defer React state update to avoid flushSync error during TipTap's render cycle
+          queueMicrotask(() => {
+            on_suggestion_change({
+              is_active: true,
+              query: props.query,
+              prefix: prefix_config.char,
+              client_rect: props.clientRect as () => DOMRect | null,
+              commands: prefix_config.commands,
+              range: props.range,
+            });
           });
         },
 
         onUpdate: (props) => {
-          on_suggestion_change({
-            is_active: true,
-            query: props.query,
-            prefix: prefix_config.char,
-            client_rect: props.clientRect as () => DOMRect | null,
-            commands: prefix_config.commands,
-            range: props.range,
+          // Defer React state update to avoid flushSync error during TipTap's render cycle
+          queueMicrotask(() => {
+            on_suggestion_change({
+              is_active: true,
+              query: props.query,
+              prefix: prefix_config.char,
+              client_rect: props.clientRect as () => DOMRect | null,
+              commands: prefix_config.commands,
+              range: props.range,
+            });
           });
         },
 
         onKeyDown: (props) => {
           if (props.event.key === "Escape") {
-            on_suggestion_change(null);
+            queueMicrotask(() => {
+              on_suggestion_change(null);
+            });
             return true;
           }
           // Let the popover handle arrow keys and enter
@@ -92,7 +100,10 @@ const create_suggestion_config = (
         },
 
         onExit: () => {
-          on_suggestion_change(null);
+          // Defer React state update to avoid flushSync error during TipTap's render cycle
+          queueMicrotask(() => {
+            on_suggestion_change(null);
+          });
         },
       };
     },
