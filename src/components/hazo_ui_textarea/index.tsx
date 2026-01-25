@@ -8,6 +8,7 @@
  */
 
 import * as React from "react";
+import { createPortal } from "react-dom";
 import { useEditor, EditorContent } from "@tiptap/react";
 import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
@@ -143,6 +144,13 @@ export const HazoUiTextarea: React.FC<HazoUiTextareaProps> = ({
   const editor_container_ref = React.useRef<HTMLDivElement>(null);
   const edit_popover_ref = React.useRef<HTMLDivElement>(null);
 
+  // Track if we're in a browser environment for SSR compatibility
+  const [mounted, set_mounted] = React.useState(false);
+
+  React.useEffect(() => {
+    set_mounted(true);
+  }, []);
+
   // Calculate height from rows if provided
   const calculated_min_height = rows ? `${rows * 1.5}em` : min_height;
 
@@ -207,25 +215,20 @@ export const HazoUiTextarea: React.FC<HazoUiTextareaProps> = ({
   });
 
   // Update popover position when suggestion state changes
+  // Now uses viewport coordinates since popover is rendered via portal
   React.useEffect(() => {
-    if (suggestion_state?.is_active && editor && editor_container_ref.current) {
+    if (suggestion_state?.is_active && editor) {
       // Use requestAnimationFrame to ensure DOM is updated
       requestAnimationFrame(() => {
-        const container = editor_container_ref.current;
-        if (!container) return;
-
-        // Get container's position for relative calculations
-        const container_rect = container.getBoundingClientRect();
-
         // Get cursor position using TipTap's view.coordsAtPos
         const { from } = suggestion_state.range;
         try {
           const coords = editor.view.coordsAtPos(from);
           if (coords) {
-            // Calculate position relative to container
+            // Use viewport coordinates directly for fixed positioning
             set_popover_position({
-              top: coords.bottom - container_rect.top + 4,
-              left: coords.left - container_rect.left,
+              top: coords.bottom + 4,
+              left: coords.left,
             });
           }
         } catch {
@@ -233,8 +236,8 @@ export const HazoUiTextarea: React.FC<HazoUiTextareaProps> = ({
           const rect = suggestion_state.client_rect?.();
           if (rect) {
             set_popover_position({
-              top: rect.bottom - container_rect.top + 4,
-              left: rect.left - container_rect.left,
+              top: rect.bottom + 4,
+              left: rect.left,
             });
           }
         }
@@ -479,9 +482,7 @@ export const HazoUiTextarea: React.FC<HazoUiTextareaProps> = ({
       const { id, prefix, action, action_label, node_pos } = detail;
 
       // Find the pill element to get its position
-      if (editor && editor_container_ref.current) {
-        const container_rect = editor_container_ref.current.getBoundingClientRect();
-
+      if (editor) {
         // Get the position of the clicked pill node
         try {
           const coords = editor.view.coordsAtPos(node_pos);
@@ -492,6 +493,7 @@ export const HazoUiTextarea: React.FC<HazoUiTextareaProps> = ({
               (cmd) => cmd.action === action
             ) ?? 0;
 
+            // Use viewport coordinates directly for fixed positioning
             set_edit_context({
               command: {
                 id,
@@ -503,8 +505,8 @@ export const HazoUiTextarea: React.FC<HazoUiTextareaProps> = ({
               },
               node_pos,
               rect: new DOMRect(
-                coords.left - container_rect.left,
-                coords.bottom - container_rect.top + 4,
+                coords.left,
+                coords.bottom + 4,
                 0,
                 0
               ),
@@ -569,13 +571,13 @@ export const HazoUiTextarea: React.FC<HazoUiTextareaProps> = ({
         />
       )}
 
-      {/* Edit Popover */}
-      {edit_context && (
+      {/* Edit Popover - rendered via portal to escape stacking contexts */}
+      {edit_context && mounted && createPortal(
         <div
           ref={edit_popover_ref}
           className={cn(
             "cls_edit_popover",
-            "absolute z-[9999]",
+            "fixed z-[9999]",
             "w-64 min-w-[200px] max-w-[300px]",
             "rounded-md border bg-popover text-popover-foreground shadow-lg",
             "animate-in fade-in-0 zoom-in-95"
@@ -635,7 +637,8 @@ export const HazoUiTextarea: React.FC<HazoUiTextareaProps> = ({
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

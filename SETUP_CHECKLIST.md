@@ -95,6 +95,9 @@ npm install @radix-ui/react-dialog @radix-ui/react-popover @radix-ui/react-selec
 - **HazoUiMultiSortDialog requires**: `@radix-ui/react-dialog`, `@radix-ui/react-popover`, `@radix-ui/react-select`, `@radix-ui/react-tooltip`, `@dnd-kit/core`, `@dnd-kit/sortable`, `@dnd-kit/utilities`, `lucide-react`
 - **HazoUiFlexRadio requires**: `@radix-ui/react-radio-group`, `@radix-ui/react-tooltip`, `react-icons`, `lucide-react`
 - **HazoUiFlexInput requires**: No additional dependencies (uses base shadcn/ui Input component)
+- **HazoUiRte requires**: `@tiptap/react`, `@tiptap/extension-*` (multiple Tiptap extensions), `lucide-react`
+- **HazoUiTextbox requires**: `@tiptap/react`, `@tiptap/extension-document`, `@tiptap/extension-paragraph`, `@tiptap/extension-text`, `@tiptap/extension-placeholder`
+- **HazoUiTextarea requires**: Same as HazoUiTextbox plus `@tiptap/extension-hard-break`
 
 ### 4. Configure Tailwind CSS
 
@@ -234,6 +237,24 @@ import { HazoUiMultiFilterDialog, HazoUiMultiSortDialog, HazoUiFlexRadio, HazoUi
 
 **Issue**: Input validation not working (for HazoUiFlexInput)
 - **Solution**: Ensure the component is properly controlled with `value` and `onChange` props, and validation occurs on blur
+
+**Issue**: Command pills not appearing (for HazoUiTextbox/HazoUiTextarea)
+- **Solution**:
+  1. Ensure `prefixes` prop is properly configured with `char` and `commands` arrays
+  2. Verify you're typing the correct prefix character (e.g., @, #, /)
+  3. Check that `@tiptap/react` and related extensions are installed
+
+**Issue**: Edit popover not opening when clicking pills (for HazoUiTextbox/HazoUiTextarea)
+- **Solution**:
+  1. Ensure pills are rendered (check if commands are inserted)
+  2. Verify the `prefixes` array includes commands for the clicked pill's prefix
+  3. Check browser console for JavaScript errors
+
+**Issue**: Command dropdown not showing suggestions (for HazoUiTextbox/HazoUiTextarea)
+- **Solution**:
+  1. Type the prefix character (e.g., @, #, /) to trigger the dropdown
+  2. Ensure the `prefixes` prop includes a matching prefix configuration
+  3. Verify `commands` array is not empty for that prefix
 
 ## Next Steps
 

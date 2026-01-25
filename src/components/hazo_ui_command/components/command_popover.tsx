@@ -4,11 +4,15 @@
  * Dropdown menu for searching and selecting commands.
  * Supports keyboard navigation and command grouping.
  *
+ * Rendered via React Portal to document.body to escape parent stacking
+ * contexts and ensure the dropdown floats above all page content.
+ *
  * Note: The query filtering is handled by TipTap's suggestion extension,
  * so typing continues in the editor and filters the list automatically.
  */
 
 import * as React from "react";
+import { createPortal } from "react-dom";
 import { cn } from "../../../lib/utils";
 import {
   Command,
@@ -77,14 +81,21 @@ export const CommandPopover: React.FC<CommandPopoverProps> = ({
     }
   }, [is_open, on_close]);
 
-  if (!is_open) return null;
+  // Track if we're in a browser environment for SSR compatibility
+  const [mounted, set_mounted] = React.useState(false);
 
-  return (
+  React.useEffect(() => {
+    set_mounted(true);
+  }, []);
+
+  if (!is_open || !mounted) return null;
+
+  const popover_content = (
     <div
       ref={container_ref}
       className={cn(
         "cls_command_popover",
-        "absolute z-[9999]",
+        "fixed z-[9999]",
         "w-64 min-w-[200px] max-w-[300px]",
         "rounded-md border bg-popover text-popover-foreground shadow-lg",
         "animate-in fade-in-0 zoom-in-95"
@@ -157,6 +168,9 @@ export const CommandPopover: React.FC<CommandPopoverProps> = ({
       </Command>
     </div>
   );
+
+  // Render via portal to escape parent stacking contexts
+  return createPortal(popover_content, document.body);
 };
 
 CommandPopover.displayName = "CommandPopover";

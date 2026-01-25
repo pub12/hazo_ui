@@ -38,3 +38,12 @@ TECHDOC.md
 SETUP_CHECKLIST.md
 docs
 
+# Old package tarballs
+*.tgz
+
+# Package lock (consumers generate their own)
+package-lock.json
+
+# Cursor IDE
+.cursor
+

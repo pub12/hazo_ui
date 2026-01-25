@@ -57,6 +57,10 @@ That's it! The components will now render correctly with proper styling.
 
 - **[HazoUiRte](#hazouirte)** - A comprehensive rich text editor for email template generation with variable insertion support, file attachments, and full formatting controls. Built on Tiptap with support for tables, lists, images, and multiple view modes (HTML, Plain Text, Raw HTML).
 
+- **[HazoUiTextbox](#hazouitextbox)** - A single-line input component with command pill support. Allows users to insert prefix-triggered commands (e.g., @mentions, /commands, #tags) that appear as interactive pills. Includes click-to-edit functionality for modifying or removing inserted commands.
+
+- **[HazoUiTextarea](#hazouitextarea)** - A multi-line textarea component with command pill support. Similar to HazoUiTextbox but supports multi-line input with Shift+Enter for new lines and Cmd/Ctrl+Enter to submit. Features the same interactive pill editing capabilities.
+
 ---
 
 ## HazoUiMultiFilterDialog
@@ -1231,6 +1235,435 @@ The toolbar includes the following controls (left to right):
 15. **Table** - Insert table with size picker, add/remove rows/columns
 16. **Variables** - Insert template variables (if `variables` prop provided)
 17. **Attachment** - Attach files
+
+---
+
+## HazoUiTextbox
+
+A single-line text input component with prefix-triggered command pill support. Perfect for mention systems, command inputs, tag fields, and any input that needs to convert text patterns into interactive elements.
+
+#### Features
+
+- **Command Pills**: Convert prefix-triggered text (e.g., @mention, /command, #tag) into interactive pills
+- **Click to Edit**: Click any pill to open an edit popover with options to change or remove the command
+- **Keyboard Navigation**: Navigate edit options with Arrow Up/Down, select with Enter, close with Escape
+- **Multiple Prefixes**: Support multiple prefix types simultaneously (e.g., @ for users, # for tags, / for commands)
+- **Visual Variants**: Three pill styles - default (blue), outline (transparent), subtle (muted)
+- **Auto-complete Dropdown**: Searchable dropdown appears when typing a prefix character
+- **Controlled & Uncontrolled**: Supports both controlled and uncontrolled usage patterns
+- **Single-line Input**: Press Enter to submit (triggers `on_submit` callback)
+- **TypeScript Support**: Fully typed with comprehensive interfaces
+
+#### Type Definitions
+
+```typescript
+interface HazoUiTextboxProps {
+  // Controlled value (plain text with prefix+action format, e.g., "Hello @john_doe!")
+  value?: string;
+
+  // Uncontrolled default value
+  default_value?: string;
+
+  // Prefix configurations (required)
+  prefixes: PrefixConfig[];
+
+  // Input properties
+  placeholder?: string;  // default: "Type here..."
+  disabled?: boolean;    // default: false
+  className?: string;
+
+  // Pill styling
+  pill_variant?: "default" | "outline" | "subtle";  // default: "default"
+
+  // Callbacks
+  on_change?: (output: CommandTextOutput) => void;
+  on_submit?: (output: CommandTextOutput) => void;  // Triggered on Enter key
+  on_command_insert?: (command: CommandItem, prefix: string) => void;
+  on_command_change?: (old_command: InsertedCommand, new_command: CommandItem) => void;
+  on_command_remove?: (command: InsertedCommand) => void;
+}
+
+interface PrefixConfig {
+  char: string;          // Prefix character (e.g., "@", "/", "#")
+  commands: CommandItem[];  // Available commands for this prefix
+}
+
+interface CommandItem {
+  action: string;           // Unique action identifier (e.g., "john_doe")
+  action_label: string;     // Display label (e.g., "John Doe")
+  action_description?: string;  // Optional description shown in dropdown
+  icon?: React.ReactNode;   // Optional icon
+}
+
+interface CommandTextOutput {
+  plain_text: string;       // Plain text with prefix+action (e.g., "Hello @john_doe!")
+  display_text: string;     // Display text with labels (e.g., "Hello @John Doe!")
+  commands: InsertedCommand[];  // Array of inserted commands with positions
+}
+
+interface InsertedCommand {
+  id: string;               // Unique ID for this instance
+  prefix: string;           // The prefix character
+  action: string;           // The action identifier
+  action_label: string;     // The display label
+  position: number;         // Character position in plain_text
+  length: number;           // Length of the command in plain_text
+}
+```
+
+#### Basic Usage
+
+```tsx
+import { HazoUiTextbox, type PrefixConfig, type CommandTextOutput } from 'hazo_ui';
+import { useState } from 'react';
+
+function MentionInput() {
+  const [value, setValue] = useState<string>("");
+
+  // Define available mentions
+  const prefixes: PrefixConfig[] = [
+    {
+      char: "@",
+      commands: [
+        { action: "john_doe", action_label: "John Doe" },
+        { action: "jane_smith", action_label: "Jane Smith" },
+        { action: "bob_wilson", action_label: "Bob Wilson" },
+      ],
+    },
+  ];
+
+  const handleChange = (output: CommandTextOutput) => {
+    setValue(output.plain_text);
+    console.log('Plain text:', output.plain_text);
+    console.log('Display text:', output.display_text);
+    console.log('Commands:', output.commands);
+  };
+
+  return (
+    <HazoUiTextbox
+      value={value}
+      prefixes={prefixes}
+      placeholder="Type @ to mention someone..."
+      on_change={handleChange}
+    />
+  );
+}
+```
+
+#### Multiple Prefix Types
+
+```tsx
+import { HazoUiTextbox, type PrefixConfig } from 'hazo_ui';
+
+function MultiPrefixInput() {
+  const prefixes: PrefixConfig[] = [
+    {
+      char: "@",
+      commands: [
+        { action: "john", action_label: "John Doe", action_description: "Software Engineer" },
+        { action: "jane", action_label: "Jane Smith", action_description: "Product Manager" },
+      ],
+    },
+    {
+      char: "#",
+      commands: [
+        { action: "bug", action_label: "Bug", action_description: "Something is broken" },
+        { action: "feature", action_label: "Feature", action_description: "New functionality" },
+        { action: "docs", action_label: "Documentation", action_description: "Documentation update" },
+      ],
+    },
+    {
+      char: "/",
+      commands: [
+        { action: "assign", action_label: "Assign", action_description: "Assign to user" },
+        { action: "close", action_label: "Close", action_description: "Close this issue" },
+        { action: "archive", action_label: "Archive", action_description: "Archive this item" },
+      ],
+    },
+  ];
+
+  return (
+    <HazoUiTextbox
+      prefixes={prefixes}
+      placeholder="Type @, #, or / for commands..."
+      on_change={(output) => console.log(output)}
+    />
+  );
+}
+```
+
+#### With Command Callbacks
+
+```tsx
+import { HazoUiTextbox, type CommandItem, type InsertedCommand } from 'hazo_ui';
+
+function CommandInput() {
+  const prefixes = [
+    {
+      char: "@",
+      commands: [
+        { action: "alice", action_label: "Alice Johnson" },
+        { action: "bob", action_label: "Bob Smith" },
+      ],
+    },
+  ];
+
+  const handleInsert = (command: CommandItem, prefix: string) => {
+    console.log(`Inserted ${prefix}${command.action_label}`);
+    // Track analytics, send notifications, etc.
+  };
+
+  const handleChange = (old_command: InsertedCommand, new_command: CommandItem) => {
+    console.log(`Changed from ${old_command.action} to ${new_command.action}`);
+    // Update references, notify backend, etc.
+  };
+
+  const handleRemove = (command: InsertedCommand) => {
+    console.log(`Removed ${command.prefix}${command.action_label}`);
+    // Clean up references, update state, etc.
+  };
+
+  return (
+    <HazoUiTextbox
+      prefixes={prefixes}
+      placeholder="Mention someone..."
+      on_command_insert={handleInsert}
+      on_command_change={handleChange}
+      on_command_remove={handleRemove}
+      on_submit={(output) => console.log('Submitted:', output)}
+    />
+  );
+}
+```
+
+#### Pill Variants
+
+```tsx
+import { HazoUiTextbox } from 'hazo_ui';
+
+function VariantExample() {
+  const prefixes = [
+    {
+      char: "@",
+      commands: [{ action: "user", action_label: "Username" }],
+    },
+  ];
+
+  return (
+    <div className="space-y-4">
+      {/* Default: Blue background */}
+      <HazoUiTextbox
+        prefixes={prefixes}
+        pill_variant="default"
+        placeholder="Default variant (blue)..."
+      />
+
+      {/* Outline: Transparent with border */}
+      <HazoUiTextbox
+        prefixes={prefixes}
+        pill_variant="outline"
+        placeholder="Outline variant (transparent)..."
+      />
+
+      {/* Subtle: Muted background */}
+      <HazoUiTextbox
+        prefixes={prefixes}
+        pill_variant="subtle"
+        placeholder="Subtle variant (muted)..."
+      />
+    </div>
+  );
+}
+```
+
+#### Edit Popover Behavior
+
+When a user clicks on an inserted command pill:
+
+1. **Edit Popover Opens**: A dropdown appears below the clicked pill
+2. **Command Options**: Shows all available commands for that prefix
+3. **Current Selection**: The current command is highlighted with "current" label
+4. **Change Command**: Click any command to change to that option (triggers `on_command_change`)
+5. **Remove Command**: Click "Remove" at the bottom to delete the pill (triggers `on_command_remove`)
+6. **Keyboard Navigation**:
+   - Arrow Up/Down: Navigate options
+   - Enter: Select highlighted option
+   - Escape: Close popover without changes
+7. **Click Outside**: Click anywhere outside the popover to close without changes
+
+#### Expected Output
+
+```typescript
+// Example input: "Hello @john_doe and #feature request"
+// With prefixes: @ for users, # for tags
+
+const output: CommandTextOutput = {
+  plain_text: "Hello @john_doe and #feature request",
+  display_text: "Hello @John Doe and #Feature request",
+  commands: [
+    {
+      id: "cmd_abc123",
+      prefix: "@",
+      action: "john_doe",
+      action_label: "John Doe",
+      position: 6,   // Character position of "@" in plain_text
+      length: 9,     // Length of "@john_doe"
+    },
+    {
+      id: "cmd_def456",
+      prefix: "#",
+      action: "feature",
+      action_label: "Feature",
+      position: 20,  // Character position of "#" in plain_text
+      length: 8,     // Length of "#feature"
+    },
+  ],
+};
+```
+
+---
+
+## HazoUiTextarea
+
+A multi-line text input component with prefix-triggered command pill support. Similar to HazoUiTextbox but supports multiple paragraphs and line breaks.
+
+#### Features
+
+- **All HazoUiTextbox Features**: Inherits all command pill functionality
+- **Multi-line Support**: Supports multiple paragraphs with line breaks
+- **Shift+Enter**: Create new lines within the textarea
+- **Cmd/Ctrl+Enter to Submit**: Submit with keyboard shortcut (triggers `on_submit` callback)
+- **Configurable Height**: Set min/max height or use rows prop
+- **Click to Edit Pills**: Same interactive pill editing as HazoUiTextbox
+- **Auto-scrolling**: Scrollable content when exceeding max height
+
+#### Type Definitions
+
+```typescript
+interface HazoUiTextareaProps {
+  // Same as HazoUiTextbox plus:
+  value?: string;
+  default_value?: string;
+  prefixes: PrefixConfig[];
+  placeholder?: string;
+  disabled?: boolean;
+  className?: string;
+  pill_variant?: "default" | "outline" | "subtle";
+  on_change?: (output: CommandTextOutput) => void;
+  on_submit?: (output: CommandTextOutput) => void;  // Triggered on Cmd/Ctrl+Enter
+  on_command_insert?: (command: CommandItem, prefix: string) => void;
+  on_command_change?: (old_command: InsertedCommand, new_command: CommandItem) => void;
+  on_command_remove?: (command: InsertedCommand) => void;
+
+  // Textarea-specific properties
+  min_height?: string;   // default: "80px"
+  max_height?: string;   // default: "200px"
+  rows?: number;         // Alternative to min_height (calculates as rows * 1.5em)
+}
+```
+
+#### Basic Usage
+
+```tsx
+import { HazoUiTextarea, type PrefixConfig } from 'hazo_ui';
+import { useState } from 'react';
+
+function CommentBox() {
+  const [value, setValue] = useState<string>("");
+
+  const prefixes: PrefixConfig[] = [
+    {
+      char: "@",
+      commands: [
+        { action: "alice", action_label: "Alice Johnson" },
+        { action: "bob", action_label: "Bob Smith" },
+      ],
+    },
+    {
+      char: "#",
+      commands: [
+        { action: "bug", action_label: "Bug" },
+        { action: "feature", action_label: "Feature Request" },
+      ],
+    },
+  ];
+
+  return (
+    <HazoUiTextarea
+      value={value}
+      prefixes={prefixes}
+      placeholder="Write a comment... (Cmd+Enter to submit)"
+      min_height="100px"
+      max_height="300px"
+      on_change={(output) => setValue(output.plain_text)}
+      on_submit={(output) => {
+        console.log('Submitting:', output);
+        // Submit comment to backend
+        setValue(""); // Clear after submit
+      }}
+    />
+  );
+}
+```
+
+#### With Custom Height
+
+```tsx
+import { HazoUiTextarea } from 'hazo_ui';
+
+function CustomHeightExample() {
+  const prefixes = [
+    { char: "@", commands: [{ action: "user", action_label: "User" }] },
+  ];
+
+  return (
+    <div className="space-y-4">
+      {/* Using rows */}
+      <HazoUiTextarea
+        prefixes={prefixes}
+        rows={3}
+        placeholder="3 rows tall..."
+      />
+
+      {/* Using min/max height */}
+      <HazoUiTextarea
+        prefixes={prefixes}
+        min_height="120px"
+        max_height="400px"
+        placeholder="Custom height..."
+      />
+    </div>
+  );
+}
+```
+
+#### Keyboard Shortcuts
+
+- **Enter**: Insert a new line (Shift+Enter also works)
+- **Cmd+Enter** (Mac) or **Ctrl+Enter** (Windows/Linux): Submit (triggers `on_submit`)
+- **Arrow Up/Down**: Navigate command suggestions or edit options
+- **Escape**: Close popover/dropdown
+- **Typing `@`, `#`, `/`** (or any configured prefix): Open command dropdown
+
+#### Props Reference
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | - | Controlled value (plain text with commands) |
+| `default_value` | `string` | - | Uncontrolled default value |
+| `prefixes` | `PrefixConfig[]` | **Required** | Prefix configurations |
+| `placeholder` | `string` | `"Type here..."` | Placeholder text |
+| `disabled` | `boolean` | `false` | Disable input |
+| `className` | `string` | - | Additional CSS classes |
+| `pill_variant` | `"default" \| "outline" \| "subtle"` | `"default"` | Pill styling variant |
+| `min_height` | `string` | `"80px"` | Minimum textarea height |
+| `max_height` | `string` | `"200px"` | Maximum textarea height |
+| `rows` | `number` | - | Number of rows (overrides min_height) |
+| `on_change` | `(output: CommandTextOutput) => void` | - | Called when content changes |
+| `on_submit` | `(output: CommandTextOutput) => void` | - | Called on Cmd/Ctrl+Enter |
+| `on_command_insert` | `(command, prefix) => void` | - | Called when command is inserted |
+| `on_command_change` | `(old, new) => void` | - | Called when command is changed via edit popover |
+| `on_command_remove` | `(command) => void` | - | Called when command is removed via edit popover |
 
 ---
 
