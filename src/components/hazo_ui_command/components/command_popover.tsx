@@ -105,6 +105,10 @@ export const CommandPopover: React.FC<CommandPopoverProps> = ({
         top: position.top,
         left: position.left,
         zIndex: 9999,
+        // Fallback background for consuming apps that may use hex CSS variables
+        // (Tailwind's bg-popover generates hsl(var(--popover)) which fails with hex values)
+        backgroundColor: "var(--popover, hsl(0 0% 100%))",
+        color: "var(--popover-foreground, hsl(222.2 84% 4.9%))",
       }}
     >
       <Command className="rounded-md">

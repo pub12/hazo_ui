@@ -587,6 +587,9 @@ export const HazoUiTextarea: React.FC<HazoUiTextareaProps> = ({
             top: edit_context.rect.y,
             left: edit_context.rect.x,
             zIndex: 9999,
+            // Fallback background for consuming apps that may use hex CSS variables
+            backgroundColor: "var(--popover, #ffffff)",
+            color: "var(--popover-foreground, #0f172a)",
           }}
         >
           <div className="py-1">
@@ -603,6 +606,12 @@ export const HazoUiTextarea: React.FC<HazoUiTextareaProps> = ({
                     idx === edit_selected_index && "bg-accent",
                     cmd.action === edit_context.command.action && "font-medium"
                   )}
+                  style={{
+                    // Inherit background from parent, use accent color when selected
+                    backgroundColor: idx === edit_selected_index
+                      ? "var(--accent, #f1f5f9)"
+                      : "inherit",
+                  }}
                   onClick={() => handle_command_update(cmd)}
                 >
                   {cmd.icon && (
@@ -633,6 +642,12 @@ export const HazoUiTextarea: React.FC<HazoUiTextareaProps> = ({
                   "hover:bg-destructive/10",
                   edit_selected_index === edit_commands.length && "bg-destructive/10"
                 )}
+                style={{
+                  // Inherit background from parent, use light destructive color when selected
+                  backgroundColor: edit_selected_index === edit_commands.length
+                    ? "rgba(239, 68, 68, 0.1)"
+                    : "inherit",
+                }}
                 onClick={handle_command_remove}
               >
                 <span>Remove</span>

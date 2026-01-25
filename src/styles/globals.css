@@ -133,29 +133,73 @@
 
 /* Command Dropdown/Popover Styles */
 /* Default styles for command dropdowns to ensure proper visual separation */
+/* Uses CSS fallback syntax to support both HSL variables and hex values from consuming apps */
 .cls_command_popover,
 .cls_command_dropdown,
 .cls_textarea_command_dropdown,
 .cls_edit_popover {
-  background-color: hsl(var(--popover)) !important;
-  border: 1px solid hsl(var(--border)) !important;
-  border-radius: var(--radius) !important;
+  /* Fallback chain: try var first (works with hex), then hsl(var) for standard shadcn, then solid white */
+  background-color: #ffffff;
+  background-color: var(--popover, #ffffff);
+  color: var(--popover-foreground, #0f172a);
+  border: 1px solid var(--border, #e2e8f0) !important;
+  border-radius: var(--radius, 0.5rem) !important;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
 }
 
-/* Dark mode shadow enhancement */
+/* Dark mode fallbacks */
 .dark .cls_command_popover,
 .dark .cls_command_dropdown,
 .dark .cls_textarea_command_dropdown,
 .dark .cls_edit_popover {
+  background-color: #1e293b;
+  background-color: var(--popover, #1e293b);
+  color: var(--popover-foreground, #f8fafc);
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.2) !important;
 }
 
-/* Command item hover states */
+/* Command items - ensure opaque backgrounds that inherit from parent */
+.cls_command_popover .cls_command_item,
+.cls_command_dropdown .cls_command_item,
+.cls_edit_popover > div > div > div {
+  background-color: inherit;
+}
+
+/* Command item hover and selected states */
+.cls_command_popover .cls_command_item:hover,
+.cls_command_dropdown .cls_command_item:hover,
+.cls_edit_popover > div > div > div:hover,
 .cls_command_popover [role="option"]:hover,
+.cls_command_dropdown [role="option"]:hover {
+  background-color: var(--accent, #f1f5f9) !important;
+  color: var(--accent-foreground, #0f172a) !important;
+}
+
+.cls_command_popover .cls_command_item.bg-accent,
+.cls_command_dropdown .cls_command_item.bg-accent,
+.cls_edit_popover > div > div > div.bg-accent,
 .cls_command_popover [role="option"][aria-selected="true"],
-.cls_command_dropdown [role="option"]:hover,
 .cls_command_dropdown [role="option"][aria-selected="true"] {
-  background-color: hsl(var(--accent)) !important;
+  background-color: var(--accent, #f1f5f9) !important;
+  color: var(--accent-foreground, #0f172a) !important;
+}
+
+/* Dark mode item states */
+.dark .cls_command_popover .cls_command_item:hover,
+.dark .cls_command_dropdown .cls_command_item:hover,
+.dark .cls_edit_popover > div > div > div:hover,
+.dark .cls_command_popover [role="option"]:hover,
+.dark .cls_command_dropdown [role="option"]:hover {
+  background-color: var(--accent, #334155) !important;
+  color: var(--accent-foreground, #f8fafc) !important;
+}
+
+.dark .cls_command_popover .cls_command_item.bg-accent,
+.dark .cls_command_dropdown .cls_command_item.bg-accent,
+.dark .cls_edit_popover > div > div > div.bg-accent,
+.dark .cls_command_popover [role="option"][aria-selected="true"],
+.dark .cls_command_dropdown [role="option"][aria-selected="true"] {
+  background-color: var(--accent, #334155) !important;
+  color: var(--accent-foreground, #f8fafc) !important;
 }
 

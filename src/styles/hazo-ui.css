@@ -49,3 +49,49 @@
   --input: 217.2 32.6% 17.5%;
   --ring: 212.7 26.8% 83.9%;
 }
+
+/* Command Dropdown/Popover Styles */
+/* These styles ensure proper backgrounds in command dropdowns regardless of CSS variable format */
+.cls_command_popover,
+.cls_command_dropdown,
+.cls_textarea_command_dropdown,
+.cls_edit_popover {
+  background-color: #ffffff;
+  background-color: var(--popover, #ffffff);
+  color: var(--popover-foreground, #0f172a);
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: var(--radius, 0.5rem);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+.dark .cls_command_popover,
+.dark .cls_command_dropdown,
+.dark .cls_textarea_command_dropdown,
+.dark .cls_edit_popover {
+  background-color: #1e293b;
+  background-color: var(--popover, #1e293b);
+  color: var(--popover-foreground, #f8fafc);
+}
+
+/* Command items inherit background from parent */
+.cls_command_popover .cls_command_item,
+.cls_command_dropdown .cls_command_item {
+  background-color: inherit;
+}
+
+/* Command item selected and hover states */
+.cls_command_popover .cls_command_item:hover,
+.cls_command_dropdown .cls_command_item:hover,
+.cls_command_popover .cls_command_item.bg-accent,
+.cls_command_dropdown .cls_command_item.bg-accent {
+  background-color: var(--accent, #f1f5f9);
+  color: var(--accent-foreground, #0f172a);
+}
+
+.dark .cls_command_popover .cls_command_item:hover,
+.dark .cls_command_dropdown .cls_command_item:hover,
+.dark .cls_command_popover .cls_command_item.bg-accent,
+.dark .cls_command_dropdown .cls_command_item.bg-accent {
+  background-color: var(--accent, #334155);
+  color: var(--accent-foreground, #f8fafc);
+}
