@@ -1,6 +1,6 @@
 {
   "name": "hazo_ui",
-  "version": "2.4.3",
+  "version": "2.4.4",
   "description": "Set of UI components for common interaction elements in a SaaS app",
   "type": "module",
   "main": "./dist/index.js",
