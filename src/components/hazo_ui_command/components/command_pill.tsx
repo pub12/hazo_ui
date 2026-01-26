@@ -25,6 +25,22 @@ const get_variant_classes = (variant: CommandPillProps["variant"] = "default"): 
 };
 
 /**
+ * Build custom inline styles from PrefixColor
+ */
+const get_custom_color_styles = (
+  color?: CommandPillProps["color"]
+): React.CSSProperties => {
+  if (!color) {
+    return {};
+  }
+  return {
+    ...(color.bg && { backgroundColor: color.bg }),
+    ...(color.fg && { color: color.fg }),
+    ...(color.border && { borderColor: color.border }),
+  };
+};
+
+/**
  * CommandPill - Displays a command as a styled badge/pill
  */
 export const CommandPill: React.FC<CommandPillProps> = ({
@@ -34,8 +50,12 @@ export const CommandPill: React.FC<CommandPillProps> = ({
   id,
   selected = false,
   variant = "default",
+  color,
   on_click,
 }) => {
+  const use_custom_colors = Boolean(color?.bg || color?.fg || color?.border);
+  const custom_styles = get_custom_color_styles(color);
+
   return (
     <span
       className={cn(
@@ -46,10 +66,12 @@ export const CommandPill: React.FC<CommandPillProps> = ({
         "text-sm font-medium",
         "border",
         "transition-all duration-150",
-        get_variant_classes(variant),
+        // Only apply variant classes if no custom colors
+        !use_custom_colors && get_variant_classes(variant),
         selected && "ring-2 ring-ring ring-offset-1",
         on_click && "cursor-pointer"
       )}
+      style={custom_styles}
       data-command-id={id}
       data-command-prefix={prefix}
       data-command-action={action}
@@ -63,7 +85,7 @@ export const CommandPill: React.FC<CommandPillProps> = ({
         }
       }}
     >
-      <span className="text-muted-foreground opacity-70">{prefix}</span>
+      <span className={cn(!use_custom_colors && "text-muted-foreground opacity-70")} style={use_custom_colors ? { opacity: 0.7 } : undefined}>{prefix}</span>
       <span>{action_label}</span>
     </span>
   );

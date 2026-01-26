@@ -3,7 +3,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { HazoUiTextarea } from "./index";
 import { useState } from "react";
-import type { CommandTextOutput, PrefixConfig, CommandItem } from "../hazo_ui_command/types";
+import type { CommandTextOutput, PrefixConfig, CommandItem, PrefixColor } from "../hazo_ui_command/types";
 import { FiUser, FiCalendar, FiFlag, FiLink, FiCode, FiImage } from "react-icons/fi";
 
 // Sample command configurations
@@ -489,6 +489,213 @@ export const IssueDescription: Story = {
             </div>
           </div>
         </div>
+      </div>
+    );
+  },
+};
+
+/**
+ * Textarea with custom prefix colors
+ */
+export const CustomPrefixColors: Story = {
+  render: () => {
+    const [output, set_output] = useState<CommandTextOutput | null>(null);
+
+    // Define custom colors for each prefix type
+    const mention_color: PrefixColor = {
+      bg: "#DBEAFE",     // light blue background
+      fg: "#1D4ED8",     // blue text
+      border: "#93C5FD", // blue border
+    };
+
+    const command_color: PrefixColor = {
+      bg: "#FEF3C7",     // light amber background
+      fg: "#D97706",     // amber text
+      border: "#FCD34D", // amber border
+    };
+
+    const tag_color: PrefixColor = {
+      bg: "#D1FAE5",     // light green background
+      fg: "#059669",     // green text
+      border: "#6EE7B7", // green border
+    };
+
+    const team_members: CommandItem[] = [
+      { action: "alice", action_label: "Alice Chen", action_description: "Frontend Dev" },
+      { action: "bob", action_label: "Bob Wilson", action_description: "Backend Dev" },
+      { action: "carol", action_label: "Carol Jones", action_description: "Designer" },
+    ];
+
+    const slash_commands: CommandItem[] = [
+      { action: "due_date", action_label: "Due Date", icon: <FiCalendar size={14} /> },
+      { action: "priority", action_label: "Priority", icon: <FiFlag size={14} /> },
+      { action: "assign", action_label: "Assign", icon: <FiUser size={14} /> },
+    ];
+
+    const tags: CommandItem[] = [
+      { action: "bug", action_label: "bug" },
+      { action: "feature", action_label: "feature" },
+      { action: "urgent", action_label: "urgent" },
+    ];
+
+    const prefixes: PrefixConfig[] = [
+      { char: "@", commands: team_members, color: mention_color },
+      { char: "/", commands: slash_commands, color: command_color },
+      { char: "#", commands: tags, color: tag_color },
+    ];
+
+    return (
+      <div className="cls_storybook_container p-4 space-y-4 w-full max-w-lg">
+        <div className="cls_description mb-2">
+          <h3 className="cls_section_title text-base font-semibold mb-2">Custom Prefix Colors</h3>
+          <p className="cls_description_text text-sm text-muted-foreground mb-4">
+            Each prefix type has a unique color scheme. Type @ (blue), / (amber), or # (green) to see colored pills.
+          </p>
+        </div>
+
+        <HazoUiTextarea
+          placeholder="Try @mention, /command, or #tag..."
+          prefixes={prefixes}
+          min_height="120px"
+          on_change={set_output}
+        />
+
+        <div className="cls_output mt-4 p-4 border rounded-md bg-gray-50 dark:bg-gray-900">
+          <p className="cls_output_label text-sm font-semibold mb-2">Color Legend:</p>
+          <div className="cls_legend flex flex-wrap gap-3 text-xs mb-4">
+            <span className="px-2 py-1 rounded" style={{ backgroundColor: "#DBEAFE", color: "#1D4ED8", border: "1px solid #93C5FD" }}>
+              @mentions
+            </span>
+            <span className="px-2 py-1 rounded" style={{ backgroundColor: "#FEF3C7", color: "#D97706", border: "1px solid #FCD34D" }}>
+              /commands
+            </span>
+            <span className="px-2 py-1 rounded" style={{ backgroundColor: "#D1FAE5", color: "#059669", border: "1px solid #6EE7B7" }}>
+              #tags
+            </span>
+          </div>
+          <p className="cls_output_label text-sm font-semibold mb-2">Output:</p>
+          <pre className="whitespace-pre-wrap bg-gray-100 dark:bg-gray-800 p-2 rounded text-xs">
+            {output?.plain_text || "(empty)"}
+          </pre>
+        </div>
+      </div>
+    );
+  },
+};
+
+/**
+ * Mixed usage - some prefixes with colors, some with variant styling
+ */
+export const ColorsWithVariants: Story = {
+  render: () => {
+    const [output, set_output] = useState<CommandTextOutput | null>(null);
+
+    // Only @mentions have custom colors
+    const mention_color: PrefixColor = {
+      bg: "#FEE2E2",     // light red background
+      fg: "#DC2626",     // red text
+      border: "#FCA5A5", // red border
+    };
+
+    const team_members: CommandItem[] = [
+      { action: "alice", action_label: "Alice Chen" },
+      { action: "bob", action_label: "Bob Wilson" },
+    ];
+
+    const slash_commands: CommandItem[] = [
+      { action: "priority", action_label: "Priority", icon: <FiFlag size={14} /> },
+      { action: "link", action_label: "Link", icon: <FiLink size={14} /> },
+    ];
+
+    const tags: CommandItem[] = [
+      { action: "bug", action_label: "bug" },
+      { action: "feature", action_label: "feature" },
+    ];
+
+    const prefixes: PrefixConfig[] = [
+      { char: "@", commands: team_members, color: mention_color }, // Custom color
+      { char: "/", commands: slash_commands }, // Uses variant styling
+      { char: "#", commands: tags }, // Uses variant styling
+    ];
+
+    return (
+      <div className="cls_storybook_container p-4 space-y-4 w-full max-w-lg">
+        <div className="cls_description mb-2">
+          <h3 className="cls_section_title text-base font-semibold mb-2">Mixed Colors and Variants</h3>
+          <p className="cls_description_text text-sm text-muted-foreground mb-4">
+            @mentions use custom red color while /commands and #tags use the default variant styling.
+          </p>
+        </div>
+
+        <HazoUiTextarea
+          placeholder="Mix @colored mentions with /default /styled commands..."
+          prefixes={prefixes}
+          pill_variant="default"
+          min_height="120px"
+          on_change={set_output}
+        />
+
+        <div className="cls_output mt-4 p-4 border rounded-md bg-gray-50 dark:bg-gray-900">
+          <p className="cls_output_label text-sm font-semibold mb-2">Commands ({output?.commands.length || 0}):</p>
+          {output?.commands.map((cmd, i) => (
+            <p key={i} className="text-xs ml-2">{cmd.prefix}{cmd.action} → {cmd.action_label}</p>
+          ))}
+          {(!output || output.commands.length === 0) && (
+            <p className="text-xs text-muted-foreground ml-2">No commands yet</p>
+          )}
+        </div>
+      </div>
+    );
+  },
+};
+
+/**
+ * Pre-populated with colored commands
+ */
+export const PrefilledWithColors: Story = {
+  render: () => {
+    const mention_color: PrefixColor = {
+      bg: "#E0E7FF",     // light indigo
+      fg: "#4338CA",     // indigo
+      border: "#A5B4FC", // indigo border
+    };
+
+    const tag_color: PrefixColor = {
+      bg: "#FCE7F3",     // light pink
+      fg: "#DB2777",     // pink
+      border: "#F9A8D4", // pink border
+    };
+
+    const team_members: CommandItem[] = [
+      { action: "alice", action_label: "Alice Chen" },
+      { action: "bob", action_label: "Bob Wilson" },
+    ];
+
+    const tags: CommandItem[] = [
+      { action: "urgent", action_label: "urgent" },
+      { action: "review", action_label: "review" },
+    ];
+
+    const prefixes: PrefixConfig[] = [
+      { char: "@", commands: team_members, color: mention_color },
+      { char: "#", commands: tags, color: tag_color },
+    ];
+
+    return (
+      <div className="cls_storybook_container p-4 space-y-4 w-full max-w-lg">
+        <div className="cls_description mb-2">
+          <h3 className="cls_section_title text-base font-semibold mb-2">Pre-filled with Colored Commands</h3>
+          <p className="cls_description_text text-sm text-muted-foreground mb-4">
+            Demonstrates that colored pills render correctly when loaded from a value.
+          </p>
+        </div>
+
+        <HazoUiTextarea
+          placeholder="Type here..."
+          prefixes={prefixes}
+          default_value="Please review this @alice and @bob. #urgent #review"
+          min_height="100px"
+        />
       </div>
     );
   },

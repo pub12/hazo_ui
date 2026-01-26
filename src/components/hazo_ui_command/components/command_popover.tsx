@@ -53,6 +53,7 @@ export const CommandPopover: React.FC<CommandPopoverProps> = ({
   on_select,
   on_close,
   on_selection_change: _on_selection_change,
+  prefix_color,
 }) => {
   const container_ref = React.useRef<HTMLDivElement>(null);
 
@@ -146,6 +147,16 @@ export const CommandPopover: React.FC<CommandPopoverProps> = ({
                     selected={flat_idx === selected_index}
                   >
                     <div className="flex items-center gap-2 w-full">
+                      {/* Color indicator dot when prefix has custom color */}
+                      {prefix_color && (prefix_color.bg || prefix_color.fg) && (
+                        <span
+                          className="flex-shrink-0 w-2 h-2 rounded-full"
+                          style={{
+                            backgroundColor: prefix_color.bg || prefix_color.fg,
+                            border: prefix_color.border ? `1px solid ${prefix_color.border}` : undefined,
+                          }}
+                        />
+                      )}
                       {cmd.icon && (
                         <span className="flex-shrink-0 text-muted-foreground">
                           {cmd.icon}

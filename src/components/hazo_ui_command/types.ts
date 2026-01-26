@@ -8,6 +8,18 @@
 import * as React from "react";
 
 /**
+ * Custom color configuration for prefix styling
+ */
+export interface PrefixColor {
+  /** Background color (e.g., "#E0F2FE", "hsl(200, 95%, 90%)") */
+  bg?: string;
+  /** Text/foreground color (e.g., "#0369A1", "hsl(200, 70%, 30%)") */
+  fg?: string;
+  /** Border color (e.g., "#7DD3FC", "hsl(200, 80%, 70%)") */
+  border?: string;
+}
+
+/**
  * Individual command item that can be selected from the command menu
  */
 export interface CommandItem {
@@ -33,6 +45,8 @@ export interface PrefixConfig {
   commands: CommandItem[];
   /** Allow free text entries that don't match existing commands */
   allow_free_text?: boolean;
+  /** Custom color styling for this prefix's pills */
+  color?: PrefixColor;
 }
 
 /**
@@ -89,6 +103,8 @@ export interface CommandPopoverProps {
   on_close: () => void;
   /** Called when selection changes via keyboard */
   on_selection_change: (index: number) => void;
+  /** Custom color for the prefix (shows color indicator dot) */
+  prefix_color?: PrefixColor;
 }
 
 /**
@@ -107,6 +123,8 @@ export interface CommandPillProps {
   selected?: boolean;
   /** Pill style variant */
   variant?: "default" | "outline" | "subtle";
+  /** Custom color styling (overrides variant when provided) */
+  color?: PrefixColor;
   /** Called when the pill is clicked (to open edit popover) */
   on_click?: () => void;
 }

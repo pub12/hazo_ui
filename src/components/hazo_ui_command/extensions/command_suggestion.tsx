@@ -8,7 +8,7 @@
 import { Extension } from "@tiptap/core";
 import Suggestion, { type SuggestionOptions } from "@tiptap/suggestion";
 import type { Editor } from "@tiptap/core";
-import type { PrefixConfig, CommandItem, SuggestionState } from "../types";
+import type { PrefixConfig, CommandItem, SuggestionState, PrefixColor } from "../types";
 
 /**
  * Props for creating the suggestion extension
@@ -166,7 +166,8 @@ export const insert_command_at_position = (
   command: CommandItem,
   prefix: string,
   range: { from: number; to: number },
-  variant: "default" | "outline" | "subtle" = "default"
+  variant: "default" | "outline" | "subtle" = "default",
+  color?: PrefixColor
 ): void => {
   editor
     .chain()
@@ -177,6 +178,7 @@ export const insert_command_at_position = (
       action: command.action,
       action_label: command.action_label,
       variant,
+      color,
     })
     .run();
 };

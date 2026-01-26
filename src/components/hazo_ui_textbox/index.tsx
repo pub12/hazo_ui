@@ -235,12 +235,17 @@ export const HazoUiTextbox: React.FC<HazoUiTextboxProps> = ({
     (command: CommandItem) => {
       if (!editor || !suggestion_state) return;
 
+      // Look up the prefix config to get the color
+      const prefix_config = prefixes.find((p) => p.char === suggestion_state.prefix);
+      const prefix_color = prefix_config?.color;
+
       insert_command_at_position(
         editor,
         command,
         suggestion_state.prefix,
         suggestion_state.range,
-        pill_variant
+        pill_variant,
+        prefix_color
       );
 
       if (on_command_insert) {
@@ -249,7 +254,7 @@ export const HazoUiTextbox: React.FC<HazoUiTextboxProps> = ({
 
       set_suggestion_state(null);
     },
-    [editor, suggestion_state, pill_variant, on_command_insert]
+    [editor, suggestion_state, pill_variant, on_command_insert, prefixes]
   );
 
   // Handle popover close
@@ -527,6 +532,7 @@ export const HazoUiTextbox: React.FC<HazoUiTextboxProps> = ({
           on_select={handle_command_select}
           on_close={handle_popover_close}
           on_selection_change={set_selected_index}
+          prefix_color={prefixes.find((p) => p.char === suggestion_state.prefix)?.color}
         />
       )}
 

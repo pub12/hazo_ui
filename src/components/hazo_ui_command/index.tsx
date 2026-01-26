@@ -16,6 +16,7 @@
 export type {
   CommandItem,
   PrefixConfig,
+  PrefixColor,
   InsertedCommand,
   CommandTextOutput,
   CommandPopoverProps,
@@ -44,6 +45,17 @@ export {
 export { CommandPill } from "./components/command_pill";
 export { CommandPopover } from "./components/command_popover";
 
+import type { PrefixColor } from "./types";
+
+/**
+ * Extended prefix configuration type for internal parsing
+ */
+type PrefixConfigForParsing = {
+  char: string;
+  commands: { action: string; action_label: string }[];
+  color?: PrefixColor;
+};
+
 /**
  * Utility to parse plain text with commands into structured format
  *
@@ -53,23 +65,25 @@ export { CommandPopover } from "./components/command_popover";
  */
 export const parse_commands_from_text = (
   text: string,
-  prefixes: { char: string; commands: { action: string; action_label: string }[] }[]
-): { action: string; action_label: string; prefix: string; position: number; length: number }[] => {
+  prefixes: PrefixConfigForParsing[]
+): { action: string; action_label: string; prefix: string; position: number; length: number; color?: PrefixColor }[] => {
   const result: {
     action: string;
     action_label: string;
     prefix: string;
     position: number;
     length: number;
+    color?: PrefixColor;
   }[] = [];
 
   // Build a map of action -> label for quick lookup
-  const action_to_label = new Map<string, { label: string; prefix: string }>();
+  const action_to_label = new Map<string, { label: string; prefix: string; color?: PrefixColor }>();
   for (const prefix_config of prefixes) {
     for (const cmd of prefix_config.commands) {
       action_to_label.set(`${prefix_config.char}${cmd.action}`, {
         label: cmd.action_label,
         prefix: prefix_config.char,
+        color: prefix_config.color,
       });
     }
   }
@@ -94,6 +108,7 @@ export const parse_commands_from_text = (
         prefix,
         position: match.index,
         length: full_match.length,
+        color: info.color,
       });
     }
   }
@@ -118,7 +133,7 @@ const escape_regex = (str: string): string => {
  */
 export const text_to_tiptap_content = (
   text: string,
-  prefixes: { char: string; commands: { action: string; action_label: string }[] }[],
+  prefixes: PrefixConfigForParsing[],
   variant: "default" | "outline" | "subtle" = "default"
 ): Record<string, unknown> => {
   const commands = parse_commands_from_text(text, prefixes);
@@ -151,7 +166,7 @@ export const text_to_tiptap_content = (
       });
     }
 
-    // Add command node
+    // Add command node with optional color attributes
     content.push({
       type: "commandNode",
       attrs: {
@@ -160,6 +175,9 @@ export const text_to_tiptap_content = (
         action: cmd.action,
         action_label: cmd.action_label,
         variant,
+        ...(cmd.color?.bg && { color_bg: cmd.color.bg }),
+        ...(cmd.color?.fg && { color_fg: cmd.color.fg }),
+        ...(cmd.color?.border && { color_border: cmd.color.border }),
       },
     });
 

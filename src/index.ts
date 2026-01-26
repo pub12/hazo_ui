@@ -39,6 +39,7 @@ export {
 export type {
   CommandItem,
   PrefixConfig,
+  PrefixColor,
   InsertedCommand,
   CommandTextOutput,
   CommandPopoverProps,

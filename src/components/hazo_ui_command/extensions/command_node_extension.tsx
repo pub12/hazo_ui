@@ -9,7 +9,7 @@ import { Node, mergeAttributes } from "@tiptap/core";
 import { ReactNodeViewRenderer, NodeViewWrapper, type NodeViewProps } from "@tiptap/react";
 import * as React from "react";
 import { cn } from "../../../lib/utils";
-import type { CommandPillProps } from "../types";
+import type { CommandPillProps, PrefixColor } from "../types";
 
 /**
  * Generate unique ID for command nodes
@@ -34,10 +34,39 @@ const get_variant_classes = (variant: CommandPillProps["variant"] = "default"): 
 };
 
 /**
+ * Build custom inline styles from PrefixColor
+ */
+const get_custom_color_styles = (
+  color_bg?: string,
+  color_fg?: string,
+  color_border?: string
+): React.CSSProperties => {
+  if (!color_bg && !color_fg && !color_border) {
+    return {};
+  }
+  return {
+    ...(color_bg && { backgroundColor: color_bg }),
+    ...(color_fg && { color: color_fg }),
+    ...(color_border && { borderColor: color_border }),
+  };
+};
+
+/**
+ * Check if custom colors are provided
+ */
+const has_custom_colors = (
+  color_bg?: string,
+  color_fg?: string,
+  color_border?: string
+): boolean => {
+  return Boolean(color_bg || color_fg || color_border);
+};
+
+/**
  * React component for rendering command pills in the editor
  */
 const CommandPillView: React.FC<NodeViewProps> = ({ node, selected, editor }) => {
-  const { prefix, action, action_label, id, variant } = node.attrs;
+  const { prefix, action, action_label, id, variant, color_bg, color_fg, color_border } = node.attrs;
 
   const handle_click = () => {
     // Dispatch a custom event that the parent component can listen to
@@ -54,6 +83,9 @@ const CommandPillView: React.FC<NodeViewProps> = ({ node, selected, editor }) =>
     document.dispatchEvent(event);
   };
 
+  const use_custom_colors = has_custom_colors(color_bg, color_fg, color_border);
+  const custom_styles = get_custom_color_styles(color_bg, color_fg, color_border);
+
   return (
     <NodeViewWrapper as="span" className="inline">
       <span
@@ -66,17 +98,19 @@ const CommandPillView: React.FC<NodeViewProps> = ({ node, selected, editor }) =>
           "border",
           "cursor-pointer select-none",
           "transition-all duration-150",
-          get_variant_classes(variant),
+          // Only apply variant classes if no custom colors
+          !use_custom_colors && get_variant_classes(variant),
           selected && "ring-2 ring-ring ring-offset-1",
           "hover:opacity-80"
         )}
+        style={custom_styles}
         contentEditable={false}
         data-command-id={id}
         data-command-prefix={prefix}
         data-command-action={action}
         onClick={handle_click}
       >
-        <span className="text-muted-foreground opacity-70">{prefix}</span>
+        <span className={cn(!use_custom_colors && "text-muted-foreground opacity-70")} style={use_custom_colors ? { opacity: 0.7 } : undefined}>{prefix}</span>
         <span>{action_label}</span>
       </span>
     </NodeViewWrapper>
@@ -94,6 +128,7 @@ declare module "@tiptap/core" {
         action: string;
         action_label: string;
         variant?: "default" | "outline" | "subtle";
+        color?: PrefixColor;
       }) => ReturnType;
       /**
        * Update an existing command node by ID
@@ -160,6 +195,27 @@ export const CommandNodeExtension = Node.create({
           "data-command-variant": attributes.variant,
         }),
       },
+      color_bg: {
+        default: null,
+        parseHTML: (element) => element.getAttribute("data-command-color-bg"),
+        renderHTML: (attributes) => ({
+          "data-command-color-bg": attributes.color_bg,
+        }),
+      },
+      color_fg: {
+        default: null,
+        parseHTML: (element) => element.getAttribute("data-command-color-fg"),
+        renderHTML: (attributes) => ({
+          "data-command-color-fg": attributes.color_fg,
+        }),
+      },
+      color_border: {
+        default: null,
+        parseHTML: (element) => element.getAttribute("data-command-color-border"),
+        renderHTML: (attributes) => ({
+          "data-command-color-border": attributes.color_border,
+        }),
+      },
     };
   },
 
@@ -196,11 +252,16 @@ export const CommandNodeExtension = Node.create({
       insertCommand:
         (attrs) =>
         ({ commands }) => {
+          // Extract color from attrs and flatten to individual attributes
+          const { color, ...rest_attrs } = attrs;
           return commands.insertContent({
             type: this.name,
             attrs: {
-              ...attrs,
+              ...rest_attrs,
               id: generate_command_id(),
+              ...(color?.bg && { color_bg: color.bg }),
+              ...(color?.fg && { color_fg: color.fg }),
+              ...(color?.border && { color_border: color.border }),
             },
           });
         },
