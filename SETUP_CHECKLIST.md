@@ -256,6 +256,12 @@ import { HazoUiMultiFilterDialog, HazoUiMultiSortDialog, HazoUiFlexRadio, HazoUi
   2. Ensure the `prefixes` prop includes a matching prefix configuration
   3. Verify `commands` array is not empty for that prefix
 
+**Issue**: "Adding different instances of a keyed plugin (suggestion$)" error (for HazoUiTextbox/HazoUiTextarea)
+- **Solution**:
+  1. This occurs when multiple editor instances coexist (e.g., in lists during React transitions)
+  2. Provide a unique `instance_id` prop to each component instance
+  3. If not provided, the component auto-generates one using React.useId()
+
 ## Next Steps
 
 - [ ] Read the [README.md](./README.md) for detailed component documentation

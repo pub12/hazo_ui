@@ -165,6 +165,12 @@ export interface BaseCommandInputProps {
   className?: string;
   /** Pill style variant */
   pill_variant?: "default" | "outline" | "subtle";
+  /**
+   * Unique instance ID to prevent TipTap plugin key conflicts.
+   * Required when multiple instances coexist (e.g., in lists).
+   * If not provided, auto-generated via React.useId().
+   */
+  instance_id?: string;
   /** Called when the content changes */
   on_change?: (output: CommandTextOutput) => void;
   /** Called when a command is inserted */

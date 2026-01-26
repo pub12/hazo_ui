@@ -95,12 +95,18 @@ export const HazoUiTextbox: React.FC<HazoUiTextboxProps> = ({
   disabled = false,
   className,
   pill_variant = "default",
+  instance_id: provided_instance_id,
   on_change,
   on_submit,
   on_command_insert,
   on_command_change,
   on_command_remove,
 }) => {
+  // Generate unique instance ID for TipTap plugin keys
+  // This prevents "Adding different instances of a keyed plugin (suggestion$)" errors
+  const generated_instance_id = React.useId();
+  const instance_id = provided_instance_id || generated_instance_id;
+
   // Suggestion state for popover
   const [suggestion_state, set_suggestion_state] =
     React.useState<SuggestionState | null>(null);
@@ -123,10 +129,11 @@ export const HazoUiTextbox: React.FC<HazoUiTextboxProps> = ({
     set_mounted(true);
   }, []);
 
-  // Create suggestion extensions
+  // Create suggestion extensions with unique plugin keys per instance
   const suggestion_extensions = React.useMemo(() => {
     return create_command_suggestion_extension({
       prefixes,
+      instance_id,
       on_suggestion_change: (state) => {
         set_suggestion_state(state);
         set_selected_index(0);
@@ -135,7 +142,7 @@ export const HazoUiTextbox: React.FC<HazoUiTextboxProps> = ({
         // This is handled by the popover selection
       },
     });
-  }, [prefixes]);
+  }, [prefixes, instance_id]);
 
   // Initialize editor
   const editor = useEditor({

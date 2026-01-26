@@ -1275,6 +1275,11 @@ interface HazoUiTextboxProps {
   // Pill styling
   pill_variant?: "default" | "outline" | "subtle";  // default: "default"
 
+  // Unique instance ID to prevent TipTap plugin key conflicts
+  // Required when multiple instances coexist (e.g., in lists)
+  // If not provided, auto-generated via React.useId()
+  instance_id?: string;
+
   // Callbacks
   on_change?: (output: CommandTextOutput) => void;
   on_submit?: (output: CommandTextOutput) => void;  // Triggered on Enter key
@@ -1549,6 +1554,12 @@ interface HazoUiTextareaProps {
   disabled?: boolean;
   className?: string;
   pill_variant?: "default" | "outline" | "subtle";
+
+  // Unique instance ID to prevent TipTap plugin key conflicts
+  // Required when multiple instances coexist (e.g., in lists)
+  // If not provided, auto-generated via React.useId()
+  instance_id?: string;
+
   on_change?: (output: CommandTextOutput) => void;
   on_submit?: (output: CommandTextOutput) => void;  // Triggered on Cmd/Ctrl+Enter
   on_command_insert?: (command: CommandItem, prefix: string) => void;
@@ -1656,6 +1667,7 @@ function CustomHeightExample() {
 | `disabled` | `boolean` | `false` | Disable input |
 | `className` | `string` | - | Additional CSS classes |
 | `pill_variant` | `"default" \| "outline" \| "subtle"` | `"default"` | Pill styling variant |
+| `instance_id` | `string` | auto-generated | Unique ID to prevent TipTap plugin conflicts when multiple instances coexist |
 | `min_height` | `string` | `"80px"` | Minimum textarea height |
 | `max_height` | `string` | `"200px"` | Maximum textarea height |
 | `rows` | `number` | - | Number of rows (overrides min_height) |

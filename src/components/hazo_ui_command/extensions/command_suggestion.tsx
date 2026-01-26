@@ -3,10 +3,14 @@
  *
  * Detects prefix characters and triggers the command popover for selection.
  * Works with multiple configurable prefixes (e.g., @, /, #).
+ *
+ * Each instance uses unique plugin keys to prevent conflicts when multiple
+ * editor instances coexist (e.g., in lists during React transitions).
  */
 
 import { Extension } from "@tiptap/core";
 import Suggestion, { type SuggestionOptions } from "@tiptap/suggestion";
+import { PluginKey } from "@tiptap/pm/state";
 import type { Editor } from "@tiptap/core";
 import type { PrefixConfig, CommandItem, SuggestionState, PrefixColor } from "../types";
 
@@ -24,6 +28,12 @@ export interface CommandSuggestionConfig {
     prefix: string,
     range: { from: number; to: number }
   ) => void;
+  /**
+   * Unique instance identifier for plugin key generation.
+   * Prevents "Adding different instances of a keyed plugin (suggestion$)" errors
+   * when multiple editor instances exist simultaneously.
+   */
+  instance_id: string;
 }
 
 /**
@@ -117,21 +127,28 @@ const create_suggestion_config = (
 
 /**
  * Create a combined suggestion extension for all configured prefixes
+ *
+ * Each suggestion plugin receives a unique key based on the instance_id
+ * to prevent conflicts when multiple editor instances exist.
  */
 export const create_command_suggestion_extension = (
   config: CommandSuggestionConfig
 ): Extension[] => {
-  const { prefixes, on_suggestion_change, on_insert_command } = config;
+  const { prefixes, on_suggestion_change, on_insert_command, instance_id } = config;
 
-  // Create an extension for each prefix
+  // Create an extension for each prefix with unique plugin keys
   return prefixes.map((prefix_config, index) => {
+    // Generate a unique plugin key for this specific instance and prefix
+    const plugin_key = new PluginKey(`suggestion_${instance_id}_${prefix_config.char}_${index}`);
+
     return Extension.create({
-      name: `commandSuggestion_${prefix_config.char}_${index}`,
+      name: `commandSuggestion_${instance_id}_${prefix_config.char}_${index}`,
 
       addProseMirrorPlugins() {
         return [
           Suggestion({
             editor: this.editor,
+            pluginKey: plugin_key,
             ...create_suggestion_config(
               prefix_config,
               on_suggestion_change,
