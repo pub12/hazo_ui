@@ -30,6 +30,10 @@ yarn-error.log*
 storybook-static
 .cache
 
+# Next.js (dev-app)
+dev-app/.next/
+!dev-app/.next/types/
+
 # IDE
 .vscode
 .idea

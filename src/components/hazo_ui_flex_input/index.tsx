@@ -72,10 +72,10 @@ function validateInput(
     }
 
     case "alpha": {
-      // Check if value contains only letters
-      const alphaRegex = /^[A-Za-z\s]*$/;
+      // Check if value contains only letters, numbers, and spaces
+      const alphaRegex = /^[A-Za-z0-9\s]*$/;
       if (!alphaRegex.test(value)) {
-        return { isValid: false, errorMessage: "Only letters are allowed" };
+        return { isValid: false, errorMessage: "Only letters, numbers, and spaces are allowed" };
       }
       break;
     }
@@ -154,8 +154,8 @@ function filterInputValue(
     }
 
     case "alpha": {
-      // Allow only letters and spaces
-      return value.replace(/[^A-Za-z\s]/g, "");
+      // Allow letters, numbers, and spaces
+      return value.replace(/[^A-Za-z0-9\s]/g, "");
     }
 
     case "email":

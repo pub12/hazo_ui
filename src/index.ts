@@ -57,3 +57,7 @@ export type { HazoUiTextboxProps } from "./components/hazo_ui_textbox";
 export { HazoUiTextarea } from "./components/hazo_ui_textarea";
 export type { HazoUiTextareaProps } from "./components/hazo_ui_textarea";
 
+// HazoUiDialog - Standardized dialog component
+export { HazoUiDialog } from "./components/hazo_ui_dialog";
+export type { HazoUiDialogProps, AnimationPreset } from "./components/hazo_ui_dialog";
+

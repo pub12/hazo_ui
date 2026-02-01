@@ -3,3 +3,31 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Smooth scrolling for anchor links */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Section scroll offset for fixed headers */
+.cls_test_section {
+  scroll-margin-top: 2rem;
+}
+
+/* Sidebar scrollbar styling */
+.cls_sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.cls_sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.cls_sidebar::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 3px;
+}
+
+.cls_sidebar::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+

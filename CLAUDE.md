@@ -13,8 +13,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 # Development
 npm run dev                 # Watch mode - rebuilds on file changes
-npm run storybook          # Component explorer at localhost:6006
-npm run dev:app            # Next.js dev app for integration testing
+npm run dev:app            # Next.js dev app for testing components at localhost:3000
 
 # Building
 npm run build              # Create dist/ with ESM + CJS bundles
@@ -38,21 +37,42 @@ src/
 │   ├── hazo_ui_multi_filter_dialog/  # Multi-field filter dialog
 │   ├── hazo_ui_multi_sort_dialog/    # Drag-drop multi-field sorting
 │   ├── hazo_ui_flex_radio/           # Flexible radio/icon selection
-│   └── hazo_ui_flex_input/           # Enhanced input with validation
+│   ├── hazo_ui_flex_input/           # Enhanced input with validation
+│   ├── hazo_ui_rte/                  # Rich text editor
+│   ├── hazo_ui_command/              # Command pill component
+│   ├── hazo_ui_textbox/              # Single-line textbox
+│   ├── hazo_ui_textarea/             # Multi-line textarea
+│   └── hazo_ui_dialog/               # Dialog component
 ├── lib/utils.ts                      # Utility functions (cn - class merge)
 ├── styles/globals.css                # Global Tailwind & CSS variables
 └── index.ts                          # Main export file
 
-dev-app/                              # Next.js app for testing integration
-.storybook/                           # Storybook configuration
+dev-app/                              # Next.js app for testing components
+├── app/                              # Component test pages
+│   ├── multi-filter-dialog/         # Multi filter tests
+│   ├── multi-sort-dialog/            # Multi sort tests
+│   ├── flex-radio/                   # Flex radio tests
+│   ├── flex-input/                   # Flex input tests
+│   ├── rte/                          # RTE tests
+│   ├── command/                      # Command system tests
+│   ├── textbox/                      # Textbox tests
+│   ├── textarea/                     # Textarea tests
+│   └── dialog/                       # Dialog tests
+└── components/
+    └── sidebar.tsx                   # Navigation sidebar
 ```
 
 ### Component Pattern
 Each component lives in `src/components/component_name/`:
 - `index.tsx` - Main component implementation
-- `component.stories.tsx` - Storybook stories
 
 All components exported from `src/index.ts` with explicit types for tree-shaking.
+
+### Testing Components
+The dev-app provides dedicated test pages for each component with multiple test cases:
+- Navigate using the sidebar menu
+- Each page contains sections testing different configurations
+- Real-time state display shows component output
 
 ### Component Customization
 Components support customization through optional props:
@@ -95,7 +115,8 @@ Components support customization through optional props:
 ## Adding New Components
 
 1. Create `src/components/new_component/index.tsx`
-2. Create `src/components/new_component/new_component.stories.tsx`
-3. Export from `src/index.ts` with types
-4. Test in Storybook and dev-app
-5. Update README.md with documentation
+2. Export from `src/index.ts` with types
+3. Create test page in `dev-app/app/new-component/page.tsx`
+4. Add navigation link to `dev-app/components/sidebar.tsx`
+5. Test in dev-app with multiple test cases
+6. Update README.md with documentation

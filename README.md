@@ -41,6 +41,28 @@ That's it! The components will now render correctly with proper styling.
 
 > **Note**: If you already have shadcn/ui configured with CSS variables, you may skip Step 1 as the variables are compatible.
 
+### Important: Tailwind v4 Compatibility
+
+If you're using **Tailwind CSS v4**, you must add the `@source` directive to ensure hazo_ui's Tailwind classes are compiled:
+
+**In your `globals.css` or main CSS file:**
+
+```css
+@import "tailwindcss";
+
+/* REQUIRED for Tailwind v4: Enable scanning of hazo_ui components */
+@source "../node_modules/hazo_ui/dist";
+```
+
+**Why is this needed?**
+
+Tailwind v4 uses JIT compilation and only generates CSS for classes found in scanned files. By default, it doesn't scan `node_modules/`. Without the `@source` directive:
+- Hover states won't work
+- Colors will be missing
+- Layouts may break
+
+**Note:** Tailwind v3 users do NOT need this directive - the `content` configuration is sufficient.
+
 ---
 
 ## Components
@@ -60,6 +82,8 @@ That's it! The components will now render correctly with proper styling.
 - **[HazoUiTextbox](#hazouitextbox)** - A single-line input component with command pill support. Allows users to insert prefix-triggered commands (e.g., @mentions, /commands, #tags) that appear as interactive pills. Includes click-to-edit functionality for modifying or removing inserted commands.
 
 - **[HazoUiTextarea](#hazouitextarea)** - A multi-line textarea component with command pill support. Similar to HazoUiTextbox but supports multi-line input with Shift+Enter for new lines and Cmd/Ctrl+Enter to submit. Features the same interactive pill editing capabilities.
+
+- **[HazoUiDialog](#hazouidialog)** - A standardized dialog component with customizable animations, sizes, and theming. Features header/body/footer layout, color customization props, multiple size variants, and distinct animation presets (zoom, slide, fade).
 
 ---
 
@@ -1679,6 +1703,420 @@ function CustomHeightExample() {
 
 ---
 
+## HazoUiDialog
+
+A flexible, standardized dialog component with customizable animations, sizes, and theming. Built on Radix UI Dialog primitives with a consistent header/body/footer layout.
+
+#### Features
+
+- **Flexible Sizing**: 5 size presets from small (400px) to full-width (98vw), plus custom sizing
+- **Animation Presets**: Distinct animations - zoom (scales from 50%), slide (from bottom), fade (opacity only)
+- **Color Customization**: Override header, body, footer, border, and accent colors via props
+- **Themed Variants**: Pre-built themes for success, warning, danger, and info states
+- **Responsive Design**: Viewport-relative sizing with maximum constraints
+- **Controlled Component**: Fully controlled open/close state
+- **Callback Support**: Separate callbacks for confirm and cancel actions
+- **TypeScript Support**: Fully typed with comprehensive interfaces
+- **Accessible**: Built with accessibility in mind using Radix UI primitives
+
+#### Type Definitions
+
+```typescript
+interface HazoUiDialogProps {
+  // Dialog State Control
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+
+  // Content & Callbacks
+  children: React.ReactNode;
+  onConfirm?: () => void;
+  onCancel?: () => void;
+
+  // Header Configuration
+  title?: string;                      // default: "Action required"
+  description?: string;
+
+  // Button Configuration
+  actionButtonText?: string;           // default: "Confirm"
+  actionButtonVariant?: ButtonVariant; // default: "default"
+  cancelButtonText?: string;           // default: "Cancel"
+  showCancelButton?: boolean;          // default: true
+
+  // Size Configuration
+  sizeWidth?: string;                  // default: "min(90vw, 600px)"
+  sizeHeight?: string;                 // default: "min(80vh, 800px)"
+
+  // Animation Configuration
+  openAnimation?: AnimationPreset | string;  // default: "zoom"
+  closeAnimation?: AnimationPreset | string; // default: "zoom"
+
+  // Color Customization
+  headerBackgroundColor?: string;
+  headerTextColor?: string;
+  bodyBackgroundColor?: string;
+  footerBackgroundColor?: string;
+  borderColor?: string;
+  accentColor?: string;
+
+  // Styling Customization
+  className?: string;
+  contentClassName?: string;
+  overlayClassName?: string;
+  headerClassName?: string;
+  footerClassName?: string;
+  showCloseButton?: boolean;           // default: true
+}
+
+type AnimationPreset = 'zoom' | 'slide' | 'fade' | 'none';
+type ButtonVariant = "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+```
+
+#### Basic Usage
+
+```tsx
+import { HazoUiDialog } from 'hazo_ui';
+import { useState } from 'react';
+
+function ConfirmDialog() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <button onClick={() => setIsOpen(true)}>
+        Open Dialog
+      </button>
+
+      <HazoUiDialog
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        title="Confirm Action"
+        description="Are you sure you want to proceed?"
+        onConfirm={() => {
+          console.log('Confirmed');
+          setIsOpen(false);
+        }}
+        onCancel={() => {
+          console.log('Cancelled');
+        }}
+      >
+        <p>This action cannot be undone.</p>
+      </HazoUiDialog>
+    </>
+  );
+}
+```
+
+#### Size Variants
+
+```tsx
+// Small - 400px
+<HazoUiDialog
+  sizeWidth="min(90vw, 400px)"
+  sizeHeight="min(70vh, 300px)"
+  {...props}
+/>
+
+// Medium (default) - 600px
+<HazoUiDialog
+  sizeWidth="min(90vw, 600px)"
+  sizeHeight="min(80vh, 600px)"
+  {...props}
+/>
+
+// Large - 1000px
+<HazoUiDialog
+  sizeWidth="min(95vw, 1000px)"
+  sizeHeight="min(85vh, 800px)"
+  {...props}
+/>
+
+// Extra-Large - 1400px
+<HazoUiDialog
+  sizeWidth="min(95vw, 1400px)"
+  sizeHeight="min(90vh, 900px)"
+  {...props}
+/>
+
+// Full Width - 98vw
+<HazoUiDialog
+  sizeWidth="98vw"
+  sizeHeight="min(90vh, 1000px)"
+  {...props}
+/>
+```
+
+#### Animation Variants
+
+```tsx
+// Zoom - Scales from 50% size
+<HazoUiDialog
+  openAnimation="zoom"
+  closeAnimation="zoom"
+  {...props}
+/>
+
+// Slide - Slides from bottom of screen
+<HazoUiDialog
+  openAnimation="slide"
+  closeAnimation="slide"
+  {...props}
+/>
+
+// Fade - Pure opacity fade
+<HazoUiDialog
+  openAnimation="fade"
+  closeAnimation="fade"
+  {...props}
+/>
+
+// None - No animation
+<HazoUiDialog
+  openAnimation="none"
+  closeAnimation="none"
+  {...props}
+/>
+```
+
+#### Themed Dialogs
+
+**Success Theme**
+```tsx
+<HazoUiDialog
+  title="✓ Success"
+  description="Operation completed successfully"
+  actionButtonText="Done"
+  showCancelButton={false}
+  borderColor="rgb(34, 197, 94)"
+  headerBackgroundColor="rgb(220, 252, 231)"
+  headerTextColor="rgb(22, 101, 52)"
+  accentColor="rgb(34, 197, 94)"
+  overlayClassName="bg-green-950/50"
+  {...props}
+>
+  <p>Your changes have been saved.</p>
+</HazoUiDialog>
+```
+
+**Warning Theme**
+```tsx
+<HazoUiDialog
+  title="⚠ Warning"
+  description="Please review before proceeding"
+  actionButtonText="I Understand"
+  borderColor="rgb(234, 179, 8)"
+  headerBackgroundColor="rgb(254, 249, 195)"
+  headerTextColor="rgb(113, 63, 18)"
+  accentColor="rgb(234, 179, 8)"
+  overlayClassName="bg-yellow-950/50"
+  {...props}
+>
+  <p>You have unsaved changes that will be lost.</p>
+</HazoUiDialog>
+```
+
+**Danger Theme**
+```tsx
+<HazoUiDialog
+  title="⛔ Destructive Action"
+  description="This cannot be undone"
+  actionButtonText="Delete Permanently"
+  actionButtonVariant="destructive"
+  borderColor="rgb(239, 68, 68)"
+  headerBackgroundColor="rgb(254, 226, 226)"
+  headerTextColor="rgb(127, 29, 29)"
+  overlayClassName="bg-red-950/50"
+  {...props}
+>
+  <p>All data will be permanently deleted.</p>
+</HazoUiDialog>
+```
+
+**Info Theme**
+```tsx
+<HazoUiDialog
+  title="ℹ Information"
+  description="Learn more about this feature"
+  actionButtonText="Got It"
+  showCancelButton={false}
+  borderColor="rgb(59, 130, 246)"
+  headerBackgroundColor="rgb(219, 234, 254)"
+  headerTextColor="rgb(30, 58, 138)"
+  accentColor="rgb(59, 130, 246)"
+  overlayClassName="bg-blue-950/50"
+  {...props}
+>
+  <p>New features are now available.</p>
+</HazoUiDialog>
+```
+
+#### Complex Form Dialog
+
+```tsx
+import { HazoUiDialog } from 'hazo_ui';
+import { useState } from 'react';
+
+function FormDialog() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    role: '',
+  });
+
+  const handleSubmit = () => {
+    console.log('Form data:', formData);
+    setIsOpen(false);
+  };
+
+  return (
+    <HazoUiDialog
+      open={isOpen}
+      onOpenChange={setIsOpen}
+      title="New Employee Registration"
+      description="Fill out the required fields"
+      actionButtonText="Register"
+      onConfirm={handleSubmit}
+      sizeWidth="min(90vw, 700px)"
+      sizeHeight="min(85vh, 900px)"
+    >
+      <div className="space-y-4">
+        <div>
+          <label className="text-sm font-medium">Full Name *</label>
+          <input
+            type="text"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            className="w-full px-3 py-2 border rounded-md"
+          />
+        </div>
+
+        <div>
+          <label className="text-sm font-medium">Email *</label>
+          <input
+            type="email"
+            value={formData.email}
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            className="w-full px-3 py-2 border rounded-md"
+          />
+        </div>
+
+        <div>
+          <label className="text-sm font-medium">Role *</label>
+          <select
+            value={formData.role}
+            onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+            className="w-full px-3 py-2 border rounded-md"
+          >
+            <option value="">Select a role</option>
+            <option value="engineer">Software Engineer</option>
+            <option value="designer">UI/UX Designer</option>
+            <option value="manager">Product Manager</option>
+          </select>
+        </div>
+      </div>
+    </HazoUiDialog>
+  );
+}
+```
+
+#### Props Reference
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `open` | `boolean` | - | Controlled open state |
+| `onOpenChange` | `(open: boolean) => void` | - | Called when open state changes |
+| `children` | `React.ReactNode` | **Required** | Dialog body content |
+| `onConfirm` | `() => void` | - | Called when action button clicked |
+| `onCancel` | `() => void` | - | Called when cancel button clicked |
+| `title` | `string` | `"Action required"` | Dialog title |
+| `description` | `string` | - | Dialog description |
+| `actionButtonText` | `string` | `"Confirm"` | Action button label |
+| `actionButtonVariant` | `ButtonVariant` | `"default"` | Action button style |
+| `cancelButtonText` | `string` | `"Cancel"` | Cancel button label |
+| `showCancelButton` | `boolean` | `true` | Show cancel button |
+| `sizeWidth` | `string` | `"min(90vw, 600px)"` | Dialog width |
+| `sizeHeight` | `string` | `"min(80vh, 800px)"` | Dialog max height |
+| `openAnimation` | `AnimationPreset \| string` | `"zoom"` | Open animation |
+| `closeAnimation` | `AnimationPreset \| string` | `"zoom"` | Close animation |
+| `headerBackgroundColor` | `string` | - | Header background color |
+| `headerTextColor` | `string` | - | Header text color |
+| `bodyBackgroundColor` | `string` | - | Body background color |
+| `footerBackgroundColor` | `string` | - | Footer background color |
+| `borderColor` | `string` | - | Dialog border color |
+| `accentColor` | `string` | - | Action button background color |
+| `className` | `string` | - | Additional CSS classes |
+| `contentClassName` | `string` | - | Body CSS classes |
+| `overlayClassName` | `string` | - | Overlay CSS classes |
+| `headerClassName` | `string` | - | Header CSS classes |
+| `footerClassName` | `string` | - | Footer CSS classes |
+| `showCloseButton` | `boolean` | `true` | Show X close button |
+
+---
+
+## Troubleshooting
+
+### Styles not applying (Tailwind v4)
+
+If you're using Tailwind CSS v4 and components appear unstyled:
+
+1. Add the `@source` directive to your globals.css:
+   ```css
+   @import "tailwindcss";
+   @source "../node_modules/hazo_ui/dist";
+   ```
+
+2. Ensure you've imported the CSS variables:
+   ```tsx
+   import 'hazo_ui/styles.css';
+   ```
+
+### Missing hover states or colors
+
+If hover states are transparent or colors don't appear:
+
+- **Tailwind v4 users**: Add the `@source` directive (see above)
+- **Tailwind v3 users**: Verify `./node_modules/hazo_ui/dist/**/*.js` is in your `content` array
+
+### Missing CSS variables
+
+If you see errors about missing CSS variables, ensure you've either:
+- Imported `hazo_ui/styles.css` in your app entry point
+- Or configured your own CSS variables following the shadcn/ui pattern
+
+### TypeScript errors
+
+Ensure your tsconfig.json includes:
+```json
+{
+  "compilerOptions": {
+    "moduleResolution": "bundler"
+  }
+}
+```
+
+### Select dropdowns clipped in dialogs
+
+If Select dropdown options are cut off when used inside a Dialog:
+```css
+/* Add to your globals.css */
+[data-slot="dialog-content"]:has([data-slot="select-content"]),
+[data-slot="dialog-content"]:has([data-state="open"][data-slot="select-trigger"]) {
+  overflow: visible !important;
+}
+
+[data-slot="select-content"] {
+  z-index: 9999 !important;
+}
+```
+
+### Command pills not appearing (HazoUiTextbox/HazoUiTextarea)
+
+1. Ensure `prefixes` prop is properly configured with `char` and `commands` arrays
+2. Verify you're typing the correct prefix character (e.g., @, #, /)
+3. Check that `@tiptap/react` and related extensions are installed
+
+---
+
 ## Styling
 
 Both components use Tailwind CSS and follow shadcn/ui design patterns. Make sure your project has Tailwind CSS configured with the following CSS variables:
@@ -1714,23 +2152,29 @@ See the component library's Tailwind config for the complete set of CSS variable
 npm run build
 ```
 
-### Run Storybook
-
-```bash
-npm run storybook
-```
-
 ### Run dev app
+
+The dev-app provides a comprehensive testing environment with dedicated pages for each component:
 
 ```bash
 npm run dev:app
 ```
 
+Navigate to `http://localhost:3000` to access:
+- **Home** - Library overview and quick start guide
+- **Component pages** - Individual test pages with multiple test cases for each component
+- **Sidebar navigation** - Easy navigation between all component tests
+
+Each component page includes:
+- Multiple test sections covering different configurations
+- Real-time state display
+- Interactive examples
+
 ### Test before publishing
 
 ```bash
-npm run test:build
-npm run test:dev
+npm run test:build  # Build library + build dev-app
+npm run test:dev    # Build library + run dev-app
 ```
 
 ## License
