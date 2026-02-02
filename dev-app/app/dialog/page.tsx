@@ -42,6 +42,17 @@ export default function DialogPage() {
   const [is_zoom_open, set_is_zoom_open] = useState<boolean>(false);
   const [is_slide_open, set_is_slide_open] = useState<boolean>(false);
   const [is_fade_open, set_is_fade_open] = useState<boolean>(false);
+  const [is_bounce_open, set_is_bounce_open] = useState<boolean>(false);
+  const [is_scale_up_open, set_is_scale_up_open] = useState<boolean>(false);
+  const [is_flip_open, set_is_flip_open] = useState<boolean>(false);
+  const [is_slide_left_open, set_is_slide_left_open] = useState<boolean>(false);
+  const [is_slide_right_open, set_is_slide_right_open] = useState<boolean>(false);
+  const [is_slide_top_open, set_is_slide_top_open] = useState<boolean>(false);
+
+  // State for header bar variants
+  const [is_header_bar_dark_open, set_is_header_bar_dark_open] = useState<boolean>(false);
+  const [is_header_bar_blue_open, set_is_header_bar_blue_open] = useState<boolean>(false);
+  const [is_header_bar_purple_open, set_is_header_bar_purple_open] = useState<boolean>(false);
 
   // Form handlers
   const handleFormSubmit = () => {
@@ -731,70 +742,299 @@ export default function DialogPage() {
         <section id="test-animations" className="cls_test_section">
           <h2 className="text-2xl font-semibold mb-4">Animation Variants</h2>
           <p className="text-sm text-muted-foreground mb-4">
-            Different animation styles for dialog entrance and exit
+            9 different animation styles for dialog entrance and exit
+          </p>
+
+          <div className="cls_component_demo p-6 border rounded-lg bg-card mb-4 grid grid-cols-2 gap-4">
+            {/* Zoom Animation */}
+            <button
+              onClick={() => set_is_zoom_open(true)}
+              className="px-4 py-2 border rounded-md hover:bg-accent transition-colors text-left"
+            >
+              <div className="font-medium">Zoom</div>
+              <div className="text-xs text-muted-foreground">Scales from 50% size</div>
+            </button>
+            <HazoUiDialog
+              open={is_zoom_open}
+              onOpenChange={set_is_zoom_open}
+              title="Zoom Animation"
+              description="Scales in and out from center"
+              openAnimation="zoom"
+              closeAnimation="zoom"
+              onConfirm={() => set_is_zoom_open(false)}
+            >
+              <p className="text-sm">Zooms from 50% size with dramatic scale effect.</p>
+            </HazoUiDialog>
+
+            {/* Slide Bottom */}
+            <button
+              onClick={() => set_is_slide_open(true)}
+              className="px-4 py-2 border rounded-md hover:bg-accent transition-colors text-left"
+            >
+              <div className="font-medium">Slide Bottom</div>
+              <div className="text-xs text-muted-foreground">Slides from below</div>
+            </button>
+            <HazoUiDialog
+              open={is_slide_open}
+              onOpenChange={set_is_slide_open}
+              title="Slide Bottom"
+              openAnimation="slide"
+              closeAnimation="slide"
+              onConfirm={() => set_is_slide_open(false)}
+            >
+              <p className="text-sm">Slides up from bottom of screen.</p>
+            </HazoUiDialog>
+
+            {/* Slide Top */}
+            <button
+              onClick={() => set_is_slide_top_open(true)}
+              className="px-4 py-2 border rounded-md hover:bg-accent transition-colors text-left"
+            >
+              <div className="font-medium">Slide Top</div>
+              <div className="text-xs text-muted-foreground">Slides from above</div>
+            </button>
+            <HazoUiDialog
+              open={is_slide_top_open}
+              onOpenChange={set_is_slide_top_open}
+              title="Slide Top"
+              openAnimation="slide-top"
+              closeAnimation="slide-top"
+              onConfirm={() => set_is_slide_top_open(false)}
+            >
+              <p className="text-sm">Slides down from top of screen.</p>
+            </HazoUiDialog>
+
+            {/* Slide Left */}
+            <button
+              onClick={() => set_is_slide_left_open(true)}
+              className="px-4 py-2 border rounded-md hover:bg-accent transition-colors text-left"
+            >
+              <div className="font-medium">Slide Left</div>
+              <div className="text-xs text-muted-foreground">Slides from left</div>
+            </button>
+            <HazoUiDialog
+              open={is_slide_left_open}
+              onOpenChange={set_is_slide_left_open}
+              title="Slide Left"
+              openAnimation="slide-left"
+              closeAnimation="slide-left"
+              onConfirm={() => set_is_slide_left_open(false)}
+            >
+              <p className="text-sm">Slides in from left side of screen.</p>
+            </HazoUiDialog>
+
+            {/* Slide Right */}
+            <button
+              onClick={() => set_is_slide_right_open(true)}
+              className="px-4 py-2 border rounded-md hover:bg-accent transition-colors text-left"
+            >
+              <div className="font-medium">Slide Right</div>
+              <div className="text-xs text-muted-foreground">Slides from right</div>
+            </button>
+            <HazoUiDialog
+              open={is_slide_right_open}
+              onOpenChange={set_is_slide_right_open}
+              title="Slide Right"
+              openAnimation="slide-right"
+              closeAnimation="slide-right"
+              onConfirm={() => set_is_slide_right_open(false)}
+            >
+              <p className="text-sm">Slides in from right side of screen.</p>
+            </HazoUiDialog>
+
+            {/* Fade */}
+            <button
+              onClick={() => set_is_fade_open(true)}
+              className="px-4 py-2 border rounded-md hover:bg-accent transition-colors text-left"
+            >
+              <div className="font-medium">Fade</div>
+              <div className="text-xs text-muted-foreground">Pure opacity fade</div>
+            </button>
+            <HazoUiDialog
+              open={is_fade_open}
+              onOpenChange={set_is_fade_open}
+              title="Fade Animation"
+              openAnimation="fade"
+              closeAnimation="fade"
+              onConfirm={() => set_is_fade_open(false)}
+            >
+              <p className="text-sm">Slow opacity fade with no movement.</p>
+            </HazoUiDialog>
+
+            {/* Bounce */}
+            <button
+              onClick={() => set_is_bounce_open(true)}
+              className="px-4 py-2 border rounded-md hover:bg-accent transition-colors text-left"
+            >
+              <div className="font-medium">Bounce</div>
+              <div className="text-xs text-muted-foreground">Subtle bounce effect</div>
+            </button>
+            <HazoUiDialog
+              open={is_bounce_open}
+              onOpenChange={set_is_bounce_open}
+              title="Bounce Animation"
+              openAnimation="bounce"
+              closeAnimation="bounce"
+              onConfirm={() => set_is_bounce_open(false)}
+            >
+              <p className="text-sm">Gentle bounce/spring animation.</p>
+            </HazoUiDialog>
+
+            {/* Scale Up */}
+            <button
+              onClick={() => set_is_scale_up_open(true)}
+              className="px-4 py-2 border rounded-md hover:bg-accent transition-colors text-left"
+            >
+              <div className="font-medium">Scale Up</div>
+              <div className="text-xs text-muted-foreground">Scales from 0%</div>
+            </button>
+            <HazoUiDialog
+              open={is_scale_up_open}
+              onOpenChange={set_is_scale_up_open}
+              title="Scale Up"
+              openAnimation="scale-up"
+              closeAnimation="scale-up"
+              onConfirm={() => set_is_scale_up_open(false)}
+            >
+              <p className="text-sm">Scales from 0% to full size.</p>
+            </HazoUiDialog>
+
+            {/* Flip */}
+            <button
+              onClick={() => set_is_flip_open(true)}
+              className="px-4 py-2 border rounded-md hover:bg-accent transition-colors text-left"
+            >
+              <div className="font-medium">Flip</div>
+              <div className="text-xs text-muted-foreground">Flip/rotate effect</div>
+            </button>
+            <HazoUiDialog
+              open={is_flip_open}
+              onOpenChange={set_is_flip_open}
+              title="Flip Animation"
+              openAnimation="flip"
+              closeAnimation="flip"
+              onConfirm={() => set_is_flip_open(false)}
+            >
+              <p className="text-sm">Flip/rotate animation effect.</p>
+            </HazoUiDialog>
+          </div>
+        </section>
+
+        {/* Section 6: Header Bar Variants */}
+        <section id="test-header-bar" className="cls_test_section">
+          <h2 className="text-2xl font-semibold mb-4">Header Bar Variants</h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            Full-width colored header bar like common modal designs
           </p>
 
           <div className="cls_component_demo p-6 border rounded-lg bg-card mb-4 space-y-4">
-            {/* Zoom Animation */}
+            {/* Dark Header Bar */}
             <div className="flex items-center gap-4">
               <button
-                onClick={() => set_is_zoom_open(true)}
-                className="px-4 py-2 border rounded-md hover:bg-accent transition-colors"
+                onClick={() => set_is_header_bar_dark_open(true)}
+                className="px-4 py-2 bg-slate-800 text-white rounded-md hover:bg-slate-700 transition-colors"
               >
-                Zoom Animation
+                Dark Header Bar
               </button>
               <HazoUiDialog
-                open={is_zoom_open}
-                onOpenChange={set_is_zoom_open}
-                title="Zoom Animation"
-                description="Scales in and out from center"
-                openAnimation="zoom"
-                closeAnimation="zoom"
-                onConfirm={() => set_is_zoom_open(false)}
+                open={is_header_bar_dark_open}
+                onOpenChange={set_is_header_bar_dark_open}
+                title="Prefill from Document"
+                description="Upload a PDF document to extract and populate form fields"
+                headerBar={true}
+                headerBarColor="#1e293b"
+                actionButtonText="Upload"
+                onConfirm={() => set_is_header_bar_dark_open(false)}
+                sizeWidth="min(90vw, 700px)"
               >
-                <p className="text-sm">This dialog zooms in and out with a scale animation.</p>
+                <div className="space-y-4">
+                  <p className="text-sm">
+                    Upload a PDF document (e.g., PAYG summary, ATO statement, prior year return) to automatically extract and populate form fields. Only empty fields will be updated.
+                  </p>
+                  <div className="p-8 border-2 border-dashed rounded-lg text-center">
+                    <div className="text-4xl mb-2">↑</div>
+                    <p className="font-medium">Click to select or drag and drop a PDF file</p>
+                    <p className="text-sm text-muted-foreground mt-1">Maximum file size: 10MB</p>
+                  </div>
+                </div>
               </HazoUiDialog>
             </div>
 
-            {/* Slide Animation */}
+            {/* Blue Header Bar */}
             <div className="flex items-center gap-4">
               <button
-                onClick={() => set_is_slide_open(true)}
-                className="px-4 py-2 border rounded-md hover:bg-accent transition-colors"
+                onClick={() => set_is_header_bar_blue_open(true)}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
               >
-                Slide Animation
+                Blue Header Bar
               </button>
               <HazoUiDialog
-                open={is_slide_open}
-                onOpenChange={set_is_slide_open}
-                title="Slide Animation"
-                description="Slides up from bottom"
-                openAnimation="slide"
-                closeAnimation="slide"
-                onConfirm={() => set_is_slide_open(false)}
+                open={is_header_bar_blue_open}
+                onOpenChange={set_is_header_bar_blue_open}
+                title="Create New Project"
+                description="Set up a new project workspace"
+                headerBar={true}
+                headerBarColor="#2563eb"
+                actionButtonText="Create"
+                onConfirm={() => set_is_header_bar_blue_open(false)}
               >
-                <p className="text-sm">This dialog slides in from the bottom of the screen.</p>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium">Project Name</label>
+                    <input
+                      type="text"
+                      placeholder="My Awesome Project"
+                      className="w-full px-3 py-2 border rounded-md mt-1"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Description</label>
+                    <textarea
+                      placeholder="Enter project description..."
+                      rows={3}
+                      className="w-full px-3 py-2 border rounded-md mt-1"
+                    />
+                  </div>
+                </div>
               </HazoUiDialog>
             </div>
 
-            {/* Fade Animation */}
+            {/* Purple Header Bar */}
             <div className="flex items-center gap-4">
               <button
-                onClick={() => set_is_fade_open(true)}
-                className="px-4 py-2 border rounded-md hover:bg-accent transition-colors"
+                onClick={() => set_is_header_bar_purple_open(true)}
+                className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
               >
-                Fade Animation
+                Purple Header Bar
               </button>
               <HazoUiDialog
-                open={is_fade_open}
-                onOpenChange={set_is_fade_open}
-                title="Fade Animation"
-                description="Simple fade in and out"
-                openAnimation="fade"
-                closeAnimation="fade"
-                onConfirm={() => set_is_fade_open(false)}
+                open={is_header_bar_purple_open}
+                onOpenChange={set_is_header_bar_purple_open}
+                title="Invite Team Members"
+                description="Add people to your workspace"
+                headerBar={true}
+                headerBarColor="#9333ea"
+                actionButtonText="Send Invites"
+                onConfirm={() => set_is_header_bar_purple_open(false)}
               >
-                <p className="text-sm">This dialog fades in and out smoothly.</p>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium">Email Addresses</label>
+                    <input
+                      type="text"
+                      placeholder="email@example.com"
+                      className="w-full px-3 py-2 border rounded-md mt-1"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Role</label>
+                    <select className="w-full px-3 py-2 border rounded-md mt-1">
+                      <option>Admin</option>
+                      <option>Editor</option>
+                      <option>Viewer</option>
+                    </select>
+                  </div>
+                </div>
               </HazoUiDialog>
             </div>
           </div>

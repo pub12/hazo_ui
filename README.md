@@ -1710,7 +1710,8 @@ A flexible, standardized dialog component with customizable animations, sizes, a
 #### Features
 
 - **Flexible Sizing**: 5 size presets from small (400px) to full-width (98vw), plus custom sizing
-- **Animation Presets**: Distinct animations - zoom (scales from 50%), slide (from bottom), fade (opacity only)
+- **9 Animation Presets**: Zoom, slide (bottom/top/left/right), fade, bounce, scale-up, and flip animations
+- **Header Bar Option**: Full-width colored header bar for modern modal designs
 - **Color Customization**: Override header, body, footer, border, and accent colors via props
 - **Themed Variants**: Pre-built themes for success, warning, danger, and info states
 - **Responsive Design**: Viewport-relative sizing with maximum constraints
@@ -1758,6 +1759,10 @@ interface HazoUiDialogProps {
   borderColor?: string;
   accentColor?: string;
 
+  // Header Bar (full-width colored bar)
+  headerBar?: boolean;                 // default: false - Enable full-width colored header bar
+  headerBarColor?: string;             // default: "#1e293b" - Color for the header bar
+
   // Styling Customization
   className?: string;
   contentClassName?: string;
@@ -1767,7 +1772,7 @@ interface HazoUiDialogProps {
   showCloseButton?: boolean;           // default: true
 }
 
-type AnimationPreset = 'zoom' | 'slide' | 'fade' | 'none';
+type AnimationPreset = 'zoom' | 'slide' | 'fade' | 'bounce' | 'scale-up' | 'flip' | 'slide-left' | 'slide-right' | 'slide-top' | 'none';
 type ButtonVariant = "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
 ```
 
@@ -1848,24 +1853,66 @@ function ConfirmDialog() {
 #### Animation Variants
 
 ```tsx
-// Zoom - Scales from 50% size
+// Zoom - Scales from 50% size with dramatic effect
 <HazoUiDialog
   openAnimation="zoom"
   closeAnimation="zoom"
   {...props}
 />
 
-// Slide - Slides from bottom of screen
+// Slide Bottom - Slides from bottom of screen
 <HazoUiDialog
   openAnimation="slide"
   closeAnimation="slide"
   {...props}
 />
 
-// Fade - Pure opacity fade
+// Slide Top - Slides from top of screen
+<HazoUiDialog
+  openAnimation="slide-top"
+  closeAnimation="slide-top"
+  {...props}
+/>
+
+// Slide Left - Slides from left side
+<HazoUiDialog
+  openAnimation="slide-left"
+  closeAnimation="slide-left"
+  {...props}
+/>
+
+// Slide Right - Slides from right side
+<HazoUiDialog
+  openAnimation="slide-right"
+  closeAnimation="slide-right"
+  {...props}
+/>
+
+// Fade - Pure opacity fade with no movement
 <HazoUiDialog
   openAnimation="fade"
   closeAnimation="fade"
+  {...props}
+/>
+
+// Bounce - Gentle bounce/spring animation
+<HazoUiDialog
+  openAnimation="bounce"
+  closeAnimation="bounce"
+  {...props}
+/>
+
+// Scale Up - Scales from 0% to full size
+<HazoUiDialog
+  openAnimation="scale-up"
+  closeAnimation="scale-up"
+  {...props}
+/>
+
+// Flip - Flip/rotate animation effect
+<HazoUiDialog
+  openAnimation="flip"
+  closeAnimation="flip"
   {...props}
 />
 
@@ -1948,6 +1995,66 @@ function ConfirmDialog() {
   <p>New features are now available.</p>
 </HazoUiDialog>
 ```
+
+#### Header Bar Style
+
+The header bar feature creates a full-width colored bar at the top of the dialog, similar to common modal designs in modern applications. When enabled, the header text automatically becomes white for better contrast.
+
+```tsx
+// Dark Header Bar (slate)
+<HazoUiDialog
+  title="Invite Team Members"
+  description="Add people to your workspace"
+  headerBar={true}
+  headerBarColor="#1e293b"
+  actionButtonText="Send Invites"
+  {...props}
+>
+  <div className="space-y-4">
+    <input
+      type="text"
+      placeholder="email@example.com"
+      className="w-full px-3 py-2 border rounded-md"
+    />
+    <select className="w-full px-3 py-2 border rounded-md">
+      <option>Admin</option>
+      <option>Editor</option>
+      <option>Viewer</option>
+    </select>
+  </div>
+</HazoUiDialog>
+
+// Blue Header Bar
+<HazoUiDialog
+  title="Create New Project"
+  description="Set up a new project workspace"
+  headerBar={true}
+  headerBarColor="#2563eb"
+  actionButtonText="Create"
+  {...props}
+>
+  {/* Form content */}
+</HazoUiDialog>
+
+// Purple Header Bar
+<HazoUiDialog
+  title="Upload Document"
+  description="Upload a file to process"
+  headerBar={true}
+  headerBarColor="#9333ea"
+  actionButtonText="Upload"
+  {...props}
+>
+  {/* Upload UI */}
+</HazoUiDialog>
+```
+
+**Key Features:**
+- Full-width colored bar extends to dialog edges
+- Header text automatically becomes white for contrast
+- Description text becomes semi-transparent white (80% opacity)
+- Close button color adapts to white for visibility
+- Compatible with all animation presets and size variants
 
 #### Complex Form Dialog
 

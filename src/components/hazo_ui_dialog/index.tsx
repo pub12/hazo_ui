@@ -29,22 +29,46 @@ import {
 } from "../ui/dialog";
 
 // Animation preset types
-export type AnimationPreset = 'zoom' | 'slide' | 'fade' | 'none';
+export type AnimationPreset = 'zoom' | 'slide' | 'fade' | 'bounce' | 'scale-up' | 'flip' | 'slide-left' | 'slide-right' | 'slide-top' | 'none';
 type ButtonVariant = "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
 
 // Animation preset configurations
 const ANIMATION_PRESETS = {
   zoom: {
-    open: "data-[state=open]:animate-in data-[state=open]:zoom-in-50 data-[state=open]:fade-in-0 data-[state=open]:duration-500",
-    close: "data-[state=closed]:animate-out data-[state=closed]:zoom-out-50 data-[state=closed]:fade-out-0 data-[state=closed]:duration-300"
+    open: "animate-dialog-zoom",
+    close: "animate-dialog-zoom"
   },
   slide: {
-    open: "data-[state=open]:animate-in data-[state=open]:slide-in-from-bottom-full data-[state=open]:duration-500",
-    close: "data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom-full data-[state=closed]:duration-300"
+    open: "animate-dialog-slide-bottom",
+    close: "animate-dialog-slide-bottom"
   },
   fade: {
-    open: "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:duration-700",
-    close: "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:duration-500"
+    open: "animate-dialog-fade",
+    close: "animate-dialog-fade"
+  },
+  bounce: {
+    open: "animate-dialog-bounce",
+    close: "animate-dialog-bounce"
+  },
+  "scale-up": {
+    open: "animate-dialog-scale",
+    close: "animate-dialog-scale"
+  },
+  flip: {
+    open: "animate-dialog-flip",
+    close: "animate-dialog-flip"
+  },
+  "slide-left": {
+    open: "animate-dialog-slide-left",
+    close: "animate-dialog-slide-left"
+  },
+  "slide-right": {
+    open: "animate-dialog-slide-right",
+    close: "animate-dialog-slide-right"
+  },
+  "slide-top": {
+    open: "animate-dialog-slide-top",
+    close: "animate-dialog-slide-top"
   },
   none: { open: "", close: "" }
 };
@@ -85,6 +109,10 @@ export interface HazoUiDialogProps {
   footerBackgroundColor?: string;
   borderColor?: string;
   accentColor?: string;
+
+  // Header Bar (full-width colored bar)
+  headerBar?: boolean;              // Enable full-width colored header bar
+  headerBarColor?: string;          // Color for the header bar (e.g., "#1e293b", "rgb(30, 41, 59)")
 
   // Styling Customization
   className?: string;
@@ -141,6 +169,8 @@ export function HazoUiDialog({
   footerBackgroundColor,
   borderColor,
   accentColor,
+  headerBar = false,
+  headerBarColor = "#1e293b",
   className,
   contentClassName,
   overlayClassName,
@@ -169,10 +199,36 @@ export function HazoUiDialog({
     ...(borderColor && { borderColor }),
   };
 
+  // Header styles - combine headerBar with custom colors
   const headerStyles: React.CSSProperties = {
-    ...(headerBackgroundColor && { backgroundColor: headerBackgroundColor }),
+    ...(headerBar && {
+      backgroundColor: headerBarColor,
+      marginLeft: "-1.5rem",
+      marginRight: "-1.5rem",
+      marginTop: "0",
+      marginBottom: "0",
+      paddingTop: "1.5rem",
+      paddingBottom: "1.5rem",
+      paddingLeft: "1.5rem",
+      paddingRight: "1.5rem",
+      borderTopLeftRadius: "inherit",
+      borderTopRightRadius: "inherit",
+    }),
+    ...(headerBackgroundColor && !headerBar && { backgroundColor: headerBackgroundColor }),
     ...(headerTextColor && { color: headerTextColor }),
   };
+
+  // Title styles - white text for header bar with !important to override inherited colors
+  const titleClassName = cn(
+    "cls_dialog_title",
+    headerBar && "!text-white"
+  );
+
+  // Description styles - lighter white for header bar with !important to override inherited colors
+  const descriptionClassName = cn(
+    "cls_dialog_description",
+    headerBar && "!text-white/80"
+  );
 
   const bodyStyles: React.CSSProperties = {
     ...(bodyBackgroundColor && { backgroundColor: bodyBackgroundColor }),
@@ -208,6 +264,7 @@ export function HazoUiDialog({
             "duration-200",
             animationClasses,
             "sm:rounded-lg",
+            "overflow-hidden",
             "focus:outline-none",
             className
           )}
@@ -215,12 +272,18 @@ export function HazoUiDialog({
         >
           {/* Header - Fixed */}
           <DialogHeader
-            className={cn("cls_dialog_header p-6 pb-4", headerClassName)}
+            className={cn(
+              "cls_dialog_header",
+              !headerBar && "p-6 pb-4",
+              headerClassName
+            )}
             style={headerStyles}
           >
-            <DialogTitle className="cls_dialog_title">{title}</DialogTitle>
+            <DialogTitle className={titleClassName}>
+              {title}
+            </DialogTitle>
             {description && (
-              <DialogDescription className="cls_dialog_description">
+              <DialogDescription className={descriptionClassName}>
                 {description}
               </DialogDescription>
             )}
@@ -268,7 +331,13 @@ export function HazoUiDialog({
           {showCloseButton && (
             <DialogPrimitive.Close
               className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
-              style={headerTextColor ? { color: headerTextColor } : undefined}
+              style={
+                headerBar
+                  ? { color: "white" }
+                  : headerTextColor
+                  ? { color: headerTextColor }
+                  : undefined
+              }
             >
               <X className="h-4 w-4" />
               <span className="sr-only">Close</span>

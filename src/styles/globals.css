@@ -203,3 +203,299 @@
   color: var(--accent-foreground, #f8fafc) !important;
 }
 
+/* Custom Dialog Animations */
+/* All animations maintain the centered position (translate -50%, -50%) */
+
+/* Flip animation with 3D rotation */
+@keyframes dialog-flip-in {
+  from {
+    transform: translate(-50%, -50%) perspective(1000px) rotateY(-90deg);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%) perspective(1000px) rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes dialog-flip-out {
+  from {
+    transform: translate(-50%, -50%) perspective(1000px) rotateY(0deg);
+    opacity: 1;
+  }
+  to {
+    transform: translate(-50%, -50%) perspective(1000px) rotateY(90deg);
+    opacity: 0;
+  }
+}
+
+/* Slide from top (vertical only) */
+@keyframes dialog-slide-in-from-top {
+  from {
+    transform: translate(-50%, -150vh);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+}
+
+@keyframes dialog-slide-out-to-top {
+  from {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+  to {
+    transform: translate(-50%, -150vh);
+    opacity: 0;
+  }
+}
+
+/* Slide from bottom (vertical only) */
+@keyframes dialog-slide-in-from-bottom {
+  from {
+    transform: translate(-50%, 150vh);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+}
+
+@keyframes dialog-slide-out-to-bottom {
+  from {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+  to {
+    transform: translate(-50%, 150vh);
+    opacity: 0;
+  }
+}
+
+/* Slide from left (horizontal only) */
+@keyframes dialog-slide-in-from-left {
+  from {
+    transform: translate(-150vw, -50%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+}
+
+@keyframes dialog-slide-out-to-left {
+  from {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+  to {
+    transform: translate(-150vw, -50%);
+    opacity: 0;
+  }
+}
+
+/* Slide from right (horizontal only) */
+@keyframes dialog-slide-in-from-right {
+  from {
+    transform: translate(150vw, -50%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+}
+
+@keyframes dialog-slide-out-to-right {
+  from {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+  to {
+    transform: translate(150vw, -50%);
+    opacity: 0;
+  }
+}
+
+/* Fade in place (no movement) */
+@keyframes dialog-fade-in {
+  from {
+    transform: translate(-50%, -50%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+}
+
+@keyframes dialog-fade-out {
+  from {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+  to {
+    transform: translate(-50%, -50%);
+    opacity: 0;
+  }
+}
+
+/* Bounce from top with spring effect */
+@keyframes dialog-bounce-in {
+  0% {
+    transform: translate(-50%, -150vh);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -45%);
+    opacity: 1;
+  }
+  65% {
+    transform: translate(-50%, -52%);
+  }
+  80% {
+    transform: translate(-50%, -49%);
+  }
+  95% {
+    transform: translate(-50%, -50.5%);
+  }
+  100% {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+}
+
+@keyframes dialog-bounce-out {
+  from {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+  to {
+    transform: translate(-50%, -150vh);
+    opacity: 0;
+  }
+}
+
+/* Scale up in place (no translation) */
+@keyframes dialog-scale-in {
+  from {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes dialog-scale-out {
+  from {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Zoom animation (existing Tailwind zoom works well) */
+@keyframes dialog-zoom-in {
+  from {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes dialog-zoom-out {
+  from {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+  }
+}
+
+/* Animation classes for dialog */
+[data-state="open"].animate-dialog-flip {
+  animation: dialog-flip-in 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-state="closed"].animate-dialog-flip {
+  animation: dialog-flip-out 0.4s cubic-bezier(0.7, 0, 0.84, 0);
+}
+
+[data-state="open"].animate-dialog-slide-top {
+  animation: dialog-slide-in-from-top 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-state="closed"].animate-dialog-slide-top {
+  animation: dialog-slide-out-to-top 0.3s cubic-bezier(0.7, 0, 0.84, 0);
+}
+
+[data-state="open"].animate-dialog-slide-bottom {
+  animation: dialog-slide-in-from-bottom 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-state="closed"].animate-dialog-slide-bottom {
+  animation: dialog-slide-out-to-bottom 0.3s cubic-bezier(0.7, 0, 0.84, 0);
+}
+
+[data-state="open"].animate-dialog-slide-left {
+  animation: dialog-slide-in-from-left 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-state="closed"].animate-dialog-slide-left {
+  animation: dialog-slide-out-to-left 0.3s cubic-bezier(0.7, 0, 0.84, 0);
+}
+
+[data-state="open"].animate-dialog-slide-right {
+  animation: dialog-slide-in-from-right 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-state="closed"].animate-dialog-slide-right {
+  animation: dialog-slide-out-to-right 0.3s cubic-bezier(0.7, 0, 0.84, 0);
+}
+
+[data-state="open"].animate-dialog-fade {
+  animation: dialog-fade-in 0.7s ease-out;
+}
+
+[data-state="closed"].animate-dialog-fade {
+  animation: dialog-fade-out 0.5s ease-in;
+}
+
+[data-state="open"].animate-dialog-bounce {
+  animation: dialog-bounce-in 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-state="closed"].animate-dialog-bounce {
+  animation: dialog-bounce-out 0.3s cubic-bezier(0.7, 0, 0.84, 0);
+}
+
+[data-state="open"].animate-dialog-scale {
+  animation: dialog-scale-in 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-state="closed"].animate-dialog-scale {
+  animation: dialog-scale-out 0.3s cubic-bezier(0.7, 0, 0.84, 0);
+}
+
+[data-state="open"].animate-dialog-zoom {
+  animation: dialog-zoom-in 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-state="closed"].animate-dialog-zoom {
+  animation: dialog-zoom-out 0.3s cubic-bezier(0.7, 0, 0.84, 0);
+}
+
