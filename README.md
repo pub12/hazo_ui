@@ -1743,6 +1743,14 @@ interface HazoUiDialogProps {
   cancelButtonText?: string;           // default: "Cancel"
   showCancelButton?: boolean;          // default: true
 
+  // Action Button Enhancement
+  actionButtonLoading?: boolean;       // default: false - Shows spinner, disables button
+  actionButtonDisabled?: boolean;      // default: false - Disables action button
+  actionButtonIcon?: React.ReactNode;  // Icon before button text (replaced by spinner when loading)
+
+  // Custom Footer
+  footerContent?: React.ReactNode;     // Custom footer content (replaces default buttons)
+
   // Size Configuration
   sizeWidth?: string;                  // default: "min(90vw, 600px)"
   sizeHeight?: string;                 // default: "min(80vh, 800px)"
@@ -1807,6 +1815,220 @@ function ConfirmDialog() {
         <p>This action cannot be undone.</p>
       </HazoUiDialog>
     </>
+  );
+}
+```
+
+#### Action Button States and Custom Footers
+
+The dialog supports enhanced action buttons with loading states, icons, and fully custom footers for complex UX scenarios.
+
+##### 1. Form Dialog with Loading State
+
+```tsx
+import { HazoUiDialog } from 'hazo_ui';
+import { useState } from 'react';
+
+function SaveFormDialog() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      await saveFormData();
+      setIsOpen(false);
+    } catch (error) {
+      console.error('Save failed:', error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <HazoUiDialog
+      open={isOpen}
+      onOpenChange={setIsOpen}
+      title="Save Changes"
+      description="Your changes will be saved to the server."
+      actionButtonText={isSaving ? "Saving..." : "Save"}
+      actionButtonLoading={isSaving}
+      onConfirm={handleSave}
+    >
+      <p>Click Save to see the loading spinner and disabled button.</p>
+    </HazoUiDialog>
+  );
+}
+```
+
+##### 2. Confirmation Dialog with Icon
+
+```tsx
+import { HazoUiDialog } from 'hazo_ui';
+import { Send } from 'lucide-react';
+import { useState } from 'react';
+
+function SendEmailDialog() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <HazoUiDialog
+      open={isOpen}
+      onOpenChange={setIsOpen}
+      title="Send Email"
+      description="This will send the email to all recipients."
+      actionButtonText="Send Email"
+      actionButtonIcon={<Send className="h-4 w-4" />}
+      onConfirm={() => {
+        sendEmail();
+        setIsOpen(false);
+      }}
+    >
+      <p>The Send icon appears before the button text.</p>
+    </HazoUiDialog>
+  );
+}
+```
+
+##### 3. Destructive Action with Loading
+
+```tsx
+import { HazoUiDialog } from 'hazo_ui';
+import { Lock } from 'lucide-react';
+import { useState } from 'react';
+
+function CloseAccountDialog() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+
+  const handleClose = async () => {
+    setIsClosing(true);
+    try {
+      await closeAccount();
+      setIsOpen(false);
+    } catch (error) {
+      console.error('Close failed:', error);
+    } finally {
+      setIsClosing(false);
+    }
+  };
+
+  return (
+    <HazoUiDialog
+      open={isOpen}
+      onOpenChange={setIsOpen}
+      title="Close Account"
+      description="This will permanently close your account."
+      actionButtonText={isClosing ? "Closing..." : "Close"}
+      actionButtonIcon={<Lock className="h-4 w-4" />}
+      actionButtonLoading={isClosing}
+      onConfirm={handleClose}
+    >
+      <p>Lock icon is replaced by spinner when loading.</p>
+    </HazoUiDialog>
+  );
+}
+```
+
+##### 4. Complex Footer with Stats
+
+```tsx
+import { HazoUiDialog } from 'hazo_ui';
+import { useState } from 'react';
+
+function ReviewItemsDialog() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [stats, setStats] = useState({ keep: 0, accept: 0, skip: 0 });
+
+  return (
+    <HazoUiDialog
+      open={isOpen}
+      onOpenChange={setIsOpen}
+      title="Review Items"
+      description="Review and process the items below."
+      footerContent={
+        <div className="flex items-center justify-between w-full">
+          <div className="text-sm text-muted-foreground">
+            Keep: {stats.keep} | Accept: {stats.accept} | Skip: {stats.skip}
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setStats({ ...stats, skip: stats.skip + 1 })}
+              className="px-3 py-1.5 text-sm border rounded-md hover:bg-muted"
+            >
+              Skip
+            </button>
+            <button
+              onClick={() => setStats({ ...stats, keep: stats.keep + 1 })}
+              className="px-3 py-1.5 text-sm bg-blue-500 text-white rounded-md"
+            >
+              Keep
+            </button>
+            <button
+              onClick={() => {
+                setStats({ ...stats, accept: stats.accept + 1 });
+                setIsOpen(false);
+              }}
+              className="px-3 py-1.5 text-sm bg-green-500 text-white rounded-md"
+            >
+              Accept
+            </button>
+          </div>
+        </div>
+      }
+    >
+      <p>Custom footer shows stats and multiple action buttons.</p>
+    </HazoUiDialog>
+  );
+}
+```
+
+##### 5. Progress Dialog with No Footer
+
+```tsx
+import { HazoUiDialog } from 'hazo_ui';
+import { useState, useEffect } from 'react';
+
+function ProgressDialog() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    if (isOpen) {
+      const interval = setInterval(() => {
+        setProgress((prev) => {
+          const next = prev + 10;
+          if (next >= 100) {
+            clearInterval(interval);
+            setTimeout(() => setIsOpen(false), 500);
+            return 100;
+          }
+          return next;
+        });
+      }, 300);
+      return () => clearInterval(interval);
+    }
+  }, [isOpen]);
+
+  return (
+    <HazoUiDialog
+      open={isOpen}
+      onOpenChange={setIsOpen}
+      title="Processing..."
+      description="Please wait while we process your request."
+      showCloseButton={false}
+      footerContent={<div />}
+    >
+      <div className="space-y-4">
+        <div className="w-full bg-muted rounded-full h-2">
+          <div
+            className="bg-primary h-2 rounded-full transition-all"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+        <p className="text-sm text-center">{progress}% complete</p>
+      </div>
+    </HazoUiDialog>
   );
 }
 ```
@@ -2141,6 +2363,10 @@ function FormDialog() {
 | `actionButtonVariant` | `ButtonVariant` | `"default"` | Action button style |
 | `cancelButtonText` | `string` | `"Cancel"` | Cancel button label |
 | `showCancelButton` | `boolean` | `true` | Show cancel button |
+| `actionButtonLoading` | `boolean` | `false` | Shows loading spinner and disables action button |
+| `actionButtonDisabled` | `boolean` | `false` | Disables the action button |
+| `actionButtonIcon` | `React.ReactNode` | - | Icon element rendered before action button text |
+| `footerContent` | `React.ReactNode` | - | Custom footer content that replaces default buttons |
 | `sizeWidth` | `string` | `"min(90vw, 600px)"` | Dialog width |
 | `sizeHeight` | `string` | `"min(80vh, 800px)"` | Dialog max height |
 | `openAnimation` | `AnimationPreset \| string` | `"zoom"` | Open animation |

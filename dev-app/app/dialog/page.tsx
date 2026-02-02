@@ -6,6 +6,7 @@
 
 import { useState } from "react";
 import { HazoUiDialog } from "hazo_ui";
+import { Send, Lock, Loader2 } from "lucide-react";
 
 export default function DialogPage() {
   // State for minimal dialog
@@ -53,6 +54,17 @@ export default function DialogPage() {
   const [is_header_bar_dark_open, set_is_header_bar_dark_open] = useState<boolean>(false);
   const [is_header_bar_blue_open, set_is_header_bar_blue_open] = useState<boolean>(false);
   const [is_header_bar_purple_open, set_is_header_bar_purple_open] = useState<boolean>(false);
+
+  // State for action button enhancement tests
+  const [is_loading_test_open, set_is_loading_test_open] = useState<boolean>(false);
+  const [test1_loading, set_test1_loading] = useState<boolean>(false);
+  const [is_icon_test_open, set_is_icon_test_open] = useState<boolean>(false);
+  const [is_icon_loading_test_open, set_is_icon_loading_test_open] = useState<boolean>(false);
+  const [test3_loading, set_test3_loading] = useState<boolean>(false);
+  const [is_custom_footer_open, set_is_custom_footer_open] = useState<boolean>(false);
+  const [stats, set_stats] = useState({ keep: 5, accept: 3, skip: 2 });
+  const [is_progress_open, set_is_progress_open] = useState<boolean>(false);
+  const [progress, set_progress] = useState<number>(0);
 
   // Form handlers
   const handleFormSubmit = () => {
@@ -1036,6 +1048,294 @@ export default function DialogPage() {
                   </div>
                 </div>
               </HazoUiDialog>
+            </div>
+          </div>
+        </section>
+
+        {/* Section: Action Button Enhancement */}
+        <section id="test-action-button" className="cls_test_section">
+          <h2 className="text-2xl font-semibold mb-4">Action Button Enhancement</h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            Loading states, icons, and custom footers for enhanced UX
+          </p>
+
+          {/* Test Case 1: Action Button Loading State */}
+          <div className="cls_test_case mb-8">
+            <h3 className="text-lg font-medium mb-2">Test Case 1: Action Button Loading State</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              Button shows spinner and is disabled during async operations
+            </p>
+
+            <div className="cls_component_demo p-6 border rounded-lg bg-card mb-4">
+              <button
+                onClick={() => set_is_loading_test_open(true)}
+                className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+              >
+                Open Save Dialog
+              </button>
+
+              <HazoUiDialog
+                open={is_loading_test_open}
+                onOpenChange={set_is_loading_test_open}
+                title="Save Changes"
+                description="Your changes will be saved to the server."
+                actionButtonText={test1_loading ? "Saving..." : "Save"}
+                actionButtonLoading={test1_loading}
+                onConfirm={() => {
+                  set_test1_loading(true);
+                  // Simulate async operation
+                  setTimeout(() => {
+                    set_test1_loading(false);
+                    set_is_loading_test_open(false);
+                    console.log("Changes saved");
+                  }, 2000);
+                }}
+                onCancel={() => {
+                  console.log("Save cancelled");
+                }}
+              >
+                <p className="text-sm text-muted-foreground">
+                  Click Save to see the loading state with spinner and disabled button.
+                </p>
+              </HazoUiDialog>
+            </div>
+
+            <div className="cls_output_display p-4 border rounded-lg bg-muted">
+              <h3 className="font-medium mb-2">State:</h3>
+              <pre className="text-xs">
+                {JSON.stringify({ is_loading_test_open, test1_loading }, null, 2)}
+              </pre>
+            </div>
+          </div>
+
+          {/* Test Case 2: Action Button with Icon */}
+          <div className="cls_test_case mb-8">
+            <h3 className="text-lg font-medium mb-2">Test Case 2: Action Button with Icon</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              Icon appears before button text for enhanced visual communication
+            </p>
+
+            <div className="cls_component_demo p-6 border rounded-lg bg-card mb-4">
+              <button
+                onClick={() => set_is_icon_test_open(true)}
+                className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+              >
+                Open Send Dialog
+              </button>
+
+              <HazoUiDialog
+                open={is_icon_test_open}
+                onOpenChange={set_is_icon_test_open}
+                title="Send Email"
+                description="This will send the email to all recipients."
+                actionButtonText="Send Email"
+                actionButtonIcon={<Send className="h-4 w-4" />}
+                onConfirm={() => {
+                  console.log("Email sent");
+                  set_is_icon_test_open(false);
+                }}
+                onCancel={() => {
+                  console.log("Send cancelled");
+                }}
+              >
+                <p className="text-sm text-muted-foreground">
+                  The Send icon appears before the button text.
+                </p>
+              </HazoUiDialog>
+            </div>
+
+            <div className="cls_output_display p-4 border rounded-lg bg-muted">
+              <h3 className="font-medium mb-2">State:</h3>
+              <pre className="text-xs">
+                {JSON.stringify({ is_icon_test_open }, null, 2)}
+              </pre>
+            </div>
+          </div>
+
+          {/* Test Case 3: Icon + Loading (Icon Replaced by Spinner) */}
+          <div className="cls_test_case mb-8">
+            <h3 className="text-lg font-medium mb-2">Test Case 3: Icon + Loading (Icon Replaced by Spinner)</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              Icon is replaced by spinner during loading state
+            </p>
+
+            <div className="cls_component_demo p-6 border rounded-lg bg-card mb-4">
+              <button
+                onClick={() => set_is_icon_loading_test_open(true)}
+                className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+              >
+                Open Lock Dialog
+              </button>
+
+              <HazoUiDialog
+                open={is_icon_loading_test_open}
+                onOpenChange={set_is_icon_loading_test_open}
+                title="Close Account"
+                description="This will permanently close your account."
+                actionButtonText={test3_loading ? "Closing..." : "Close"}
+                actionButtonIcon={<Lock className="h-4 w-4" />}
+                actionButtonLoading={test3_loading}
+                onConfirm={() => {
+                  set_test3_loading(true);
+                  // Simulate async operation
+                  setTimeout(() => {
+                    set_test3_loading(false);
+                    set_is_icon_loading_test_open(false);
+                    console.log("Account closed");
+                  }, 2000);
+                }}
+                onCancel={() => {
+                  console.log("Close cancelled");
+                }}
+              >
+                <p className="text-sm text-muted-foreground">
+                  Lock icon is replaced by spinner when loading.
+                </p>
+              </HazoUiDialog>
+            </div>
+
+            <div className="cls_output_display p-4 border rounded-lg bg-muted">
+              <h3 className="font-medium mb-2">State:</h3>
+              <pre className="text-xs">
+                {JSON.stringify({ is_icon_loading_test_open, test3_loading }, null, 2)}
+              </pre>
+            </div>
+          </div>
+
+          {/* Test Case 4: Custom Footer Content (Stats + Buttons) */}
+          <div className="cls_test_case mb-8">
+            <h3 className="text-lg font-medium mb-2">Test Case 4: Custom Footer Content (Stats + Buttons)</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              Custom footer with stats and multiple action buttons
+            </p>
+
+            <div className="cls_component_demo p-6 border rounded-lg bg-card mb-4">
+              <button
+                onClick={() => set_is_custom_footer_open(true)}
+                className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+              >
+                Open Review Dialog
+              </button>
+
+              <HazoUiDialog
+                open={is_custom_footer_open}
+                onOpenChange={set_is_custom_footer_open}
+                title="Review Items"
+                description="Review and process the items below."
+                footerContent={
+                  <div className="flex items-center justify-between w-full">
+                    <div className="text-sm text-muted-foreground">
+                      Keep: {stats.keep} | Accept: {stats.accept} | Skip: {stats.skip}
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => {
+                          set_stats({ ...stats, skip: stats.skip + 1 });
+                        }}
+                        className="px-3 py-1.5 text-sm border rounded-md hover:bg-muted transition-colors"
+                      >
+                        Skip
+                      </button>
+                      <button
+                        onClick={() => {
+                          set_stats({ ...stats, keep: stats.keep + 1 });
+                        }}
+                        className="px-3 py-1.5 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+                      >
+                        Keep
+                      </button>
+                      <button
+                        onClick={() => {
+                          set_stats({ ...stats, accept: stats.accept + 1 });
+                          set_is_custom_footer_open(false);
+                        }}
+                        className="px-3 py-1.5 text-sm bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
+                      >
+                        Accept
+                      </button>
+                    </div>
+                  </div>
+                }
+              >
+                <div className="space-y-4">
+                  <p className="text-sm text-muted-foreground">
+                    Custom footer shows stats and multiple action buttons.
+                  </p>
+                  <div className="p-4 border rounded-lg bg-muted">
+                    <p className="text-sm">Item to review: Sample content</p>
+                  </div>
+                </div>
+              </HazoUiDialog>
+            </div>
+
+            <div className="cls_output_display p-4 border rounded-lg bg-muted">
+              <h3 className="font-medium mb-2">State:</h3>
+              <pre className="text-xs">
+                {JSON.stringify({ is_custom_footer_open, stats }, null, 2)}
+              </pre>
+            </div>
+          </div>
+
+          {/* Test Case 5: Empty Footer Content (No Footer) */}
+          <div className="cls_test_case mb-8">
+            <h3 className="text-lg font-medium mb-2">Test Case 5: Empty Footer Content (No Footer)</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              Progress dialog with no footer or close button
+            </p>
+
+            <div className="cls_component_demo p-6 border rounded-lg bg-card mb-4">
+              <button
+                onClick={() => {
+                  set_is_progress_open(true);
+                  set_progress(0);
+                  // Simulate progress
+                  const interval = setInterval(() => {
+                    set_progress((prev) => {
+                      const next = prev + 10;
+                      if (next >= 100) {
+                        clearInterval(interval);
+                        setTimeout(() => {
+                          set_is_progress_open(false);
+                          set_progress(0);
+                        }, 500);
+                        return 100;
+                      }
+                      return next;
+                    });
+                  }, 300);
+                }}
+                className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+              >
+                Open Progress Dialog
+              </button>
+
+              <HazoUiDialog
+                open={is_progress_open}
+                onOpenChange={set_is_progress_open}
+                title="Processing..."
+                description="Please wait while we process your request."
+                showCloseButton={false}
+                footerContent={<div />}
+              >
+                <div className="space-y-4">
+                  <div className="w-full bg-muted rounded-full h-2">
+                    <div
+                      className="bg-primary h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                  <p className="text-sm text-center text-muted-foreground">
+                    {progress}% complete
+                  </p>
+                </div>
+              </HazoUiDialog>
+            </div>
+
+            <div className="cls_output_display p-4 border rounded-lg bg-muted">
+              <h3 className="font-medium mb-2">State:</h3>
+              <pre className="text-xs">
+                {JSON.stringify({ is_progress_open, progress }, null, 2)}
+              </pre>
             </div>
           </div>
         </section>

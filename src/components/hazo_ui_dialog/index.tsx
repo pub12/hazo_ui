@@ -15,7 +15,7 @@
 
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { X } from "lucide-react";
+import { X, Loader2 } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { Button } from "../ui/button";
 import {
@@ -94,6 +94,37 @@ export interface HazoUiDialogProps {
   cancelButtonText?: string;
   showCancelButton?: boolean;
 
+  /**
+   * Shows a loading spinner and disables the action button.
+   * When true, renders a spinner icon before the action button text.
+   * Does not affect cancel button.
+   * Ignored if footerContent is provided.
+   */
+  actionButtonLoading?: boolean;
+
+  /**
+   * Disables the action button.
+   * Ignored if footerContent is provided.
+   */
+  actionButtonDisabled?: boolean;
+
+  /**
+   * Icon element rendered before the action button text.
+   * Typically a Lucide icon like <Send className="h-4 w-4 mr-2" />
+   * When actionButtonLoading is true, this is replaced with a spinner.
+   * Ignored if footerContent is provided.
+   */
+  actionButtonIcon?: React.ReactNode;
+
+  /**
+   * Custom footer content that completely replaces the default footer.
+   * When provided, actionButtonText, onConfirm, onCancel, showCancelButton,
+   * actionButtonLoading, actionButtonIcon are all ignored.
+   * Use this for complex layouts like stats + buttons, multiple actions,
+   * or conditional button rendering.
+   */
+  footerContent?: React.ReactNode;
+
   // Size Configuration (responsive)
   sizeWidth?: string;
   sizeHeight?: string;
@@ -159,6 +190,10 @@ export function HazoUiDialog({
   actionButtonVariant = "default",
   cancelButtonText = "Cancel",
   showCancelButton = true,
+  actionButtonLoading = false,
+  actionButtonDisabled = false,
+  actionButtonIcon,
+  footerContent,
   sizeWidth = "min(90vw, 600px)",
   sizeHeight = "min(80vh, 800px)",
   openAnimation = "zoom",
@@ -306,25 +341,39 @@ export function HazoUiDialog({
             className={cn("cls_dialog_footer p-6 pt-4", footerClassName)}
             style={footerStyles}
           >
-            {showCancelButton && (
-              <Button
-                type="button"
-                className="cls_cancel_button"
-                variant="outline"
-                onClick={handleCancel}
-              >
-                {cancelButtonText}
-              </Button>
+            {footerContent ? (
+              // Custom footer content replaces default buttons
+              footerContent
+            ) : (
+              // Default footer with action and cancel buttons
+              <>
+                {showCancelButton && (
+                  <Button
+                    type="button"
+                    className="cls_cancel_button"
+                    variant="outline"
+                    onClick={handleCancel}
+                  >
+                    {cancelButtonText}
+                  </Button>
+                )}
+                <Button
+                  type="button"
+                  className="cls_confirm_button"
+                  variant={actionButtonVariant}
+                  onClick={handleConfirm}
+                  style={actionButtonStyles}
+                  disabled={actionButtonLoading || actionButtonDisabled}
+                >
+                  {actionButtonLoading ? (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  ) : (
+                    actionButtonIcon
+                  )}
+                  {actionButtonText}
+                </Button>
+              </>
             )}
-            <Button
-              type="button"
-              className="cls_confirm_button"
-              variant={actionButtonVariant}
-              onClick={handleConfirm}
-              style={actionButtonStyles}
-            >
-              {actionButtonText}
-            </Button>
           </DialogFooter>
 
           {/* Close button */}
