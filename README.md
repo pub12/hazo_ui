@@ -1707,6 +1707,27 @@ function CustomHeightExample() {
 
 A flexible, standardized dialog component with customizable animations, sizes, and theming. Built on Radix UI Dialog primitives with a consistent header/body/footer layout.
 
+### Two Usage Patterns
+
+HazoUiDialog offers two approaches depending on your needs:
+
+1. **Props-based API (HazoUiDialog)** - For simple confirmations, alerts, and standard forms with predefined header/body/footer layout
+2. **Compositional API (Primitives)** - For complex layouts with custom headers, tabs, avatars, and full layout control
+
+#### When to Use Each Approach
+
+**Use HazoUiDialog (props-based) when:**
+- You need a standard confirmation dialog
+- Your content fits a simple header/body/footer layout
+- You want quick implementation with minimal code
+- Examples: confirmations, alerts, simple forms
+
+**Use Compositional API (primitives) when:**
+- You need custom headers with avatars, icons, or complex layouts
+- Your dialog has tabs or multi-section content
+- You want full control over the dialog structure
+- Examples: client details with tabs, complex forms, custom workflows
+
 #### Features
 
 - **Flexible Sizing**: 5 size presets from small (400px) to full-width (98vw), plus custom sizing
@@ -1784,7 +1805,9 @@ type AnimationPreset = 'zoom' | 'slide' | 'fade' | 'bounce' | 'scale-up' | 'flip
 type ButtonVariant = "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
 ```
 
-#### Basic Usage
+#### Pattern 1: Basic Usage (Props-based API)
+
+For simple dialogs with standard layout:
 
 ```tsx
 import { HazoUiDialog } from 'hazo_ui';
@@ -1818,6 +1841,170 @@ function ConfirmDialog() {
   );
 }
 ```
+
+#### Pattern 2: Compositional API (Complex Layouts)
+
+For dialogs with custom headers, tabs, or complex layouts:
+
+```tsx
+import {
+  HazoUiDialogRoot,
+  HazoUiDialogContent,
+  HazoUiDialogHeader,
+  HazoUiDialogTitle,
+  HazoUiDialogDescription,
+  HazoUiDialogFooter,
+} from 'hazo_ui';
+import { useState } from 'react';
+import { User } from 'lucide-react';
+
+function ClientDetailsDialog() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('personal');
+
+  return (
+    <>
+      <button onClick={() => setIsOpen(true)}>
+        Open Client Details
+      </button>
+
+      <HazoUiDialogRoot open={isOpen} onOpenChange={setIsOpen}>
+        <HazoUiDialogContent className="sm:max-w-2xl w-[90vw] h-[80vh] flex flex-col p-0">
+          {/* Custom Header with Avatar */}
+          <HazoUiDialogHeader className="bg-navbar text-navbar-foreground p-6 rounded-t-lg">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
+                <User className="h-6 w-6 text-primary-foreground" />
+              </div>
+              <div>
+                <HazoUiDialogTitle className="text-white text-left">
+                  John Doe
+                </HazoUiDialogTitle>
+                <HazoUiDialogDescription className="text-white/80 text-left">
+                  john.doe@example.com
+                </HazoUiDialogDescription>
+              </div>
+            </div>
+          </HazoUiDialogHeader>
+
+          {/* Tabs Navigation */}
+          <div className="border-b px-6">
+            <div className="flex gap-4">
+              <button
+                onClick={() => setActiveTab('personal')}
+                className={`py-3 px-1 text-sm font-medium border-b-2 ${
+                  activeTab === 'personal'
+                    ? 'border-primary text-primary'
+                    : 'border-transparent text-muted-foreground'
+                }`}
+              >
+                Personal
+              </button>
+              <button
+                onClick={() => setActiveTab('address')}
+                className={`py-3 px-1 text-sm font-medium border-b-2 ${
+                  activeTab === 'address'
+                    ? 'border-primary text-primary'
+                    : 'border-transparent text-muted-foreground'
+                }`}
+              >
+                Address
+              </button>
+              <button
+                onClick={() => setActiveTab('contact')}
+                className={`py-3 px-1 text-sm font-medium border-b-2 ${
+                  activeTab === 'contact'
+                    ? 'border-primary text-primary'
+                    : 'border-transparent text-muted-foreground'
+                }`}
+              >
+                Contact
+              </button>
+            </div>
+          </div>
+
+          {/* Scrollable Tab Content */}
+          <div className="flex-1 overflow-y-auto p-6">
+            {activeTab === 'personal' && (
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium">Full Name</label>
+                  <input
+                    type="text"
+                    className="w-full px-3 py-2 border rounded-md mt-1"
+                  />
+                </div>
+                {/* More personal fields */}
+              </div>
+            )}
+            {activeTab === 'address' && (
+              <div className="space-y-4">
+                {/* Address fields */}
+              </div>
+            )}
+            {activeTab === 'contact' && (
+              <div className="space-y-4">
+                {/* Contact fields */}
+              </div>
+            )}
+          </div>
+
+          {/* Footer */}
+          <HazoUiDialogFooter className="p-6 border-t">
+            <button
+              onClick={() => setIsOpen(false)}
+              className="px-4 py-2 border rounded-md hover:bg-accent"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => setIsOpen(false)}
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-md"
+            >
+              Save Changes
+            </button>
+          </HazoUiDialogFooter>
+        </HazoUiDialogContent>
+      </HazoUiDialogRoot>
+    </>
+  );
+}
+```
+
+**Available Compositional Components:**
+
+```tsx
+import {
+  HazoUiDialogRoot,        // Root dialog container (replaces Dialog)
+  HazoUiDialogTrigger,     // Trigger button (optional)
+  HazoUiDialogContent,     // Dialog content wrapper
+  HazoUiDialogHeader,      // Header section
+  HazoUiDialogTitle,       // Title text
+  HazoUiDialogDescription, // Description text
+  HazoUiDialogFooter,      // Footer section
+  HazoUiDialogPortal,      // Portal wrapper
+  HazoUiDialogOverlay,     // Backdrop overlay
+  HazoUiDialogClose,       // Close button
+} from 'hazo_ui';
+```
+
+**Key Differences:**
+
+| Feature | Props-based API | Compositional API |
+|---------|----------------|-------------------|
+| **Layout** | Predefined header/body/footer | Build your own structure |
+| **Configuration** | Via props | Via component composition |
+| **Complexity** | Simple, quick | Flexible, powerful |
+| **Best for** | Confirmations, alerts | Tabs, avatars, custom layouts |
+| **Code** | Minimal | More verbose |
+
+**Compositional API Tips:**
+
+- Use `flex flex-col` on `HazoUiDialogContent` for layouts with headers/footers
+- Set `p-0` on `HazoUiDialogContent` and add padding to individual sections
+- Use `overflow-y-auto` on the scrollable content area
+- Apply `bg-navbar text-navbar-foreground` for dark headers
+- Use `border-t` on footer for visual separation
 
 #### Action Button States and Custom Footers
 

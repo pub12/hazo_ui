@@ -57,7 +57,22 @@ export type { HazoUiTextboxProps } from "./components/hazo_ui_textbox";
 export { HazoUiTextarea } from "./components/hazo_ui_textarea";
 export type { HazoUiTextareaProps } from "./components/hazo_ui_textarea";
 
-// HazoUiDialog - Standardized dialog component
+// HazoUiDialog - Standardized dialog component (props-based API for simple dialogs)
 export { HazoUiDialog } from "./components/hazo_ui_dialog";
 export type { HazoUiDialogProps, AnimationPreset } from "./components/hazo_ui_dialog";
+
+// Compositional Dialog Components (for complex layouts with tabs, avatars, custom headers)
+// These are re-exports of shadcn/ui primitives that already exist in src/components/ui/dialog.tsx
+export {
+  Dialog as HazoUiDialogRoot,
+  DialogContent as HazoUiDialogContent,
+  DialogHeader as HazoUiDialogHeader,
+  DialogFooter as HazoUiDialogFooter,
+  DialogTitle as HazoUiDialogTitle,
+  DialogDescription as HazoUiDialogDescription,
+  DialogPortal as HazoUiDialogPortal,
+  DialogOverlay as HazoUiDialogOverlay,
+  DialogClose as HazoUiDialogClose,
+  DialogTrigger as HazoUiDialogTrigger,
+} from "./components/ui/dialog";
 

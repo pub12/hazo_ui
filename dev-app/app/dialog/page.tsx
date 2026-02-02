@@ -5,8 +5,16 @@
 "use client";
 
 import { useState } from "react";
-import { HazoUiDialog } from "hazo_ui";
-import { Send, Lock, Loader2 } from "lucide-react";
+import {
+  HazoUiDialog,
+  HazoUiDialogRoot,
+  HazoUiDialogContent,
+  HazoUiDialogHeader,
+  HazoUiDialogTitle,
+  HazoUiDialogDescription,
+  HazoUiDialogFooter,
+} from "hazo_ui";
+import { Send, Lock, Loader2, User } from "lucide-react";
 
 export default function DialogPage() {
   // State for minimal dialog
@@ -65,6 +73,21 @@ export default function DialogPage() {
   const [stats, set_stats] = useState({ keep: 5, accept: 3, skip: 2 });
   const [is_progress_open, set_is_progress_open] = useState<boolean>(false);
   const [progress, set_progress] = useState<number>(0);
+
+  // State for compositional API tests
+  const [is_compositional_basic_open, set_is_compositional_basic_open] = useState<boolean>(false);
+  const [is_compositional_avatar_open, set_is_compositional_avatar_open] = useState<boolean>(false);
+  const [active_tab, set_active_tab] = useState<string>("personal");
+  const [compositional_form, set_compositional_form] = useState({
+    name: "John Doe",
+    email: "john.doe@example.com",
+    phone: "+1 (555) 123-4567",
+    company: "Acme Corp",
+    address: "123 Main St",
+    city: "San Francisco",
+    state: "CA",
+    zip: "94105",
+  });
 
   // Form handlers
   const handleFormSubmit = () => {
@@ -1336,6 +1359,325 @@ export default function DialogPage() {
               <pre className="text-xs">
                 {JSON.stringify({ is_progress_open, progress }, null, 2)}
               </pre>
+            </div>
+          </div>
+        </section>
+
+        {/* Section: Compositional API (Complex Layouts) */}
+        <section id="test-compositional" className="cls_test_section">
+          <h2 className="text-2xl font-semibold mb-4">Compositional API (Complex Layouts)</h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            Use HazoUiDialogRoot + primitives for complex layouts with custom headers, tabs, avatars, etc.
+          </p>
+
+          {/* Test Case 1: Basic Compositional Dialog */}
+          <div className="cls_test_case mb-8">
+            <h3 className="text-lg font-medium mb-2">Test Case 1: Basic Compositional Dialog</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              Build your own dialog layout using primitive components
+            </p>
+
+            <div className="cls_component_demo p-6 border rounded-lg bg-card mb-4">
+              <button
+                onClick={() => set_is_compositional_basic_open(true)}
+                className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+              >
+                Open Basic Compositional Dialog
+              </button>
+
+              <HazoUiDialogRoot open={is_compositional_basic_open} onOpenChange={set_is_compositional_basic_open}>
+                <HazoUiDialogContent className="sm:max-w-md">
+                  <HazoUiDialogHeader>
+                    <HazoUiDialogTitle>Custom Layout Dialog</HazoUiDialogTitle>
+                    <HazoUiDialogDescription>
+                      Built using compositional primitives for maximum flexibility
+                    </HazoUiDialogDescription>
+                  </HazoUiDialogHeader>
+
+                  <div className="py-4">
+                    <p className="text-sm text-muted-foreground mb-4">
+                      This dialog is built using HazoUiDialogRoot, HazoUiDialogContent, HazoUiDialogHeader, etc.
+                    </p>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Example Field</label>
+                      <input
+                        type="text"
+                        placeholder="Enter text..."
+                        className="w-full px-3 py-2 border rounded-md bg-background"
+                      />
+                    </div>
+                  </div>
+
+                  <HazoUiDialogFooter>
+                    <button
+                      onClick={() => set_is_compositional_basic_open(false)}
+                      className="px-4 py-2 border rounded-md hover:bg-accent transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => set_is_compositional_basic_open(false)}
+                      className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+                    >
+                      Save
+                    </button>
+                  </HazoUiDialogFooter>
+                </HazoUiDialogContent>
+              </HazoUiDialogRoot>
+            </div>
+
+            <div className="cls_output_display p-4 border rounded-lg bg-muted">
+              <h3 className="font-medium mb-2">State:</h3>
+              <pre className="text-xs">
+                {JSON.stringify({ is_compositional_basic_open }, null, 2)}
+              </pre>
+            </div>
+          </div>
+
+          {/* Test Case 2: Avatar Header + Tabs (Complex Layout) */}
+          <div className="cls_test_case mb-8">
+            <h3 className="text-lg font-medium mb-2">Test Case 2: Avatar Header + Tabs (Complex Layout)</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              Custom header with avatar/icon and tabbed content - ideal for client/user details
+            </p>
+
+            <div className="cls_component_demo p-6 border rounded-lg bg-card mb-4">
+              <button
+                onClick={() => set_is_compositional_avatar_open(true)}
+                className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+              >
+                Open Client Details Dialog
+              </button>
+
+              <HazoUiDialogRoot open={is_compositional_avatar_open} onOpenChange={set_is_compositional_avatar_open}>
+                <HazoUiDialogContent className="sm:max-w-2xl w-[90vw] h-[80vh] flex flex-col p-0">
+                  {/* Custom Header with Avatar */}
+                  <HazoUiDialogHeader className="bg-navbar text-navbar-foreground p-6 pb-4 rounded-t-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
+                        <User className="h-6 w-6 text-primary-foreground" />
+                      </div>
+                      <div>
+                        <HazoUiDialogTitle className="text-white text-left">
+                          {compositional_form.name}
+                        </HazoUiDialogTitle>
+                        <HazoUiDialogDescription className="text-white/80 text-left">
+                          {compositional_form.email}
+                        </HazoUiDialogDescription>
+                      </div>
+                    </div>
+                  </HazoUiDialogHeader>
+
+                  {/* Tabs Navigation */}
+                  <div className="border-b px-6">
+                    <div className="flex gap-4">
+                      <button
+                        onClick={() => set_active_tab("personal")}
+                        className={`py-3 px-1 text-sm font-medium border-b-2 transition-colors ${
+                          active_tab === "personal"
+                            ? "border-primary text-primary"
+                            : "border-transparent text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        Personal
+                      </button>
+                      <button
+                        onClick={() => set_active_tab("address")}
+                        className={`py-3 px-1 text-sm font-medium border-b-2 transition-colors ${
+                          active_tab === "address"
+                            ? "border-primary text-primary"
+                            : "border-transparent text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        Address
+                      </button>
+                      <button
+                        onClick={() => set_active_tab("contact")}
+                        className={`py-3 px-1 text-sm font-medium border-b-2 transition-colors ${
+                          active_tab === "contact"
+                            ? "border-primary text-primary"
+                            : "border-transparent text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        Contact
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Scrollable Tab Content */}
+                  <div className="flex-1 overflow-y-auto p-6">
+                    {active_tab === "personal" && (
+                      <div className="space-y-4">
+                        <div>
+                          <label className="text-sm font-medium">Full Name</label>
+                          <input
+                            type="text"
+                            value={compositional_form.name}
+                            onChange={(e) =>
+                              set_compositional_form({ ...compositional_form, name: e.target.value })
+                            }
+                            className="w-full px-3 py-2 border rounded-md mt-1 bg-background"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium">Email</label>
+                          <input
+                            type="email"
+                            value={compositional_form.email}
+                            onChange={(e) =>
+                              set_compositional_form({ ...compositional_form, email: e.target.value })
+                            }
+                            className="w-full px-3 py-2 border rounded-md mt-1 bg-background"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium">Company</label>
+                          <input
+                            type="text"
+                            value={compositional_form.company}
+                            onChange={(e) =>
+                              set_compositional_form({ ...compositional_form, company: e.target.value })
+                            }
+                            className="w-full px-3 py-2 border rounded-md mt-1 bg-background"
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {active_tab === "address" && (
+                      <div className="space-y-4">
+                        <div>
+                          <label className="text-sm font-medium">Street Address</label>
+                          <input
+                            type="text"
+                            value={compositional_form.address}
+                            onChange={(e) =>
+                              set_compositional_form({ ...compositional_form, address: e.target.value })
+                            }
+                            className="w-full px-3 py-2 border rounded-md mt-1 bg-background"
+                          />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="text-sm font-medium">City</label>
+                            <input
+                              type="text"
+                              value={compositional_form.city}
+                              onChange={(e) =>
+                                set_compositional_form({ ...compositional_form, city: e.target.value })
+                              }
+                              className="w-full px-3 py-2 border rounded-md mt-1 bg-background"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium">State</label>
+                            <input
+                              type="text"
+                              value={compositional_form.state}
+                              onChange={(e) =>
+                                set_compositional_form({ ...compositional_form, state: e.target.value })
+                              }
+                              className="w-full px-3 py-2 border rounded-md mt-1 bg-background"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium">ZIP Code</label>
+                          <input
+                            type="text"
+                            value={compositional_form.zip}
+                            onChange={(e) =>
+                              set_compositional_form({ ...compositional_form, zip: e.target.value })
+                            }
+                            className="w-full px-3 py-2 border rounded-md mt-1 bg-background"
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {active_tab === "contact" && (
+                      <div className="space-y-4">
+                        <div>
+                          <label className="text-sm font-medium">Phone Number</label>
+                          <input
+                            type="tel"
+                            value={compositional_form.phone}
+                            onChange={(e) =>
+                              set_compositional_form({ ...compositional_form, phone: e.target.value })
+                            }
+                            className="w-full px-3 py-2 border rounded-md mt-1 bg-background"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium">Alternative Email</label>
+                          <input
+                            type="email"
+                            placeholder="alternative@example.com"
+                            className="w-full px-3 py-2 border rounded-md mt-1 bg-background"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Footer */}
+                  <HazoUiDialogFooter className="p-6 border-t">
+                    <button
+                      onClick={() => set_is_compositional_avatar_open(false)}
+                      className="px-4 py-2 border rounded-md hover:bg-accent transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => {
+                        console.log("Saved:", compositional_form);
+                        set_is_compositional_avatar_open(false);
+                      }}
+                      className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+                    >
+                      Save Changes
+                    </button>
+                  </HazoUiDialogFooter>
+                </HazoUiDialogContent>
+              </HazoUiDialogRoot>
+            </div>
+
+            <div className="cls_output_display p-4 border rounded-lg bg-muted">
+              <h3 className="font-medium mb-2">State:</h3>
+              <pre className="text-xs overflow-auto max-h-64">
+                {JSON.stringify({ is_compositional_avatar_open, active_tab, compositional_form }, null, 2)}
+              </pre>
+            </div>
+          </div>
+
+          {/* Comparison Guide */}
+          <div className="cls_comparison_guide p-6 border-2 border-primary/20 rounded-lg bg-primary/5">
+            <h3 className="text-lg font-medium mb-4">When to Use Each Approach</h3>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="font-medium text-sm mb-2 text-primary">HazoUiDialog (Props-based API)</h4>
+                <p className="text-sm text-muted-foreground mb-2">
+                  For simple confirmations, alerts, and standard forms
+                </p>
+                <ul className="text-sm space-y-1 list-disc list-inside text-muted-foreground">
+                  <li>Standard header/body/footer layout</li>
+                  <li>Predefined styling and structure</li>
+                  <li>Quick to implement</li>
+                  <li>Configured via props</li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-medium text-sm mb-2 text-primary">Compositional API (Primitives)</h4>
+                <p className="text-sm text-muted-foreground mb-2">
+                  For complex layouts with custom headers, tabs, avatars
+                </p>
+                <ul className="text-sm space-y-1 list-disc list-inside text-muted-foreground">
+                  <li>Full layout control</li>
+                  <li>Custom headers with avatars/icons</li>
+                  <li>Tabbed content support</li>
+                  <li>Build your own structure</li>
+                </ul>
+              </div>
             </div>
           </div>
         </section>
