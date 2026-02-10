@@ -27,10 +27,61 @@ import {
   DialogOverlay,
   DialogPortal,
 } from "../ui/dialog";
+import { get_hazo_ui_config } from "../../lib/hazo_ui_config";
 
 // Animation preset types
 export type AnimationPreset = 'zoom' | 'slide' | 'fade' | 'bounce' | 'scale-up' | 'flip' | 'slide-left' | 'slide-right' | 'slide-top' | 'none';
 type ButtonVariant = "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+
+// Dialog variant types for preset color themes
+export type DialogVariant = 'default' | 'info' | 'success' | 'warning' | 'danger';
+
+// Variant preset color configurations
+interface VariantPreset {
+  header_background_color: string;
+  description_background_color: string;
+  header_text_color: string;
+  border_color: string;
+  accent_color: string;
+  overlay_class_name: string;
+  action_button_variant?: ButtonVariant;
+}
+
+const VARIANT_PRESETS: Record<Exclude<DialogVariant, 'default'>, VariantPreset> = {
+  info: {
+    header_background_color: "rgb(191, 219, 254)",
+    description_background_color: "rgb(219, 234, 254)",
+    header_text_color: "rgb(30, 58, 138)",
+    border_color: "rgb(59, 130, 246)",
+    accent_color: "rgb(59, 130, 246)",
+    overlay_class_name: "bg-blue-950/50",
+  },
+  success: {
+    header_background_color: "rgb(187, 247, 208)",
+    description_background_color: "rgb(220, 252, 231)",
+    header_text_color: "rgb(22, 101, 52)",
+    border_color: "rgb(34, 197, 94)",
+    accent_color: "rgb(34, 197, 94)",
+    overlay_class_name: "bg-green-950/50",
+  },
+  warning: {
+    header_background_color: "rgb(253, 230, 138)",
+    description_background_color: "rgb(254, 249, 195)",
+    header_text_color: "rgb(113, 63, 18)",
+    border_color: "rgb(234, 179, 8)",
+    accent_color: "rgb(234, 179, 8)",
+    overlay_class_name: "bg-yellow-950/50",
+  },
+  danger: {
+    header_background_color: "rgb(254, 202, 202)",
+    description_background_color: "rgb(254, 226, 226)",
+    header_text_color: "rgb(127, 29, 29)",
+    border_color: "rgb(239, 68, 68)",
+    accent_color: "rgb(239, 68, 68)",
+    overlay_class_name: "bg-red-950/50",
+    action_button_variant: "destructive",
+  },
+};
 
 // Animation preset configurations
 const ANIMATION_PRESETS = {
@@ -133,8 +184,19 @@ export interface HazoUiDialogProps {
   openAnimation?: AnimationPreset | string;
   closeAnimation?: AnimationPreset | string;
 
-  // Color Customization
+  // Variant (preset color theme)
+  variant?: DialogVariant;
+
+  /**
+   * Controls header layout when a variant is active.
+   * - true (default): title and description get separate background rows
+   * - false: single header background, description rendered as italic subtext
+   */
+  splitHeader?: boolean;
+
+  // Color Customization (overrides variant preset if both provided)
   headerBackgroundColor?: string;
+  descriptionBackgroundColor?: string;
   headerTextColor?: string;
   bodyBackgroundColor?: string;
   footerBackgroundColor?: string;
@@ -187,7 +249,7 @@ export function HazoUiDialog({
   title = "Action required",
   description,
   actionButtonText = "Confirm",
-  actionButtonVariant = "default",
+  actionButtonVariant,
   cancelButtonText = "Cancel",
   showCancelButton = true,
   actionButtonLoading = false,
@@ -198,7 +260,10 @@ export function HazoUiDialog({
   sizeHeight = "min(80vh, 800px)",
   openAnimation = "zoom",
   closeAnimation = "zoom",
+  variant = "default",
+  splitHeader = true,
   headerBackgroundColor,
+  descriptionBackgroundColor,
   headerTextColor,
   bodyBackgroundColor,
   footerBackgroundColor,
@@ -213,6 +278,15 @@ export function HazoUiDialog({
   footerClassName,
   showCloseButton = true,
 }: HazoUiDialogProps) {
+  // Get global config as defaults
+  const config = get_hazo_ui_config();
+
+  // Resolve variant preset (undefined for 'default' variant)
+  const variant_preset = variant !== "default" ? VARIANT_PRESETS[variant] : undefined;
+
+  // Resolve action button variant: prop > variant preset > "default"
+  const resolved_action_button_variant = actionButtonVariant ?? variant_preset?.action_button_variant ?? "default";
+
   // Button click handlers
   const handleConfirm = () => {
     onConfirm?.();
@@ -228,29 +302,39 @@ export function HazoUiDialog({
   const animationClasses = resolveAnimationClasses(openAnimation, closeAnimation);
 
   // Build inline styles for color customization
+  // Three-tier resolution: prop > variant preset > config
+  const resolved_border_color = borderColor ?? variant_preset?.border_color;
+
   const contentStyles: React.CSSProperties = {
     width: sizeWidth,
     maxHeight: sizeHeight,
-    ...(borderColor && { borderColor }),
+    ...(resolved_border_color && { borderColor: resolved_border_color }),
   };
 
-  // Header styles - combine headerBar with custom colors
+  // Header styles - combine headerBar with custom colors, using variant then config as fallback
+  const finalHeaderBackgroundColor = headerBackgroundColor ?? variant_preset?.header_background_color ?? config.header_background_color;
+  const finalDescriptionBgColor = descriptionBackgroundColor ?? variant_preset?.description_background_color;
+  const finalHeaderTextColor = headerTextColor ?? variant_preset?.header_text_color ?? config.header_text_color;
+
+  // Variant is active when not 'default'
+  const is_variant_active = variant !== "default";
+
+  // When splitHeader is true with a description bg, render two separate background rows
+  const has_split_header = splitHeader && !headerBar && !!finalDescriptionBgColor && !!description;
+
+  // When splitHeader is false but variant is active, use single bg with italic description
+  const has_merged_variant_header = !splitHeader && is_variant_active && !headerBar && !!description;
+
   const headerStyles: React.CSSProperties = {
     ...(headerBar && {
       backgroundColor: headerBarColor,
-      marginLeft: "-1.5rem",
-      marginRight: "-1.5rem",
-      marginTop: "0",
-      marginBottom: "0",
       paddingTop: "1.5rem",
       paddingBottom: "1.5rem",
       paddingLeft: "1.5rem",
       paddingRight: "1.5rem",
-      borderTopLeftRadius: "inherit",
-      borderTopRightRadius: "inherit",
     }),
-    ...(headerBackgroundColor && !headerBar && { backgroundColor: headerBackgroundColor }),
-    ...(headerTextColor && { color: headerTextColor }),
+    ...(!has_split_header && finalHeaderBackgroundColor && !headerBar && { backgroundColor: finalHeaderBackgroundColor }),
+    ...(!has_split_header && finalHeaderTextColor && { color: finalHeaderTextColor }),
   };
 
   // Title styles - white text for header bar with !important to override inherited colors
@@ -273,12 +357,27 @@ export function HazoUiDialog({
     ...(footerBackgroundColor && { backgroundColor: footerBackgroundColor }),
   };
 
-  // Build button styles for accent color
+  // Build button styles for accent color and config colors
+  const finalSubmitBgColor = accentColor ?? variant_preset?.accent_color ?? config.submit_button_background_color;
+  const finalSubmitTextColor = config.submit_button_text_color;
+  const finalCancelBgColor = config.cancel_button_background_color;
+  const finalCancelTextColor = config.cancel_button_text_color;
+  const finalCancelBorderColor = config.cancel_button_border_color;
+
   const actionButtonStyles: React.CSSProperties = {
-    ...(accentColor && actionButtonVariant === "default" && {
-      backgroundColor: accentColor,
-      borderColor: accentColor,
+    ...(finalSubmitBgColor && resolved_action_button_variant === "default" && {
+      backgroundColor: finalSubmitBgColor,
+      borderColor: finalSubmitBgColor,
     }),
+    ...(finalSubmitTextColor && resolved_action_button_variant === "default" && {
+      color: finalSubmitTextColor,
+    }),
+  };
+
+  const cancelButtonStyles: React.CSSProperties = {
+    ...(finalCancelBgColor && { backgroundColor: finalCancelBgColor }),
+    ...(finalCancelTextColor && { color: finalCancelTextColor }),
+    ...(finalCancelBorderColor && { borderColor: finalCancelBorderColor }),
   };
 
   return (
@@ -286,7 +385,7 @@ export function HazoUiDialog({
       <DialogPortal>
         {/* Custom DialogOverlay for background customization */}
         <DialogOverlay
-          className={cn("cls_hazo_dialog_overlay", overlayClassName)}
+          className={cn("cls_hazo_dialog_overlay", overlayClassName ?? variant_preset?.overlay_class_name)}
         />
 
         {/* DialogContent - manually rendered to support overlay customization */}
@@ -306,29 +405,69 @@ export function HazoUiDialog({
           style={contentStyles}
         >
           {/* Header - Fixed */}
-          <DialogHeader
-            className={cn(
-              "cls_dialog_header",
-              !headerBar && "p-6 pb-4",
-              headerClassName
-            )}
-            style={headerStyles}
-          >
-            <DialogTitle className={titleClassName}>
-              {title}
-            </DialogTitle>
-            {description && (
-              <DialogDescription className={descriptionClassName}>
-                {description}
-              </DialogDescription>
-            )}
-          </DialogHeader>
+          {has_split_header ? (
+            /* Split header: two rows with different backgrounds */
+            <DialogHeader
+              className={cn(
+                "cls_dialog_header shrink-0 p-0 space-y-0",
+                headerClassName
+              )}
+            >
+              {/* Title row - main header background */}
+              <div
+                className="cls_dialog_header_title px-6 pt-6 pb-3"
+                style={{
+                  ...(finalHeaderBackgroundColor && { backgroundColor: finalHeaderBackgroundColor }),
+                  ...(finalHeaderTextColor && { color: finalHeaderTextColor }),
+                }}
+              >
+                <DialogTitle className={titleClassName}>
+                  {title}
+                </DialogTitle>
+              </div>
+              {/* Description row - lighter sub-header background */}
+              <div
+                className="cls_dialog_header_description px-6 py-1.5"
+                style={{
+                  backgroundColor: finalDescriptionBgColor,
+                  ...(finalHeaderTextColor && { color: finalHeaderTextColor }),
+                }}
+              >
+                <DialogDescription className={cn(descriptionClassName, "italic text-xs")}>
+                  {description}
+                </DialogDescription>
+              </div>
+            </DialogHeader>
+          ) : (
+            /* Single header: one background, italic description when variant is active */
+            <DialogHeader
+              className={cn(
+                "cls_dialog_header shrink-0",
+                !headerBar && "p-6 pb-4",
+                has_merged_variant_header && "pb-3",
+                headerClassName
+              )}
+              style={headerStyles}
+            >
+              <DialogTitle className={titleClassName}>
+                {title}
+              </DialogTitle>
+              {description && (
+                <DialogDescription className={cn(
+                  descriptionClassName,
+                  has_merged_variant_header && "italic text-xs mt-1"
+                )}>
+                  {description}
+                </DialogDescription>
+              )}
+            </DialogHeader>
+          )}
 
           {/* Body - Scrollable */}
           <div
             className={cn(
               "cls_dialog_body",
-              "px-6 py-4 overflow-y-auto flex-1",
+              "px-6 py-4 overflow-y-auto flex-1 min-h-0",
               contentClassName
             )}
             style={bodyStyles}
@@ -338,7 +477,7 @@ export function HazoUiDialog({
 
           {/* Footer - Fixed, Right-aligned buttons */}
           <DialogFooter
-            className={cn("cls_dialog_footer p-6 pt-4", footerClassName)}
+            className={cn("cls_dialog_footer shrink-0 p-6 pt-4", footerClassName)}
             style={footerStyles}
           >
             {footerContent ? (
@@ -353,6 +492,7 @@ export function HazoUiDialog({
                     className="cls_cancel_button"
                     variant="outline"
                     onClick={handleCancel}
+                    style={cancelButtonStyles}
                   >
                     {cancelButtonText}
                   </Button>
@@ -360,7 +500,7 @@ export function HazoUiDialog({
                 <Button
                   type="button"
                   className="cls_confirm_button"
-                  variant={actionButtonVariant}
+                  variant={resolved_action_button_variant}
                   onClick={handleConfirm}
                   style={actionButtonStyles}
                   disabled={actionButtonLoading || actionButtonDisabled}
@@ -383,8 +523,8 @@ export function HazoUiDialog({
               style={
                 headerBar
                   ? { color: "white" }
-                  : headerTextColor
-                  ? { color: headerTextColor }
+                  : finalHeaderTextColor
+                  ? { color: finalHeaderTextColor }
                   : undefined
               }
             >

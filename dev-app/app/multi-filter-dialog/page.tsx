@@ -4,8 +4,14 @@
  */
 "use client";
 
-import { useState } from "react";
-import { HazoUiMultiFilterDialog, type FilterField, type FilterConfig } from "hazo_ui";
+import { useState, useEffect } from "react";
+import {
+  HazoUiMultiFilterDialog,
+  type FilterField,
+  type FilterConfig,
+  set_hazo_ui_config,
+  reset_hazo_ui_config,
+} from "hazo_ui";
 
 export default function MultiFilterDialogPage() {
   const [filters_default, set_filters_default] = useState<FilterConfig[]>([]);
@@ -15,6 +21,8 @@ export default function MultiFilterDialogPage() {
   ]);
   const [filters_text_only, set_filters_text_only] = useState<FilterConfig[]>([]);
   const [filters_number, set_filters_number] = useState<FilterConfig[]>([]);
+  const [filters_custom_colors, set_filters_custom_colors] = useState<FilterConfig[]>([]);
+  const [filters_prop_override, set_filters_prop_override] = useState<FilterConfig[]>([]);
 
   // All field types
   const all_fields: FilterField[] = [
@@ -217,6 +225,87 @@ export default function MultiFilterDialogPage() {
             <h3 className="font-medium mb-2">Active Filters:</h3>
             <pre className="text-xs overflow-auto max-h-48">
               {JSON.stringify(filters_number, null, 2)}
+            </pre>
+          </div>
+        </section>
+
+        {/* Section 5: Global color configuration */}
+        <section id="test-global-colors" className="cls_test_section">
+          <h2 className="text-2xl font-semibold mb-4">Global Color Configuration</h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            Testing global color config via set_hazo_ui_config(). Click button to set custom colors.
+          </p>
+
+          <div className="cls_component_demo p-6 border rounded-lg bg-card mb-4 space-y-4">
+            <div className="cls_controls flex gap-2">
+              <button
+                onClick={() => {
+                  set_hazo_ui_config({
+                    header_background_color: "#1e3a8a",
+                    header_text_color: "#ffffff",
+                    submit_button_background_color: "#10b981",
+                    submit_button_text_color: "#ffffff",
+                    cancel_button_border_color: "#6b7280",
+                    clear_button_border_color: "#ef4444",
+                    clear_button_text_color: "#ef4444",
+                  });
+                }}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              >
+                Set Custom Colors
+              </button>
+              <button
+                onClick={() => {
+                  reset_hazo_ui_config();
+                }}
+                className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+              >
+                Reset to Default
+              </button>
+            </div>
+
+            <HazoUiMultiFilterDialog
+              availableFields={all_fields}
+              onFilterChange={set_filters_custom_colors}
+              initialFilters={filters_custom_colors}
+            />
+          </div>
+
+          <div className="cls_output_display p-4 border rounded-lg bg-muted">
+            <h3 className="font-medium mb-2">Active Filters:</h3>
+            <pre className="text-xs overflow-auto max-h-48">
+              {JSON.stringify(filters_custom_colors, null, 2)}
+            </pre>
+          </div>
+        </section>
+
+        {/* Section 6: Prop-level color override */}
+        <section id="test-prop-override" className="cls_test_section">
+          <h2 className="text-2xl font-semibold mb-4">Prop-Level Color Override</h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            Testing color customization via component props (overrides global config)
+          </p>
+
+          <div className="cls_component_demo p-6 border rounded-lg bg-card mb-4">
+            <HazoUiMultiFilterDialog
+              availableFields={all_fields}
+              onFilterChange={set_filters_prop_override}
+              initialFilters={filters_prop_override}
+              headerBackgroundColor="#7c3aed"
+              headerTextColor="#ffffff"
+              submitButtonBackgroundColor="#f59e0b"
+              submitButtonTextColor="#ffffff"
+              cancelButtonBorderColor="#ec4899"
+              cancelButtonTextColor="#ec4899"
+              clearButtonBorderColor="#8b5cf6"
+              clearButtonTextColor="#8b5cf6"
+            />
+          </div>
+
+          <div className="cls_output_display p-4 border rounded-lg bg-muted">
+            <h3 className="font-medium mb-2">Active Filters:</h3>
+            <pre className="text-xs overflow-auto max-h-48">
+              {JSON.stringify(filters_prop_override, null, 2)}
             </pre>
           </div>
         </section>

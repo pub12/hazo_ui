@@ -40,12 +40,25 @@ export default function DialogPage() {
   const [is_danger_open, set_is_danger_open] = useState<boolean>(false);
   const [is_info_open, set_is_info_open] = useState<boolean>(false);
 
+  // State for variant override test
+  const [is_variant_override_open, set_is_variant_override_open] = useState<boolean>(false);
+  const [is_variant_default_open, set_is_variant_default_open] = useState<boolean>(false);
+  const [is_variant_danger_custom_open, set_is_variant_danger_custom_open] = useState<boolean>(false);
+
+  // State for splitHeader tests
+  const [is_merged_info_open, set_is_merged_info_open] = useState<boolean>(false);
+  const [is_merged_danger_open, set_is_merged_danger_open] = useState<boolean>(false);
+  const [is_split_info_open, set_is_split_info_open] = useState<boolean>(false);
+
   // State for size variants
   const [is_small_open, set_is_small_open] = useState<boolean>(false);
   const [is_medium_open, set_is_medium_open] = useState<boolean>(false);
   const [is_large_open, set_is_large_open] = useState<boolean>(false);
   const [is_xlarge_open, set_is_xlarge_open] = useState<boolean>(false);
   const [is_fullwidth_open, set_is_fullwidth_open] = useState<boolean>(false);
+
+  // State for scrollable content test
+  const [is_scrollable_open, set_is_scrollable_open] = useState<boolean>(false);
 
   // State for animation variants
   const [is_zoom_open, set_is_zoom_open] = useState<boolean>(false);
@@ -404,14 +417,9 @@ export default function DialogPage() {
                 title="✓ Operation Successful"
                 description="Your changes have been saved successfully."
                 actionButtonText="Done"
-                actionButtonVariant="default"
                 showCancelButton={false}
                 onConfirm={() => set_is_success_open(false)}
-                overlayClassName="bg-green-950/50"
-                borderColor="rgb(34, 197, 94)"
-                headerBackgroundColor="rgb(220, 252, 231)"
-                headerTextColor="rgb(22, 101, 52)"
-                accentColor="rgb(34, 197, 94)"
+                variant="success"
               >
                 <div className="cls_success_content space-y-4">
                   <div className="flex items-center gap-3 p-4 bg-green-50 dark:bg-green-950/30 rounded-lg border border-green-200 dark:border-green-800">
@@ -448,14 +456,9 @@ export default function DialogPage() {
                 title="⚠ Warning: Action Required"
                 description="Please review the following before proceeding."
                 actionButtonText="I Understand"
-                actionButtonVariant="default"
                 cancelButtonText="Go Back"
                 onConfirm={() => set_is_warning_open(false)}
-                overlayClassName="bg-yellow-950/50"
-                borderColor="rgb(234, 179, 8)"
-                headerBackgroundColor="rgb(254, 249, 195)"
-                headerTextColor="rgb(113, 63, 18)"
-                accentColor="rgb(234, 179, 8)"
+                variant="warning"
               >
                 <div className="cls_warning_content space-y-4">
                   <div className="flex items-start gap-3 p-4 bg-yellow-50 dark:bg-yellow-950/30 rounded-lg border border-yellow-200 dark:border-yellow-800">
@@ -494,16 +497,12 @@ export default function DialogPage() {
                 title="⛔ Destructive Action"
                 description="This action is permanent and cannot be undone."
                 actionButtonText="Delete Permanently"
-                actionButtonVariant="destructive"
                 cancelButtonText="Cancel"
                 onConfirm={() => {
                   console.log("Destructive action confirmed");
                   set_is_danger_open(false);
                 }}
-                overlayClassName="bg-red-950/50"
-                borderColor="rgb(239, 68, 68)"
-                headerBackgroundColor="rgb(254, 226, 226)"
-                headerTextColor="rgb(127, 29, 29)"
+                variant="danger"
               >
                 <div className="cls_danger_content space-y-4">
                   <div className="flex items-start gap-3 p-4 bg-red-50 dark:bg-red-950/30 rounded-lg border border-red-200 dark:border-red-800">
@@ -554,14 +553,9 @@ export default function DialogPage() {
                 title="ℹ Information"
                 description="Learn more about this feature and how to use it."
                 actionButtonText="Got It"
-                actionButtonVariant="default"
                 showCancelButton={false}
                 onConfirm={() => set_is_info_open(false)}
-                overlayClassName="bg-blue-950/50"
-                borderColor="rgb(59, 130, 246)"
-                headerBackgroundColor="rgb(219, 234, 254)"
-                headerTextColor="rgb(30, 58, 138)"
-                accentColor="rgb(59, 130, 246)"
+                variant="info"
               >
                 <div className="cls_info_content space-y-4">
                   <div className="flex items-start gap-3 p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
@@ -587,6 +581,188 @@ export default function DialogPage() {
                     </ul>
                   </div>
                 </div>
+              </HazoUiDialog>
+            </div>
+          </div>
+        </section>
+
+        {/* Section: Variant Prop Override Chain */}
+        <section id="test-variant-overrides" className="cls_test_section">
+          <h2 className="text-2xl font-semibold mb-4">Variant Prop & Override Chain</h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            Tests the three-tier override chain: individual prop &gt; variant preset &gt; global config
+          </p>
+
+          <div className="cls_component_demo p-6 border rounded-lg bg-card mb-4 space-y-4">
+            {/* Default variant (no colors applied) */}
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => set_is_variant_default_open(true)}
+                className="px-4 py-2 border rounded-md hover:bg-accent transition-colors"
+              >
+                Default Variant
+              </button>
+              <span className="text-xs text-muted-foreground">variant=&quot;default&quot; - no preset colors</span>
+              <HazoUiDialog
+                open={is_variant_default_open}
+                onOpenChange={set_is_variant_default_open}
+                title="Default Variant"
+                description="No variant colors applied - uses theme defaults."
+                variant="default"
+                onConfirm={() => set_is_variant_default_open(false)}
+              >
+                <p className="text-sm text-muted-foreground">
+                  This dialog uses variant=&quot;default&quot; which applies no preset colors.
+                  It uses the global config or CSS variable defaults.
+                </p>
+              </HazoUiDialog>
+            </div>
+
+            {/* Info variant with header color override */}
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => set_is_variant_override_open(true)}
+                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md transition-colors"
+              >
+                Info + Purple Header Override
+              </button>
+              <span className="text-xs text-muted-foreground">variant=&quot;info&quot; + headerBackgroundColor override</span>
+              <HazoUiDialog
+                open={is_variant_override_open}
+                onOpenChange={set_is_variant_override_open}
+                title="Info Variant with Override"
+                description="Info variant but header background overridden to purple."
+                variant="info"
+                headerBackgroundColor="rgb(243, 232, 255)"
+                headerTextColor="rgb(88, 28, 135)"
+                onConfirm={() => set_is_variant_override_open(false)}
+              >
+                <div className="space-y-3">
+                  <p className="text-sm text-muted-foreground">
+                    This dialog uses variant=&quot;info&quot; for border, accent, and overlay colors,
+                    but the header colors are overridden to purple via individual props.
+                  </p>
+                  <div className="p-3 bg-muted rounded-md text-xs font-mono">
+                    <p>variant=&quot;info&quot; provides: blue border, blue accent, blue overlay</p>
+                    <p>headerBackgroundColor=&quot;rgb(243,232,255)&quot; overrides: purple header</p>
+                    <p>headerTextColor=&quot;rgb(88,28,135)&quot; overrides: purple text</p>
+                  </div>
+                </div>
+              </HazoUiDialog>
+            </div>
+
+            {/* Danger variant with custom button variant override */}
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => set_is_variant_danger_custom_open(true)}
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors"
+              >
+                Danger + Default Button Override
+              </button>
+              <span className="text-xs text-muted-foreground">variant=&quot;danger&quot; + actionButtonVariant=&quot;default&quot; override</span>
+              <HazoUiDialog
+                open={is_variant_danger_custom_open}
+                onOpenChange={set_is_variant_danger_custom_open}
+                title="Danger with Button Override"
+                description="Danger variant colors but non-destructive button."
+                variant="danger"
+                actionButtonVariant="default"
+                actionButtonText="Acknowledge"
+                onConfirm={() => set_is_variant_danger_custom_open(false)}
+              >
+                <div className="space-y-3">
+                  <p className="text-sm text-muted-foreground">
+                    This dialog uses variant=&quot;danger&quot; for red colors,
+                    but the action button is overridden back to &quot;default&quot; variant.
+                  </p>
+                  <div className="p-3 bg-muted rounded-md text-xs font-mono">
+                    <p>variant=&quot;danger&quot; provides: red header, red border, destructive button</p>
+                    <p>actionButtonVariant=&quot;default&quot; overrides: non-destructive button</p>
+                  </div>
+                </div>
+              </HazoUiDialog>
+            </div>
+          </div>
+        </section>
+
+        {/* Section: Split Header vs Merged Header */}
+        <section id="test-split-header" className="cls_test_section">
+          <h2 className="text-2xl font-semibold mb-4">Split Header vs Merged Header</h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            splitHeader controls whether the title and description get separate background rows or share one
+          </p>
+
+          <div className="cls_component_demo p-6 border rounded-lg bg-card mb-4 space-y-4">
+            {/* Split header (default) */}
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => set_is_split_info_open(true)}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors"
+              >
+                Split Header (default)
+              </button>
+              <span className="text-xs text-muted-foreground">splitHeader=true - two background rows</span>
+              <HazoUiDialog
+                open={is_split_info_open}
+                onOpenChange={set_is_split_info_open}
+                title="Split Header"
+                description="Title and description have separate background colors."
+                variant="info"
+                splitHeader={true}
+                onConfirm={() => set_is_split_info_open(false)}
+              >
+                <p className="text-sm text-muted-foreground">
+                  The title row has a stronger blue, the description row has a lighter blue.
+                </p>
+              </HazoUiDialog>
+            </div>
+
+            {/* Merged header - info */}
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => set_is_merged_info_open(true)}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors"
+              >
+                Merged Header (Info)
+              </button>
+              <span className="text-xs text-muted-foreground">splitHeader=false - single background, italic description</span>
+              <HazoUiDialog
+                open={is_merged_info_open}
+                onOpenChange={set_is_merged_info_open}
+                title="Merged Header"
+                description="Single background with italic subtext."
+                variant="info"
+                splitHeader={false}
+                onConfirm={() => set_is_merged_info_open(false)}
+              >
+                <p className="text-sm text-muted-foreground">
+                  One header background color with the description as small italic text underneath the title.
+                </p>
+              </HazoUiDialog>
+            </div>
+
+            {/* Merged header - danger */}
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => set_is_merged_danger_open(true)}
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors"
+              >
+                Merged Header (Danger)
+              </button>
+              <span className="text-xs text-muted-foreground">splitHeader=false + variant=&quot;danger&quot;</span>
+              <HazoUiDialog
+                open={is_merged_danger_open}
+                onOpenChange={set_is_merged_danger_open}
+                title="Delete Workspace"
+                description="This action is permanent and cannot be reversed."
+                variant="danger"
+                splitHeader={false}
+                actionButtonText="Delete"
+                onConfirm={() => set_is_merged_danger_open(false)}
+              >
+                <p className="text-sm text-muted-foreground">
+                  Danger variant with a single red header and italic description. Button is auto-destructive.
+                </p>
               </HazoUiDialog>
             </div>
           </div>
@@ -770,6 +946,85 @@ export default function DialogPage() {
                 </div>
               </HazoUiDialog>
             </div>
+          </div>
+        </section>
+
+        {/* Section: Scrollable Content */}
+        <section id="test-scrollable" className="cls_test_section">
+          <h2 className="text-2xl font-semibold mb-4">Scrollable Content</h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            Dialog with constrained height where the body scrolls independently while header and footer remain fixed
+          </p>
+
+          <div className="cls_component_demo p-6 border rounded-lg bg-card mb-4">
+            <button
+              onClick={() => set_is_scrollable_open(true)}
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+            >
+              Open Scrollable Dialog
+            </button>
+
+            <HazoUiDialog
+              open={is_scrollable_open}
+              onOpenChange={set_is_scrollable_open}
+              title="Terms and Conditions"
+              description="Please read the following terms carefully before proceeding."
+              headerBar={true}
+              headerBarColor="#1e293b"
+              actionButtonText="I Accept"
+              sizeWidth="min(90vw, 600px)"
+              sizeHeight="70vh"
+              onConfirm={() => {
+                console.log("Terms accepted");
+                set_is_scrollable_open(false);
+              }}
+              onCancel={() => {
+                console.log("Terms declined");
+              }}
+              cancelButtonText="Decline"
+              footerContent={
+                <div className="flex items-center justify-between w-full">
+                  <p className="text-xs text-muted-foreground">Scroll to read all sections</p>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => set_is_scrollable_open(false)}
+                      className="px-4 py-2 border rounded-md hover:bg-accent transition-colors text-sm"
+                    >
+                      Decline
+                    </button>
+                    <button
+                      onClick={() => {
+                        console.log("Terms accepted");
+                        set_is_scrollable_open(false);
+                      }}
+                      className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors text-sm"
+                    >
+                      I Accept
+                    </button>
+                  </div>
+                </div>
+              }
+            >
+              <div className="cls_scrollable_content space-y-6">
+                {Array.from({ length: 20 }, (_, i) => (
+                  <div key={i} className="space-y-2">
+                    <h4 className="font-medium text-sm">Section {i + 1}: Article {i + 1}</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+                      incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                      exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </HazoUiDialog>
+          </div>
+
+          <div className="cls_output_display p-4 border rounded-lg bg-muted">
+            <h3 className="font-medium mb-2">State:</h3>
+            <pre className="text-xs">
+              {JSON.stringify({ is_scrollable_open }, null, 2)}
+            </pre>
           </div>
         </section>
 

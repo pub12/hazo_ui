@@ -65,6 +65,104 @@ Tailwind v4 uses JIT compilation and only generates CSS for classes found in sca
 
 ---
 
+## Color Configuration
+
+hazo_ui provides a centralized configuration system for customizing button and header colors across all components. You can set colors globally using `set_hazo_ui_config()` or override them per-component using props.
+
+### Global Configuration
+
+Set default colors for all components in your app:
+
+```tsx
+import { set_hazo_ui_config } from 'hazo_ui';
+
+// Set custom colors globally (typically in your app's entry point)
+set_hazo_ui_config({
+  // Dialog headers
+  header_background_color: '#1e3a8a',
+  header_text_color: '#ffffff',
+
+  // Submit/Apply buttons
+  submit_button_background_color: '#10b981',
+  submit_button_text_color: '#ffffff',
+
+  // Cancel buttons
+  cancel_button_border_color: '#6b7280',
+  cancel_button_text_color: '#374151',
+
+  // Clear/Delete buttons
+  clear_button_border_color: '#ef4444',
+  clear_button_text_color: '#ef4444',
+});
+```
+
+### Per-Component Override
+
+Override colors for individual component instances using props:
+
+```tsx
+<HazoUiMultiFilterDialog
+  availableFields={fields}
+  onFilterChange={handleFilterChange}
+  // Color overrides (these take precedence over global config)
+  headerBackgroundColor="#7c3aed"
+  headerTextColor="#ffffff"
+  submitButtonBackgroundColor="#f59e0b"
+  submitButtonTextColor="#ffffff"
+  cancelButtonBorderColor="#ec4899"
+  cancelButtonTextColor="#ec4899"
+/>
+```
+
+### Available Color Properties
+
+**HazoUiConfig Interface:**
+```tsx
+interface HazoUiConfig {
+  // Dialog Header Colors
+  header_background_color?: string;
+  header_text_color?: string;
+
+  // Submit/Action Button Colors
+  submit_button_background_color?: string;
+  submit_button_text_color?: string;
+  submit_button_hover_color?: string;
+
+  // Cancel Button Colors
+  cancel_button_background_color?: string;
+  cancel_button_text_color?: string;
+  cancel_button_border_color?: string;
+  cancel_button_hover_color?: string;
+
+  // Clear/Delete Button Colors
+  clear_button_background_color?: string;
+  clear_button_text_color?: string;
+  clear_button_border_color?: string;
+  clear_button_hover_color?: string;
+}
+```
+
+### Configuration Functions
+
+**`set_hazo_ui_config(config: Partial<HazoUiConfig>)`**
+- Merges provided config with existing global config
+- Accepts partial config (you can set only the colors you want to customize)
+
+**`get_hazo_ui_config(): Readonly<HazoUiConfig>`**
+- Returns the current global configuration (read-only)
+
+**`reset_hazo_ui_config()`**
+- Resets all colors to default (undefined, using theme defaults)
+
+### Components Supporting Color Configuration
+
+The following components support both global config and prop-level color overrides:
+- `HazoUiDialog` - via `headerBackgroundColor`, `headerTextColor`, `accentColor` props
+- `HazoUiMultiFilterDialog` - via header/submit/cancel/clear color props
+- `HazoUiMultiSortDialog` - via header/submit/cancel/clear color props
+
+---
+
 ## Components
 
 ### Component Overview
@@ -1780,8 +1878,13 @@ interface HazoUiDialogProps {
   openAnimation?: AnimationPreset | string;  // default: "zoom"
   closeAnimation?: AnimationPreset | string; // default: "zoom"
 
-  // Color Customization
+  // Variant (preset color theme)
+  variant?: DialogVariant;               // default: "default"
+  splitHeader?: boolean;                 // default: true - When true, title/description get separate bg rows; false = single bg, italic description
+
+  // Color Customization (overrides variant preset if both provided)
   headerBackgroundColor?: string;
+  descriptionBackgroundColor?: string;
   headerTextColor?: string;
   bodyBackgroundColor?: string;
   footerBackgroundColor?: string;
@@ -1801,6 +1904,7 @@ interface HazoUiDialogProps {
   showCloseButton?: boolean;           // default: true
 }
 
+type DialogVariant = 'default' | 'info' | 'success' | 'warning' | 'danger';
 type AnimationPreset = 'zoom' | 'slide' | 'fade' | 'bounce' | 'scale-up' | 'flip' | 'slide-left' | 'slide-right' | 'slide-top' | 'none';
 type ButtonVariant = "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
 ```
@@ -2333,75 +2437,69 @@ function ProgressDialog() {
 />
 ```
 
-#### Themed Dialogs
+#### Themed Dialogs (Variant Prop)
 
-**Success Theme**
+Use the `variant` prop to apply preset color themes with a single prop instead of specifying individual colors. Available variants: `info`, `success`, `warning`, `danger`.
+
+Each variant auto-applies: header background tint, header text color, border color, accent color, tinted overlay, and (for `danger`) destructive button variant.
+
+**Override chain:** Individual prop > Variant preset > Global config. You can use a variant and still override specific colors via props.
+
 ```tsx
-<HazoUiDialog
-  title="✓ Success"
-  description="Operation completed successfully"
-  actionButtonText="Done"
-  showCancelButton={false}
-  borderColor="rgb(34, 197, 94)"
-  headerBackgroundColor="rgb(220, 252, 231)"
-  headerTextColor="rgb(22, 101, 52)"
-  accentColor="rgb(34, 197, 94)"
-  overlayClassName="bg-green-950/50"
-  {...props}
->
+// Success variant
+<HazoUiDialog variant="success" title="✓ Success" actionButtonText="Done" showCancelButton={false} {...props}>
   <p>Your changes have been saved.</p>
 </HazoUiDialog>
-```
 
-**Warning Theme**
-```tsx
-<HazoUiDialog
-  title="⚠ Warning"
-  description="Please review before proceeding"
-  actionButtonText="I Understand"
-  borderColor="rgb(234, 179, 8)"
-  headerBackgroundColor="rgb(254, 249, 195)"
-  headerTextColor="rgb(113, 63, 18)"
-  accentColor="rgb(234, 179, 8)"
-  overlayClassName="bg-yellow-950/50"
-  {...props}
->
+// Warning variant
+<HazoUiDialog variant="warning" title="⚠ Warning" actionButtonText="I Understand" {...props}>
   <p>You have unsaved changes that will be lost.</p>
 </HazoUiDialog>
-```
 
-**Danger Theme**
-```tsx
-<HazoUiDialog
-  title="⛔ Destructive Action"
-  description="This cannot be undone"
-  actionButtonText="Delete Permanently"
-  actionButtonVariant="destructive"
-  borderColor="rgb(239, 68, 68)"
-  headerBackgroundColor="rgb(254, 226, 226)"
-  headerTextColor="rgb(127, 29, 29)"
-  overlayClassName="bg-red-950/50"
-  {...props}
->
+// Danger variant (auto-sets destructive button)
+<HazoUiDialog variant="danger" title="⛔ Delete" actionButtonText="Delete Permanently" {...props}>
   <p>All data will be permanently deleted.</p>
+</HazoUiDialog>
+
+// Info variant
+<HazoUiDialog variant="info" title="ℹ Information" actionButtonText="Got It" showCancelButton={false} {...props}>
+  <p>New features are now available.</p>
 </HazoUiDialog>
 ```
 
-**Info Theme**
+##### Split Header vs Merged Header
+
+By default (`splitHeader={true}`), variant dialogs render the title and description as two separate rows with different background intensities. Set `splitHeader={false}` for a single header background with the description as italic subtext.
+
 ```tsx
+// Split header (default) - two background rows
+<HazoUiDialog variant="info" splitHeader={true} title="Title" description="Description" {...props}>
+  <p>Title row has stronger blue, description row has lighter blue.</p>
+</HazoUiDialog>
+
+// Merged header - single background, italic description
+<HazoUiDialog variant="danger" splitHeader={false} title="Delete" description="This is permanent." {...props}>
+  <p>One red header background with italic description text.</p>
+</HazoUiDialog>
+```
+
+##### Overriding Variant Colors
+
+```tsx
+// Use info variant but override header to purple
 <HazoUiDialog
-  title="ℹ Information"
-  description="Learn more about this feature"
-  actionButtonText="Got It"
-  showCancelButton={false}
-  borderColor="rgb(59, 130, 246)"
-  headerBackgroundColor="rgb(219, 234, 254)"
-  headerTextColor="rgb(30, 58, 138)"
-  accentColor="rgb(59, 130, 246)"
-  overlayClassName="bg-blue-950/50"
+  variant="info"
+  headerBackgroundColor="rgb(243, 232, 255)"
+  headerTextColor="rgb(88, 28, 135)"
+  title="Custom Header"
   {...props}
 >
-  <p>New features are now available.</p>
+  <p>Blue border/accent from variant, purple header from props.</p>
+</HazoUiDialog>
+
+// Danger variant with non-destructive button override
+<HazoUiDialog variant="danger" actionButtonVariant="default" title="Acknowledge" {...props}>
+  <p>Red colors from variant, default button from prop override.</p>
 </HazoUiDialog>
 ```
 

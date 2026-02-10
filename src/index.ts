@@ -2,6 +2,14 @@
 // Export all components here to enable tree-shaking
 // Components should be imported individually: import { Button } from 'hazo_ui'
 
+// HazoUI Configuration
+export {
+  get_hazo_ui_config,
+  set_hazo_ui_config,
+  reset_hazo_ui_config,
+} from "./lib/hazo_ui_config";
+export type { HazoUiConfig } from "./lib/hazo_ui_config";
+
 // HazoUiMultiFilterDialog component
 export { HazoUiMultiFilterDialog } from "./components/hazo_ui_multi_filter_dialog";
 export type { FilterField, FilterConfig } from "./components/hazo_ui_multi_filter_dialog";
@@ -59,7 +67,7 @@ export type { HazoUiTextareaProps } from "./components/hazo_ui_textarea";
 
 // HazoUiDialog - Standardized dialog component (props-based API for simple dialogs)
 export { HazoUiDialog } from "./components/hazo_ui_dialog";
-export type { HazoUiDialogProps, AnimationPreset } from "./components/hazo_ui_dialog";
+export type { HazoUiDialogProps, AnimationPreset, DialogVariant } from "./components/hazo_ui_dialog";
 
 // Compositional Dialog Components (for complex layouts with tabs, avatars, custom headers)
 // These are re-exports of shadcn/ui primitives that already exist in src/components/ui/dialog.tsx

@@ -40,6 +40,7 @@ import { Calendar as CalendarComponent } from "../ui/calendar";
 import { Filter, Trash2, Plus, Check as CheckIcon, ChevronsUpDown, Calendar as CalendarIcon, X } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { format } from "date-fns";
+import { get_hazo_ui_config } from "../../lib/hazo_ui_config";
 
 export interface FilterField {
   value: string;
@@ -74,6 +75,18 @@ interface HazoUiMultiFilterDialogProps {
   initialFilters?: FilterConfig[];
   title?: string;
   description?: string;
+
+  // Color overrides (falls back to hazo_ui_config)
+  headerBackgroundColor?: string;
+  headerTextColor?: string;
+  submitButtonBackgroundColor?: string;
+  submitButtonTextColor?: string;
+  cancelButtonBackgroundColor?: string;
+  cancelButtonTextColor?: string;
+  cancelButtonBorderColor?: string;
+  clearButtonBackgroundColor?: string;
+  clearButtonTextColor?: string;
+  clearButtonBorderColor?: string;
 }
 
 interface FilterFieldItemProps {
@@ -318,7 +331,56 @@ export function HazoUiMultiFilterDialog({
   initialFilters = [],
   title = "Filter",
   description = "Add multiple fields to filter by. Select a field and set its filter value.",
+  headerBackgroundColor,
+  headerTextColor,
+  submitButtonBackgroundColor,
+  submitButtonTextColor,
+  cancelButtonBackgroundColor,
+  cancelButtonTextColor,
+  cancelButtonBorderColor,
+  clearButtonBackgroundColor,
+  clearButtonTextColor,
+  clearButtonBorderColor,
 }: HazoUiMultiFilterDialogProps) {
+  // Get global config as defaults
+  const config = get_hazo_ui_config();
+
+  // Build button styles using config with prop overrides
+  const finalSubmitBgColor = submitButtonBackgroundColor ?? config.submit_button_background_color;
+  const finalSubmitTextColor = submitButtonTextColor ?? config.submit_button_text_color;
+  const finalCancelBgColor = cancelButtonBackgroundColor ?? config.cancel_button_background_color;
+  const finalCancelTextColor = cancelButtonTextColor ?? config.cancel_button_text_color;
+  const finalCancelBorderColor = cancelButtonBorderColor ?? config.cancel_button_border_color;
+  const finalClearBgColor = clearButtonBackgroundColor ?? config.clear_button_background_color;
+  const finalClearTextColor = clearButtonTextColor ?? config.clear_button_text_color;
+  const finalClearBorderColor = clearButtonBorderColor ?? config.clear_button_border_color;
+
+  const submitButtonStyles: React.CSSProperties = {
+    ...(finalSubmitBgColor && { backgroundColor: finalSubmitBgColor, borderColor: finalSubmitBgColor }),
+    ...(finalSubmitTextColor && { color: finalSubmitTextColor }),
+  };
+
+  const cancelButtonStyles: React.CSSProperties = {
+    ...(finalCancelBgColor && { backgroundColor: finalCancelBgColor }),
+    ...(finalCancelTextColor && { color: finalCancelTextColor }),
+    ...(finalCancelBorderColor && { borderColor: finalCancelBorderColor }),
+  };
+
+  const clearButtonStyles: React.CSSProperties = {
+    ...(finalClearBgColor && { backgroundColor: finalClearBgColor }),
+    ...(finalClearTextColor && { color: finalClearTextColor }),
+    ...(finalClearBorderColor && { borderColor: finalClearBorderColor }),
+  };
+
+  // Header styles
+  const finalHeaderBgColor = headerBackgroundColor ?? config.header_background_color;
+  const finalHeaderTextColor = headerTextColor ?? config.header_text_color;
+
+  const headerStyles: React.CSSProperties = {
+    ...(finalHeaderBgColor && { backgroundColor: finalHeaderBgColor }),
+    ...(finalHeaderTextColor && { color: finalHeaderTextColor }),
+  };
+
   const [isOpen, setIsOpen] = useState(false);
   const [filterFields, setFilterFields] = useState<FilterConfig[]>(initialFilters);
   const [isComboboxOpen, setIsComboboxOpen] = useState(false);
@@ -475,7 +537,7 @@ export function HazoUiMultiFilterDialog({
         </Tooltip>
       </TooltipProvider>
       <DialogContent className="cls_filter_dialog_content max-w-lg w-full max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
+        <DialogHeader style={headerStyles}>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>
             {description}
@@ -562,6 +624,7 @@ export function HazoUiMultiFilterDialog({
               variant="outline"
               onClick={handleClearAll}
               className="cls_clear_all_btn"
+              style={clearButtonStyles}
             >
               <X className="cls_clear_all_icon h-4 w-4 mr-2" />
               Clear All
@@ -570,6 +633,7 @@ export function HazoUiMultiFilterDialog({
           <Button
             onClick={handleApply}
             className="cls_apply_btn"
+            style={submitButtonStyles}
           >
             Apply
           </Button>
@@ -577,6 +641,7 @@ export function HazoUiMultiFilterDialog({
             variant="outline"
             onClick={handleCancel}
             className="cls_cancel_btn"
+            style={cancelButtonStyles}
           >
             Cancel
           </Button>
