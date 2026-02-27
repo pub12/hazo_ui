@@ -37,12 +37,39 @@ export interface ButtonProps
   asChild?: boolean;
 }
 
+// Inline style fallbacks keyed by variant
+// These bypass Tailwind's color utility compilation so buttons render correctly
+// regardless of the consuming project's Tailwind version or CSS variable format
+const variant_styles: Record<string, React.CSSProperties> = {
+  default: {
+    backgroundColor: "var(--primary)",
+    color: "var(--primary-foreground)",
+    border: "1px solid var(--primary)",
+  },
+  destructive: {
+    backgroundColor: "var(--destructive)",
+    color: "white",
+    border: "1px solid var(--destructive)",
+  },
+  outline: {
+    backgroundColor: "var(--background)",
+    color: "var(--foreground)",
+    border: "1px solid var(--border)",
+  },
+  secondary: {
+    backgroundColor: "var(--secondary)",
+    color: "var(--secondary-foreground)",
+  },
+};
+
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, style, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
+    const fallback_styles = variant_styles[variant ?? "default"] ?? {};
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
+        style={{ ...fallback_styles, ...style }}
         ref={ref}
         {...props}
       />
